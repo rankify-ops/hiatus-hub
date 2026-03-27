@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-27T05:49:20+10:00",
+  "last_updated": "2026-03-27T08:34:27+10:00",
   "source": "Shopify \u2014 97850c.myshopify.com",
   "store_status": "Live",
   "summary": {
@@ -7,398 +7,380 @@
     "in_stock": 14,
     "low_stock": 22,
     "out_of_stock": 3,
-    "total_products": 10
+    "total_products": 9
   },
-  "items": [
+  "products": [
     {
       "product": "CREATORS RING (SILVER)",
-      "variant": "10 (M)",
-      "sku": "RNGCR10",
-      "quantity": 3,
-      "price": 179.0,
       "product_id": 7012105781291,
-      "variant_id": 40597810315307,
-      "reorder_point": 3
-    },
-    {
-      "product": "CREATORS RING (SILVER)",
-      "variant": "11 (M/L)",
-      "sku": "RNGCR11",
-      "quantity": 5,
       "price": 179.0,
-      "product_id": 7012105781291,
-      "variant_id": 40597810348075,
-      "reorder_point": 3
-    },
-    {
-      "product": "CREATORS RING (SILVER)",
-      "variant": "12 (L)",
-      "sku": "RNGCR12",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7012105781291,
-      "variant_id": 40597810380843,
-      "reorder_point": 3
-    },
-    {
-      "product": "CREATORS RING (SILVER)",
-      "variant": "13 (XL)",
-      "sku": "RNGCR13",
-      "quantity": 2,
-      "price": 179.0,
-      "product_id": 7012105781291,
-      "variant_id": 40597810413611,
-      "reorder_point": 3
-    },
-    {
-      "product": "CREATORS RING (SILVER)",
-      "variant": "6 (XXS)",
-      "sku": "RNGCR6",
-      "quantity": 99,
-      "price": 179.0,
-      "product_id": 7012105781291,
-      "variant_id": 40739088760875,
-      "reorder_point": 3
-    },
-    {
-      "product": "CREATORS RING (SILVER)",
-      "variant": "7 (XS)",
-      "sku": "RNGCR7",
-      "quantity": 99,
-      "price": 179.0,
-      "product_id": 7012105781291,
-      "variant_id": 40739088662571,
-      "reorder_point": 3
-    },
-    {
-      "product": "CREATORS RING (SILVER)",
-      "variant": "8 (S)",
-      "sku": "RNGCR8",
-      "quantity": 99,
-      "price": 179.0,
-      "product_id": 7012105781291,
-      "variant_id": 40739083649067,
-      "reorder_point": 3
-    },
-    {
-      "product": "CREATORS RING (SILVER)",
-      "variant": "9 (S/M)",
-      "sku": "RNGCR9",
-      "quantity": 1,
-      "price": 179.0,
-      "product_id": 7012105781291,
-      "variant_id": 40597810282539,
-      "reorder_point": 3
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/12_635b1c9b-b2bc-4f83-8d7f-aee9fe904e5b.webp?v=1751674402",
+      "total_quantity": 311,
+      "variants_oos": 0,
+      "variants_low": 4,
+      "variants": [
+        {
+          "title": "6 (XXS)",
+          "sku": "RNGCR6",
+          "quantity": 99,
+          "variant_id": 40739088760875,
+          "inventory_item_id": 42835911114795
+        },
+        {
+          "title": "7 (XS)",
+          "sku": "RNGCR7",
+          "quantity": 99,
+          "variant_id": 40739088662571,
+          "inventory_item_id": 42835911016491
+        },
+        {
+          "title": "8 (S)",
+          "sku": "RNGCR8",
+          "quantity": 99,
+          "variant_id": 40739083649067,
+          "inventory_item_id": 42835906002987
+        },
+        {
+          "title": "9 (S/M)",
+          "sku": "RNGCR9",
+          "quantity": 1,
+          "variant_id": 40597810282539,
+          "inventory_item_id": 42694389891115
+        },
+        {
+          "title": "10 (M)",
+          "sku": "RNGCR10",
+          "quantity": 3,
+          "variant_id": 40597810315307,
+          "inventory_item_id": 42694389923883
+        },
+        {
+          "title": "11 (M/L)",
+          "sku": "RNGCR11",
+          "quantity": 5,
+          "variant_id": 40597810348075,
+          "inventory_item_id": 42694389956651
+        },
+        {
+          "title": "12 (L)",
+          "sku": "RNGCR12",
+          "quantity": 3,
+          "variant_id": 40597810380843,
+          "inventory_item_id": 42694389989419
+        },
+        {
+          "title": "13 (XL)",
+          "sku": "RNGCR13",
+          "quantity": 2,
+          "variant_id": 40597810413611,
+          "inventory_item_id": 42694390022187
+        }
+      ]
     },
     {
       "product": "CUBAN LINK BRACELET (SILVER)",
-      "variant": "Large - (8 Inches) / Silver",
-      "sku": "BLCLL",
-      "quantity": 99,
-      "price": 299.0,
       "product_id": 7153409392683,
-      "variant_id": 40904650588203,
-      "reorder_point": 3
-    },
-    {
-      "product": "CUBAN LINK BRACELET (SILVER)",
-      "variant": "Medium - (7.5 Inches) / Silver",
-      "sku": "BLCLM",
-      "quantity": 99,
       "price": 299.0,
-      "product_id": 7153409392683,
-      "variant_id": 40904650555435,
-      "reorder_point": 3
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_7.png?v=1751674498",
+      "total_quantity": 198,
+      "variants_oos": 0,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "Medium - (7.5 Inches) / Silver",
+          "sku": "BLCLM",
+          "quantity": 99,
+          "variant_id": 40904650555435,
+          "inventory_item_id": 43002450640939
+        },
+        {
+          "title": "Large - (8 Inches) / Silver",
+          "sku": "BLCLL",
+          "quantity": 99,
+          "variant_id": 40904650588203,
+          "inventory_item_id": 43002450673707
+        }
+      ]
     },
     {
       "product": "FREE RING SIZER",
-      "variant": "One Size",
-      "sku": "RSZ1",
-      "quantity": 50,
-      "price": 0.0,
       "product_id": 7011733340203,
-      "variant_id": 40597817098283,
-      "reorder_point": 3
+      "price": 0.0,
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/6_303c3692-5ae1-4da8-b03a-08ded9770274.webp?v=1751674357",
+      "total_quantity": 50,
+      "variants_oos": 0,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "One Size",
+          "sku": "RSZ1",
+          "quantity": 50,
+          "variant_id": 40597817098283,
+          "inventory_item_id": 42694396706859
+        }
+      ]
     },
     {
       "product": "PARADOX PEARLS (SILVER)",
-      "variant": "Large - (8 Inches)",
-      "sku": "BLPPL",
-      "quantity": 0,
-      "price": 299.0,
       "product_id": 7153408344107,
-      "variant_id": 40904648065067,
-      "reorder_point": 3
-    },
-    {
-      "product": "PARADOX PEARLS (SILVER)",
-      "variant": "Medium - (7.5 Inches)",
-      "sku": "BLPPM",
-      "quantity": 0,
       "price": 299.0,
-      "product_id": 7153408344107,
-      "variant_id": 40904648032299,
-      "reorder_point": 3
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/Untitled_design_-_2025-07-04T220628.962.png?v=1751632132",
+      "total_quantity": 0,
+      "variants_oos": 2,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "Medium - (7.5 Inches)",
+          "sku": "BLPPM",
+          "quantity": 0,
+          "variant_id": 40904648032299,
+          "inventory_item_id": 43002447495211
+        },
+        {
+          "title": "Large - (8 Inches)",
+          "sku": "BLPPL",
+          "quantity": 0,
+          "variant_id": 40904648065067,
+          "inventory_item_id": 43002447527979
+        }
+      ]
     },
     {
       "product": "SUN WORSHIPPER PENDANT (SILVER)",
-      "variant": "Default Title",
-      "sku": "PENSWL",
-      "quantity": 3,
-      "price": 149.0,
       "product_id": 7153409654827,
-      "variant_id": 40904660484139,
-      "reorder_point": 3
+      "price": 149.0,
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_9.png?v=1767592068",
+      "total_quantity": 3,
+      "variants_oos": 0,
+      "variants_low": 1,
+      "variants": [
+        {
+          "title": "Default Title",
+          "sku": "PENSWL",
+          "quantity": 3,
+          "variant_id": 40904660484139,
+          "inventory_item_id": 43002461159467
+        }
+      ]
     },
     {
       "product": "UNEARTH CUFF (SILVER)",
-      "variant": "One Size (Adjustable)",
-      "sku": "CUFUE1",
-      "quantity": 101,
-      "price": 299.0,
       "product_id": 7011734552619,
-      "variant_id": 40597810642987,
-      "reorder_point": 3
+      "price": 299.0,
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/13.webp?v=1751674389",
+      "total_quantity": 101,
+      "variants_oos": 0,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "One Size (Adjustable)",
+          "sku": "CUFUE1",
+          "quantity": 101,
+          "variant_id": 40597810642987,
+          "inventory_item_id": 42694390251563
+        }
+      ]
     },
     {
       "product": "UNEARTH RING (SILVER)",
-      "variant": "10 (M)",
-      "sku": "RNGUE10",
-      "quantity": 6,
-      "price": 179.0,
       "product_id": 7011734257707,
-      "variant_id": 40560529408043,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH RING (SILVER)",
-      "variant": "11 (M/L)",
-      "sku": "RNGUE11",
-      "quantity": 3,
       "price": 179.0,
-      "product_id": 7011734257707,
-      "variant_id": 40560529440811,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH RING (SILVER)",
-      "variant": "12 (L)",
-      "sku": "RNGUE12",
-      "quantity": 4,
-      "price": 179.0,
-      "product_id": 7011734257707,
-      "variant_id": 40560529473579,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH RING (SILVER)",
-      "variant": "13 (XL)",
-      "sku": "RNGUE13",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7011734257707,
-      "variant_id": 40560529506347,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH RING (SILVER)",
-      "variant": "6 (XXS)",
-      "sku": "RNGUE6",
-      "quantity": 99,
-      "price": 179.0,
-      "product_id": 7011734257707,
-      "variant_id": 40739090006059,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH RING (SILVER)",
-      "variant": "7 (XS)",
-      "sku": "RNGUE7",
-      "quantity": 99,
-      "price": 179.0,
-      "product_id": 7011734257707,
-      "variant_id": 40739090071595,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH RING (SILVER)",
-      "variant": "8 (S)",
-      "sku": "RNGUE8",
-      "quantity": 99,
-      "price": 179.0,
-      "product_id": 7011734257707,
-      "variant_id": 40739089973291,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH RING (SILVER)",
-      "variant": "9 (S/M)",
-      "sku": "RNGUE9",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7011734257707,
-      "variant_id": 40560529375275,
-      "reorder_point": 3
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/11_680d9bae-4556-4c04-828a-00bbd1899724.webp?v=1751674374",
+      "total_quantity": 316,
+      "variants_oos": 0,
+      "variants_low": 3,
+      "variants": [
+        {
+          "title": "6 (XXS)",
+          "sku": "RNGUE6",
+          "quantity": 99,
+          "variant_id": 40739090006059,
+          "inventory_item_id": 42835912359979
+        },
+        {
+          "title": "7 (XS)",
+          "sku": "RNGUE7",
+          "quantity": 99,
+          "variant_id": 40739090071595,
+          "inventory_item_id": 42835912425515
+        },
+        {
+          "title": "8 (S)",
+          "sku": "RNGUE8",
+          "quantity": 99,
+          "variant_id": 40739089973291,
+          "inventory_item_id": 42835912327211
+        },
+        {
+          "title": "9 (S/M)",
+          "sku": "RNGUE9",
+          "quantity": 3,
+          "variant_id": 40560529375275,
+          "inventory_item_id": 42657055080491
+        },
+        {
+          "title": "10 (M)",
+          "sku": "RNGUE10",
+          "quantity": 6,
+          "variant_id": 40560529408043,
+          "inventory_item_id": 42657055113259
+        },
+        {
+          "title": "11 (M/L)",
+          "sku": "RNGUE11",
+          "quantity": 3,
+          "variant_id": 40560529440811,
+          "inventory_item_id": 42657055146027
+        },
+        {
+          "title": "12 (L)",
+          "sku": "RNGUE12",
+          "quantity": 4,
+          "variant_id": 40560529473579,
+          "inventory_item_id": 42657055178795
+        },
+        {
+          "title": "13 (XL)",
+          "sku": "RNGUE13",
+          "quantity": 3,
+          "variant_id": 40560529506347,
+          "inventory_item_id": 42657055211563
+        }
+      ]
     },
     {
       "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "10 (M)",
-      "sku": "RNGSR10",
-      "quantity": 4,
-      "price": 179.0,
       "product_id": 7043490381867,
-      "variant_id": 40634895269931,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "11 (M/L)",
-      "sku": "RNGSR11",
-      "quantity": 2,
       "price": 179.0,
-      "product_id": 7043490381867,
-      "variant_id": 40634895302699,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "12 (L)",
-      "sku": "RNGSR12",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7043490381867,
-      "variant_id": 40634895335467,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "13 (XL)",
-      "sku": "RNGSR13",
-      "quantity": 2,
-      "price": 179.0,
-      "product_id": 7043490381867,
-      "variant_id": 40634895368235,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "6 (XXS)",
-      "sku": "RNGCR6",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7043490381867,
-      "variant_id": 40739090268203,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "7 (XS)",
-      "sku": "RNGSR7",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7043490381867,
-      "variant_id": 40641417281579,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "8 (S)",
-      "sku": "RNGSR8",
-      "quantity": 1,
-      "price": 179.0,
-      "product_id": 7043490381867,
-      "variant_id": 40641417314347,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH SIGNET RING (SILVER)",
-      "variant": "9 (S/M)",
-      "sku": "RNGSR9",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7043490381867,
-      "variant_id": 40634895237163,
-      "reorder_point": 3
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/9_012c12af-b7a4-47f3-8d70-dc6b1e340d4e.webp?v=1751674419",
+      "total_quantity": 21,
+      "variants_oos": 0,
+      "variants_low": 7,
+      "variants": [
+        {
+          "title": "6 (XXS)",
+          "sku": "RNGCR6",
+          "quantity": 3,
+          "variant_id": 40739090268203,
+          "inventory_item_id": 42835912622123
+        },
+        {
+          "title": "7 (XS)",
+          "sku": "RNGSR7",
+          "quantity": 3,
+          "variant_id": 40641417281579,
+          "inventory_item_id": 42738090508331
+        },
+        {
+          "title": "8 (S)",
+          "sku": "RNGSR8",
+          "quantity": 1,
+          "variant_id": 40641417314347,
+          "inventory_item_id": 42738090541099
+        },
+        {
+          "title": "9 (S/M)",
+          "sku": "RNGSR9",
+          "quantity": 3,
+          "variant_id": 40634895237163,
+          "inventory_item_id": 42731549491243
+        },
+        {
+          "title": "10 (M)",
+          "sku": "RNGSR10",
+          "quantity": 4,
+          "variant_id": 40634895269931,
+          "inventory_item_id": 42731549524011
+        },
+        {
+          "title": "11 (M/L)",
+          "sku": "RNGSR11",
+          "quantity": 2,
+          "variant_id": 40634895302699,
+          "inventory_item_id": 42731549556779
+        },
+        {
+          "title": "12 (L)",
+          "sku": "RNGSR12",
+          "quantity": 3,
+          "variant_id": 40634895335467,
+          "inventory_item_id": 42731549589547
+        },
+        {
+          "title": "13 (XL)",
+          "sku": "RNGSR13",
+          "quantity": 2,
+          "variant_id": 40634895368235,
+          "inventory_item_id": 42731549622315
+        }
+      ]
     },
     {
       "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "10 (M)",
-      "sku": "RNGSUE10",
-      "quantity": 1,
-      "price": 179.0,
       "product_id": 7032101077035,
-      "variant_id": 40597811265579,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "11 (M/L)",
-      "sku": "RNGSUE11",
-      "quantity": 1,
       "price": 179.0,
-      "product_id": 7032101077035,
-      "variant_id": 40597811298347,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "12 (L)",
-      "sku": "RNGSUE12",
-      "quantity": 1,
-      "price": 179.0,
-      "product_id": 7032101077035,
-      "variant_id": 40597811331115,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "13 (XL)",
-      "sku": "RNGSUE13",
-      "quantity": 2,
-      "price": 179.0,
-      "product_id": 7032101077035,
-      "variant_id": 40597811363883,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "6 (XXS)",
-      "sku": "RNGSUE6",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7032101077035,
-      "variant_id": 40739092398123,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "7 (XS)",
-      "sku": "RNGSUE7",
-      "quantity": 3,
-      "price": 179.0,
-      "product_id": 7032101077035,
-      "variant_id": 40739092529195,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "8 (S)",
-      "sku": "RNGSUE8",
-      "quantity": 1,
-      "price": 179.0,
-      "product_id": 7032101077035,
-      "variant_id": 40739091415083,
-      "reorder_point": 3
-    },
-    {
-      "product": "UNEARTH STACKER RING SET (SILVER)",
-      "variant": "9 (S/M)",
-      "sku": "RNGSUE9",
-      "quantity": 0,
-      "price": 179.0,
-      "product_id": 7032101077035,
-      "variant_id": 40597811232811,
-      "reorder_point": 3
+      "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409",
+      "total_quantity": 12,
+      "variants_oos": 1,
+      "variants_low": 7,
+      "variants": [
+        {
+          "title": "6 (XXS)",
+          "sku": "RNGSUE6",
+          "quantity": 3,
+          "variant_id": 40739092398123,
+          "inventory_item_id": 42835914752043
+        },
+        {
+          "title": "7 (XS)",
+          "sku": "RNGSUE7",
+          "quantity": 3,
+          "variant_id": 40739092529195,
+          "inventory_item_id": 42835914883115
+        },
+        {
+          "title": "8 (S)",
+          "sku": "RNGSUE8",
+          "quantity": 1,
+          "variant_id": 40739091415083,
+          "inventory_item_id": 42835913769003
+        },
+        {
+          "title": "9 (S/M)",
+          "sku": "RNGSUE9",
+          "quantity": 0,
+          "variant_id": 40597811232811,
+          "inventory_item_id": 42694390841387
+        },
+        {
+          "title": "10 (M)",
+          "sku": "RNGSUE10",
+          "quantity": 1,
+          "variant_id": 40597811265579,
+          "inventory_item_id": 42694390874155
+        },
+        {
+          "title": "11 (M/L)",
+          "sku": "RNGSUE11",
+          "quantity": 1,
+          "variant_id": 40597811298347,
+          "inventory_item_id": 42694390906923
+        },
+        {
+          "title": "12 (L)",
+          "sku": "RNGSUE12",
+          "quantity": 1,
+          "variant_id": 40597811331115,
+          "inventory_item_id": 42694390939691
+        },
+        {
+          "title": "13 (XL)",
+          "sku": "RNGSUE13",
+          "quantity": 2,
+          "variant_id": 40597811363883,
+          "inventory_item_id": 42694390972459
+        }
+      ]
     }
   ]
 }
