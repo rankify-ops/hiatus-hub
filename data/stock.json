@@ -1,13 +1,408 @@
 {
-  "last_updated": "2026-03-27T21:30:00+10:00",
-  "source": "Manual — pending store integration",
-  "store_status": "Pre-launch",
-  "summary": {
-    "total_skus": 0,
-    "in_stock": 0,
-    "low_stock": 0,
-    "out_of_stock": 0
+  "last_updated": "2026-03-27T05:13:10+10:00",
+  "source": "Shopify \u2014 97850c.myshopify.com",
+  "store_status": "Live",
+  "shopify_config": {
+    "store": "97850c.myshopify.com",
+    "domain": "hiatuscollection.com.au"
   },
-  "items": [],
-  "notes": "Stock tracking will populate once products are manufactured and listed. Connect to Shopify inventory API when store goes live."
+  "summary": {
+    "total_skus": 39,
+    "in_stock": 14,
+    "low_stock": 22,
+    "out_of_stock": 3,
+    "total_products": 10
+  },
+  "items": [
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "10 (M)",
+      "sku": "RNGCR10",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40597810315307,
+      "reorder_point": 3
+    },
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "11 (M/L)",
+      "sku": "RNGCR11",
+      "quantity": 5,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40597810348075,
+      "reorder_point": 3
+    },
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "12 (L)",
+      "sku": "RNGCR12",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40597810380843,
+      "reorder_point": 3
+    },
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "13 (XL)",
+      "sku": "RNGCR13",
+      "quantity": 2,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40597810413611,
+      "reorder_point": 3
+    },
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "6 (XXS)",
+      "sku": "RNGCR6",
+      "quantity": 99,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40739088760875,
+      "reorder_point": 3
+    },
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "7 (XS)",
+      "sku": "RNGCR7",
+      "quantity": 99,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40739088662571,
+      "reorder_point": 3
+    },
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "8 (S)",
+      "sku": "RNGCR8",
+      "quantity": 99,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40739083649067,
+      "reorder_point": 3
+    },
+    {
+      "product": "CREATORS RING (SILVER)",
+      "variant": "9 (S/M)",
+      "sku": "RNGCR9",
+      "quantity": 1,
+      "price": 179.0,
+      "product_id": 7012105781291,
+      "variant_id": 40597810282539,
+      "reorder_point": 3
+    },
+    {
+      "product": "CUBAN LINK BRACELET (SILVER)",
+      "variant": "Large - (8 Inches) / Silver",
+      "sku": "BLCLL",
+      "quantity": 99,
+      "price": 299.0,
+      "product_id": 7153409392683,
+      "variant_id": 40904650588203,
+      "reorder_point": 3
+    },
+    {
+      "product": "CUBAN LINK BRACELET (SILVER)",
+      "variant": "Medium - (7.5 Inches) / Silver",
+      "sku": "BLCLM",
+      "quantity": 99,
+      "price": 299.0,
+      "product_id": 7153409392683,
+      "variant_id": 40904650555435,
+      "reorder_point": 3
+    },
+    {
+      "product": "FREE RING SIZER",
+      "variant": "One Size",
+      "sku": "RSZ1",
+      "quantity": 50,
+      "price": 0.0,
+      "product_id": 7011733340203,
+      "variant_id": 40597817098283,
+      "reorder_point": 3
+    },
+    {
+      "product": "PARADOX PEARLS (SILVER)",
+      "variant": "Large - (8 Inches)",
+      "sku": "BLPPL",
+      "quantity": 0,
+      "price": 299.0,
+      "product_id": 7153408344107,
+      "variant_id": 40904648065067,
+      "reorder_point": 3
+    },
+    {
+      "product": "PARADOX PEARLS (SILVER)",
+      "variant": "Medium - (7.5 Inches)",
+      "sku": "BLPPM",
+      "quantity": 0,
+      "price": 299.0,
+      "product_id": 7153408344107,
+      "variant_id": 40904648032299,
+      "reorder_point": 3
+    },
+    {
+      "product": "SUN WORSHIPPER PENDANT (SILVER)",
+      "variant": "Default Title",
+      "sku": "PENSWL",
+      "quantity": 3,
+      "price": 149.0,
+      "product_id": 7153409654827,
+      "variant_id": 40904660484139,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH CUFF (SILVER)",
+      "variant": "One Size (Adjustable)",
+      "sku": "CUFUE1",
+      "quantity": 99,
+      "price": 299.0,
+      "product_id": 7011734552619,
+      "variant_id": 40597810642987,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "10 (M)",
+      "sku": "RNGUE10",
+      "quantity": 6,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40560529408043,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "11 (M/L)",
+      "sku": "RNGUE11",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40560529440811,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "12 (L)",
+      "sku": "RNGUE12",
+      "quantity": 4,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40560529473579,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "13 (XL)",
+      "sku": "RNGUE13",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40560529506347,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "6 (XXS)",
+      "sku": "RNGUE6",
+      "quantity": 99,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40739090006059,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "7 (XS)",
+      "sku": "RNGUE7",
+      "quantity": 99,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40739090071595,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "8 (S)",
+      "sku": "RNGUE8",
+      "quantity": 99,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40739089973291,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "9 (S/M)",
+      "sku": "RNGUE9",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7011734257707,
+      "variant_id": 40560529375275,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "10 (M)",
+      "sku": "RNGSR10",
+      "quantity": 4,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40634895269931,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "11 (M/L)",
+      "sku": "RNGSR11",
+      "quantity": 2,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40634895302699,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "12 (L)",
+      "sku": "RNGSR12",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40634895335467,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "13 (XL)",
+      "sku": "RNGSR13",
+      "quantity": 2,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40634895368235,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "6 (XXS)",
+      "sku": "RNGCR6",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40739090268203,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "7 (XS)",
+      "sku": "RNGSR7",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40641417281579,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "8 (S)",
+      "sku": "RNGSR8",
+      "quantity": 1,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40641417314347,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH SIGNET RING (SILVER)",
+      "variant": "9 (S/M)",
+      "sku": "RNGSR9",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7043490381867,
+      "variant_id": 40634895237163,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "10 (M)",
+      "sku": "RNGSUE10",
+      "quantity": 1,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40597811265579,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "11 (M/L)",
+      "sku": "RNGSUE11",
+      "quantity": 1,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40597811298347,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "12 (L)",
+      "sku": "RNGSUE12",
+      "quantity": 1,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40597811331115,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "13 (XL)",
+      "sku": "RNGSUE13",
+      "quantity": 2,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40597811363883,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "6 (XXS)",
+      "sku": "RNGSUE6",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40739092398123,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "7 (XS)",
+      "sku": "RNGSUE7",
+      "quantity": 3,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40739092529195,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "8 (S)",
+      "sku": "RNGSUE8",
+      "quantity": 1,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40739091415083,
+      "reorder_point": 3
+    },
+    {
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "9 (S/M)",
+      "sku": "RNGSUE9",
+      "quantity": 0,
+      "price": 179.0,
+      "product_id": 7032101077035,
+      "variant_id": 40597811232811,
+      "reorder_point": 3
+    }
+  ]
 }
