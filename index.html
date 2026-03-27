@@ -199,6 +199,11 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
     </div>
     <div class="tab-panel" id="tab-orders">
       <div class="section-header"><h2>Orders / Sales</h2><div class="updated" id="orders-updated">Loading...</div></div>
+      <div style="display:flex;gap:6px;margin-bottom:18px" id="orders-subtabs">
+        <button class="cat-filter active" data-subtab="all" onclick="switchOrderTab('all')">All Sales</button>
+        <button class="cat-filter" data-subtab="shopify" onclick="switchOrderTab('shopify')">Shopify</button>
+        <button class="cat-filter" data-subtab="markets" onclick="switchOrderTab('markets')">Markets</button>
+      </div>
       <div id="orders-content"></div>
     </div>
     <div class="tab-panel" id="tab-stock">
@@ -217,7 +222,7 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 </div>
 <script>
 const DATA_BASE='data/';
-const DATA_FILES={overview:'overview.json',products:'products.json',content:'content.json',orders:'orders.json',stock:'stock.json',markets:'markets.json',finance:'finance.json'};
+const DATA_FILES={overview:'overview.json',products:'products.json',content:'content.json',orders:'orders.json',market_sales:'market_sales.json',stock:'stock.json',markets:'markets.json',finance:'finance.json'};
 let appData={};
 document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
 async function loadData(){for(const[key,file]of Object.entries(DATA_FILES)){try{const res=await fetch(DATA_BASE+file+'?t='+Date.now());if(res.ok)appData[key]=await res.json()}catch(e){console.warn(`Failed: ${file}`,e)}}renderAll()}
@@ -267,12 +272,67 @@ document.querySelectorAll('.cat-item').forEach(c=>{c.style.display=(type==='all'
 }
 
 function renderContent(){const d=appData.content;if(!d)return;document.getElementById('content-updated').textContent='Last synced: '+fmt(d.last_updated);const ig=d.instagram||{};document.getElementById('instagram-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value">${ig.followers||0}</div><div class="metric-label">Followers</div></div><div class="card metric-tile"><div class="metric-value">${ig.posts||0}</div><div class="metric-label">Posts</div></div><div class="card metric-tile"><div class="metric-value teal">${ig.engagement_rate||0}%</div><div class="metric-label">Engagement</div></div><div class="card metric-tile"><div class="metric-value">${(d.content_pipeline?.scheduled||[]).length}</div><div class="metric-label">Scheduled</div></div>`;const ai=d.ai_image_gen||{};document.getElementById('ai-gen-info').innerHTML=`<div class="status-list"><div class="status-item"><div class="status-dot teal"></div><span class="status-text">Prompt Library: ${ai.prompt_library||'—'}</span></div><div class="status-item"><div class="status-dot green"></div><span class="status-text" style="font-size:0.73rem">${ai.aesthetic_notes||'—'}</span></div></div>`;document.getElementById('video-info').innerHTML=`<div class="status-list"><div class="status-item"><div class="status-dot teal"></div><span class="status-text">Tool: ${ai.video_tool||'—'}</span></div></div>`;const ideas=d.content_pipeline?.ideas||[];document.getElementById('content-ideas').innerHTML=ideas.length?ideas.map(i=>`<div class="content-card"><h4>${i.concept}</h4><p>${i.aesthetic||''}</p><div class="meta"><span class="content-tag">${i.platform||'—'}</span><span class="content-tag">${i.format||'—'}</span><span class="content-tag">${i.status||'—'}</span></div></div>`).join(''):'<div class="empty-state"><div class="icon">◉</div><h3>No content ideas yet</h3><p>Ideas will appear here as they\'re added.</p></div>'}
+let currentOrderTab='all';
+window.switchOrderTab=function(tab){
+currentOrderTab=tab;
+document.querySelectorAll('#orders-subtabs .cat-filter').forEach(b=>b.classList.toggle('active',b.dataset.subtab===tab));
+renderOrders();
+}
 function renderOrders(){const d=appData.orders;if(!d)return;
-document.getElementById('orders-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: Shopify';
-if(d.store_status==='Pre-launch'){document.getElementById('orders-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">▤</div><h3>Pre-launch</h3><p>Order tracking will activate once the store goes live.</p></div></div>`;return}
+const ms=appData.market_sales||{sales:[]};
+document.getElementById('orders-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: Shopify + Markets';
 const o=d.orders||{},r=d.revenue||{},recent=d.recent_orders||[],top=d.top_products||[];
+const mSales=ms.sales||[];
+const mRev=mSales.reduce((a,s)=>a+s.total,0);
+const mCount=mSales.length;
 const statusCol=s=>s==='paid'?'var(--teal)':s==='refunded'?'var(--red-soft)':'var(--amber)';
 const fulCol=s=>s==='fulfilled'?'var(--teal)':'var(--amber)';
+const combinedRev=(r.all_time||0)+mRev;
+const combinedOrders=(o.total||0)+mCount;
+
+if(currentOrderTab==='all'){
+// Combined all + market sales into recent list
+const allSales=[...recent.map(o=>({...o,channel:'Shopify',date:o.created_at})),...mSales.map(s=>({order_number:s.id||'M-'+mSales.indexOf(s),created_at:s.date,customer:s.customer||'Walk-in',items:s.items.map(i=>i.name+' x'+i.qty).join(', '),total:s.total,financial_status:'paid',fulfillment_status:'fulfilled',channel:'Market',market_name:s.market_name||'',date:s.date}))].sort((a,b)=>b.date>a.date?1:-1);
+document.getElementById('orders-content').innerHTML=`
+<div class="metrics-grid">
+  <div class="card metric-tile"><div class="metric-value">${combinedOrders}</div><div class="metric-label">Total Sales</div></div>
+  <div class="card metric-tile"><div class="metric-value teal">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div></div>
+  <div class="card metric-tile"><div class="metric-value">${o.total||0}</div><div class="metric-label">Shopify Orders</div></div>
+  <div class="card metric-tile"><div class="metric-value">${mCount}</div><div class="metric-label">Market Sales</div></div>
+</div>
+<div class="grid-2" style="margin-bottom:14px">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Revenue Breakdown</span></div>
+    <div class="finance-row"><span class="label">Shopify (Online)</span><span class="value">$${(r.all_time||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+    <div class="finance-row"><span class="label">Markets (In-person)</span><span class="value">$${mRev.toFixed(2)}</span></div>
+    <div class="finance-row" style="border-top:2px solid rgba(0,0,0,0.06);padding-top:12px;margin-top:4px"><span class="label" style="font-weight:700">Combined Total</span><span class="value" style="font-weight:700;color:var(--teal)">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Top Products (All Channels)</span></div>
+    ${top.slice(0,5).map((p,i)=>`<div class="finance-row">
+      <span class="label"><span style="color:var(--text-faint);font-size:0.7rem;margin-right:6px">${i+1}</span>${p.name}</span>
+      <span class="value">$${p.revenue.toFixed(0)}</span>
+    </div>`).join('')}
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">All Recent Sales</span></div>
+  <table class="data-table"><thead><tr><th>#</th><th>Date</th><th>Channel</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr></thead><tbody>
+    ${allSales.slice(0,25).map(o=>{
+      const chCol=o.channel==='Shopify'?'#4a8fe8':'#e8a84d';
+      return `<tr>
+      <td style="font-weight:700;color:var(--black)">${o.channel==='Shopify'?'<a href="'+(o.shopify_url||'')+'" target="_blank" style="color:var(--teal);text-decoration:none">#'+o.order_number+'</a>':'#'+o.order_number}</td>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${o.created_at}</td>
+      <td><span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700;background:${chCol}15;color:${chCol};border:1px solid ${chCol}25">${o.channel}${o.market_name?' · '+o.market_name:''}</span></td>
+      <td style="font-weight:500;color:var(--black)">${o.customer}</td>
+      <td style="font-size:0.72rem;color:var(--text-secondary);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.items}</td>
+      <td style="font-weight:700;color:var(--black)">$${o.total.toFixed(2)}</td>
+      <td><span class="card-badge" style="background:${statusCol(o.financial_status)}15;color:${statusCol(o.financial_status)};border:1px solid ${statusCol(o.financial_status)}30;font-size:0.55rem">${o.financial_status}</span></td>
+    </tr>`}).join('')}
+  </tbody></table>
+</div>`}
+
+else if(currentOrderTab==='shopify'){
 document.getElementById('orders-content').innerHTML=`
 <div class="metrics-grid">
   <div class="card metric-tile"><div class="metric-value">${o.total||0}</div><div class="metric-label">Total Orders</div></div>
@@ -293,28 +353,14 @@ document.getElementById('orders-content').innerHTML=`
     <div class="card-header"><span class="card-title">Top Products</span></div>
     ${top.slice(0,6).map((p,i)=>`<div class="finance-row">
       <span class="label"><span style="color:var(--text-faint);font-size:0.7rem;margin-right:6px">${i+1}</span>${p.name}</span>
-      <span class="value" style="display:flex;gap:10px;align-items:center">
-        <span style="font-size:0.7rem;color:var(--text-muted)">${p.units} sold</span>
-        <span>$${p.revenue.toFixed(0)}</span>
-      </span>
+      <span class="value" style="display:flex;gap:10px;align-items:center"><span style="font-size:0.7rem;color:var(--text-muted)">${p.units} sold</span><span>$${p.revenue.toFixed(0)}</span></span>
     </div>`).join('')}
   </div>
 </div>
 ${(d.monthly_revenue&&Object.keys(d.monthly_revenue).length)?`<div class="card" style="margin-bottom:14px">
   <div class="card-header"><span class="card-title">Monthly Revenue</span></div>
   <div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding:10px 0">
-    ${(()=>{
-      const months=Object.entries(d.monthly_revenue).slice(-12);
-      const max=Math.max(...months.map(m=>m[1]))||1;
-      return months.map(([mo,val])=>{
-        const h=Math.max((val/max)*100,2);
-        const label=mo.split('-')[1]+'/'+mo.split('-')[0].slice(2);
-        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-          <div style="font-size:0.58rem;font-weight:600;color:var(--text-secondary)">$${val>999?(val/1000).toFixed(1)+'k':val.toFixed(0)}</div>
-          <div style="width:100%;height:${h}px;background:var(--teal);border-radius:4px 4px 0 0;min-width:16px;opacity:${val>0?1:0.2}"></div>
-          <div style="font-size:0.55rem;color:var(--text-faint)">${label}</div>
-        </div>`}).join('')
-    })()}
+    ${(()=>{const months=Object.entries(d.monthly_revenue).slice(-12);const max=Math.max(...months.map(m=>m[1]))||1;return months.map(([mo,val])=>{const h=Math.max((val/max)*100,2);const label=mo.split('-')[1]+'/'+mo.split('-')[0].slice(2);return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font-size:0.58rem;font-weight:600;color:var(--text-secondary)">$${val>999?(val/1000).toFixed(1)+'k':val.toFixed(0)}</div><div style="width:100%;height:${h}px;background:var(--teal);border-radius:4px 4px 0 0;min-width:16px;opacity:${val>0?1:0.2}"></div><div style="font-size:0.55rem;color:var(--text-faint)">${label}</div></div>`}).join('')})()}
   </div>
 </div>`:''}
 <div class="card">
@@ -331,6 +377,30 @@ ${(d.monthly_revenue&&Object.keys(d.monthly_revenue).length)?`<div class="card" 
     </tr>`).join('')}
   </tbody></table>
 </div>`}
+
+else if(currentOrderTab==='markets'){
+const mSum=ms.summary||{};
+document.getElementById('orders-content').innerHTML=`
+<div class="metrics-grid">
+  <div class="card metric-tile"><div class="metric-value">${mCount}</div><div class="metric-label">Total Sales</div></div>
+  <div class="card metric-tile"><div class="metric-value teal">$${mRev.toFixed(2)}</div><div class="metric-label">Market Revenue</div></div>
+  <div class="card metric-tile"><div class="metric-value">${mSum.total_markets_attended||0}</div><div class="metric-label">Markets Attended</div></div>
+  <div class="card metric-tile"><div class="metric-value">$${(mSum.avg_per_market||0).toFixed(0)}</div><div class="metric-label">Avg per Market</div></div>
+</div>
+${mSales.length?`<div class="card">
+  <div class="card-header"><span class="card-title">Market Sales</span><span class="card-badge badge-amber">In-person</span></div>
+  <table class="data-table"><thead><tr><th>Date</th><th>Market</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th></tr></thead><tbody>
+    ${mSales.map(s=>`<tr>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${s.date}</td>
+      <td style="font-weight:600;color:var(--black)">${s.market_name||'—'}</td>
+      <td style="color:var(--text-secondary)">${s.customer||'Walk-in'}</td>
+      <td style="font-size:0.72rem;color:var(--text-secondary)">${s.items.map(i=>i.name+' x'+i.qty).join(', ')}</td>
+      <td style="font-weight:700;color:var(--black)">$${s.total.toFixed(2)}</td>
+      <td><span class="card-badge" style="background:var(--teal)15;color:var(--teal);border:1px solid var(--teal)30;font-size:0.55rem">${s.payment_method||'Cash'}</span></td>
+    </tr>`).join('')}
+  </tbody></table>
+</div>`:`<div class="card"><div class="empty-state"><div class="icon">⚑</div><h3>No market sales yet</h3><p>When you sell at a market, just tell me what you sold and I'll log it here and update your Shopify inventory.</p></div></div>`}
+`}}
 function renderFinance(){const d=appData.finance;if(!d)return;
 document.getElementById('finance-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: ClickUp Cost Tracking';
 const c=d.costs||{},r=d.revenue||{},subs=d.subscriptions||[];
