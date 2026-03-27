@@ -1,0 +1,37 @@
+{
+  "last_updated": "2026-03-27T06:30:00+10:00",
+  "instagram": {
+    "handle": "@hiatuscollection",
+    "followers": 0,
+    "following": 0,
+    "posts": 0,
+    "engagement_rate": 0,
+    "recent_posts": []
+  },
+  "content_pipeline": {
+    "scheduled": [],
+    "drafts": [],
+    "ideas": [
+      {
+        "concept": "Brand reveal — oxidised silver macro shots",
+        "platform": "Instagram",
+        "format": "Carousel",
+        "aesthetic": "Portra 800 pushed, deep blacks, chiaroscuro",
+        "status": "Concept"
+      },
+      {
+        "concept": "Cross pendant hero video",
+        "platform": "Instagram",
+        "format": "Reel",
+        "tool": "Kling 3.0 / Higgsfield",
+        "aesthetic": "Dark, moody, rotating product",
+        "status": "Awaiting CAD/product"
+      }
+    ]
+  },
+  "ai_image_gen": {
+    "prompt_library": "Nano Banana 2",
+    "aesthetic_notes": "Portra 800 pushed one stop, deep blacks, no golden hour, chiaroscuro lighting",
+    "video_tool": "Kling 3.0 on Higgsfield"
+  }
+}

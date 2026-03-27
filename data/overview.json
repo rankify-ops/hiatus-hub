@@ -1,0 +1,26 @@
+{
+  "last_updated": "2026-03-27T06:30:00+10:00",
+  "brand": "Hiatus Collection",
+  "tagline": "Premium Oxidised 925 Sterling Silver",
+  "metrics": {
+    "total_products": 0,
+    "active_listings": 0,
+    "instagram_followers": 0,
+    "monthly_revenue": 0,
+    "monthly_costs": 0,
+    "pending_orders": 0
+  },
+  "status": {
+    "store": "Pre-launch",
+    "content_pipeline": "Building",
+    "cad_pending": ["Ornate Cross Pendant (Filigree/Jerusalem)"],
+    "collections_planned": ["The Kingdom", "Seek First the Kingdom"],
+    "hero_pieces": ["Flaming Sword", "New Jerusalem"]
+  },
+  "alerts": [
+    {
+      "type": "info",
+      "message": "Dashboard initialised — awaiting first data sync from Claude Code agents"
+    }
+  ]
+}

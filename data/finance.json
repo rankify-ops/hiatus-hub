@@ -1,0 +1,25 @@
+{
+  "last_updated": "2026-03-27T06:30:00+10:00",
+  "currency": "AUD",
+  "period": "2026-03",
+  "costs": {
+    "total_monthly": 0,
+    "subscriptions": [],
+    "cad_design": 0,
+    "manufacturing": 0,
+    "marketing": 0,
+    "packaging": 0,
+    "shipping": 0,
+    "other": 0
+  },
+  "revenue": {
+    "total_monthly": 0,
+    "by_channel": {}
+  },
+  "margin": {
+    "gross": 0,
+    "net": 0
+  },
+  "investment_to_date": 0,
+  "notes": "Pre-launch phase — tracking setup costs and investments"
+}

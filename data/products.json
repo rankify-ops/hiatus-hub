@@ -1,0 +1,49 @@
+{
+  "last_updated": "2026-03-27T06:30:00+10:00",
+  "collections": [
+    {
+      "name": "The Kingdom",
+      "status": "Concept",
+      "description": "Biblical imagery — Revelation, Genesis inspired premium pieces",
+      "pieces": [
+        {
+          "name": "Ornate Cross Pendant",
+          "type": "Pendant",
+          "material": "925 Sterling Silver, Oxidised",
+          "style": "Filigree / Jerusalem Cross",
+          "status": "CAD conversion pending",
+          "supplier_ready": false,
+          "estimated_cost": null,
+          "retail_price": null
+        },
+        {
+          "name": "Flaming Sword",
+          "type": "Pendant",
+          "material": "925 Sterling Silver, Oxidised",
+          "style": "Genesis — Garden of Eden",
+          "status": "Design phase",
+          "supplier_ready": false,
+          "estimated_cost": null,
+          "retail_price": null
+        },
+        {
+          "name": "New Jerusalem",
+          "type": "Pendant",
+          "material": "925 Sterling Silver, Oxidised",
+          "style": "Revelation 21 — Holy City",
+          "status": "Design phase",
+          "supplier_ready": false,
+          "estimated_cost": null,
+          "retail_price": null
+        }
+      ]
+    }
+  ],
+  "pipeline_summary": {
+    "concept": 3,
+    "cad_pending": 1,
+    "manufacturing": 0,
+    "in_stock": 0,
+    "listed": 0
+  }
+}
