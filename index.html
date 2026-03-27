@@ -8,664 +8,166 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════════
-   HIATUS COLLECTION — OPERATIONS HUB
-   Dark, moody, chiaroscuro aesthetic
-   Premium oxidised 925 sterling silver jewellery
-   ═══════════════════════════════════════════════════════════════ */
-
 :root {
-  --black: #0a0a0a;
-  --black-rich: #050505;
-  --charcoal: #1a1a1a;
-  --graphite: #2a2a2a;
-  --slate: #3a3a3a;
-  --silver-dark: #666;
-  --silver: #999;
-  --silver-light: #bbb;
-  --white: #f0ece6;
-  --white-pure: #fff;
-  
-  --teal: #2dd4a8;
-  --teal-dim: #1a9e7a;
-  --teal-glow: rgba(45, 212, 168, 0.15);
-  --teal-subtle: rgba(45, 212, 168, 0.06);
-  
-  --red-soft: #e85d5d;
-  --amber: #e8a84d;
-  --green: #4de88a;
-  
-  --glass-bg: rgba(18, 18, 18, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --glass-highlight: rgba(255, 255, 255, 0.03);
-  --glass-blur: 20px;
-  
+  --black: #111;
+  --text: #1a1a1a;
+  --text-secondary: #444;
+  --text-muted: #666;
+  --text-faint: #888;
+  --white: #fff;
+  --teal: #0d9373;
+  --teal-bright: #10b981;
+  --teal-glow: rgba(16,185,129,0.15);
+  --teal-subtle: rgba(16,185,129,0.07);
+  --red-soft: #dc4a4a;
+  --amber: #d97706;
+  --green: #16a34a;
+  --glass-bg: rgba(255,255,255,0.55);
+  --glass-bg-heavy: rgba(255,255,255,0.7);
+  --glass-border: rgba(255,255,255,0.5);
+  --glass-border-subtle: rgba(255,255,255,0.3);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  --glass-blur: 24px;
+  --sidebar-bg: rgba(255,255,255,0.6);
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'DM Sans', -apple-system, sans-serif;
-  
-  --sidebar-w: 260px;
-  --header-h: 0px;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-w: 256px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
 }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { font-size: 15px; }
-
-body {
-  font-family: var(--font-body);
-  background: var(--black-rich);
-  color: var(--silver-light);
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ─── Ambient Background ─── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(45, 212, 168, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 90%, rgba(45, 212, 168, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(10, 10, 10, 0.9) 0%, var(--black-rich) 100%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Grain overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 128px;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ─── Layout ─── */
-.app { display: flex; min-height: 100vh; position: relative; z-index: 2; }
-
-/* ─── Sidebar ─── */
-.sidebar {
-  width: var(--sidebar-w);
-  min-height: 100vh;
-  position: fixed;
-  left: 0; top: 0;
-  background: rgba(8, 8, 8, 0.85);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border-right: 1px solid var(--glass-border);
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
-  transition: transform var(--transition);
-}
-
-.sidebar-brand {
-  padding: 28px 24px 20px;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.sidebar-brand h1 {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--white);
-  line-height: 1.2;
-}
-
-.sidebar-brand .subtitle {
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--silver-dark);
-  margin-top: 6px;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 16px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition);
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: var(--silver);
-  border: 1px solid transparent;
-  user-select: none;
-}
-
-.nav-item:hover {
-  background: var(--teal-subtle);
-  color: var(--silver-light);
-}
-
-.nav-item.active {
-  background: var(--teal-glow);
-  color: var(--teal);
-  border-color: rgba(45, 212, 168, 0.12);
-  font-weight: 500;
-}
-
-.nav-item .nav-icon {
-  width: 20px;
-  text-align: center;
-  font-size: 0.9rem;
-  opacity: 0.7;
-}
-
-.nav-item.active .nav-icon { opacity: 1; }
-
-.sidebar-footer {
-  padding: 16px 20px;
-  border-top: 1px solid var(--glass-border);
-  font-size: 0.7rem;
-  color: var(--silver-dark);
-  letter-spacing: 0.05em;
-}
-
-.sidebar-footer .domain {
-  color: var(--teal-dim);
-  font-weight: 500;
-}
-
-/* ─── Mobile toggle ─── */
-.mobile-toggle {
-  display: none;
-  position: fixed;
-  top: 16px; left: 16px;
-  z-index: 200;
-  width: 40px; height: 40px;
-  border-radius: var(--radius-sm);
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  color: var(--silver-light);
-  font-size: 1.2rem;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ─── Main Content ─── */
-.main {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  padding: 32px 36px;
-  min-height: 100vh;
-}
-
-/* ─── Glass Card ─── */
-.card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color var(--transition);
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
-}
-
-.card:hover { border-color: rgba(255, 255, 255, 0.1); }
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.card-title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 400;
-  color: var(--white);
-  letter-spacing: 0.04em;
-}
-
-.card-badge {
-  font-size: 0.65rem;
-  padding: 3px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
-.badge-teal { background: var(--teal-glow); color: var(--teal); border: 1px solid rgba(45,212,168,0.2); }
-.badge-amber { background: rgba(232,168,77,0.12); color: var(--amber); border: 1px solid rgba(232,168,77,0.2); }
-.badge-red { background: rgba(232,93,93,0.12); color: var(--red-soft); border: 1px solid rgba(232,93,93,0.2); }
-.badge-silver { background: rgba(150,150,150,0.1); color: var(--silver); border: 1px solid rgba(150,150,150,0.15); }
-
-/* ─── Tab Panels ─── */
-.tab-panel { display: none; animation: fadeUp 0.4s ease; }
-.tab-panel.active { display: block; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── Section Headers ─── */
-.section-header {
-  margin-bottom: 28px;
-}
-
-.section-header h2 {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 300;
-  color: var(--white);
-  letter-spacing: 0.06em;
-}
-
-.section-header .updated {
-  font-size: 0.72rem;
-  color: var(--silver-dark);
-  margin-top: 6px;
-  letter-spacing: 0.03em;
-}
-
-/* ─── Metric Tiles ─── */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.metric-tile {
-  text-align: center;
-  padding: 22px 16px;
-}
-
-.metric-value {
-  font-family: var(--font-display);
-  font-size: 2.2rem;
-  font-weight: 300;
-  color: var(--white);
-  letter-spacing: 0.02em;
-  line-height: 1;
-}
-
-.metric-value.teal { color: var(--teal); }
-
-.metric-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--silver-dark);
-  margin-top: 8px;
-}
-
-/* ─── Status Items ─── */
-.status-list { display: flex; flex-direction: column; gap: 10px; }
-
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: var(--radius-sm);
-  background: var(--glass-highlight);
-  border: 1px solid var(--glass-border);
-  transition: all var(--transition);
-}
-
-.status-item:hover { border-color: rgba(255,255,255,0.08); }
-
-.status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.status-dot.green { background: var(--green); box-shadow: 0 0 8px rgba(77,232,138,0.4); }
-.status-dot.amber { background: var(--amber); box-shadow: 0 0 8px rgba(232,168,77,0.4); }
-.status-dot.red   { background: var(--red-soft); box-shadow: 0 0 8px rgba(232,93,93,0.4); }
-.status-dot.teal  { background: var(--teal); box-shadow: 0 0 8px rgba(45,212,168,0.4); }
-
-.status-text { font-size: 0.82rem; color: var(--silver-light); flex: 1; }
-.status-meta { font-size: 0.7rem; color: var(--silver-dark); }
-
-/* ─── Product Pipeline ─── */
-.pipeline-bar {
-  display: flex;
-  height: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-  background: var(--graphite);
-  margin: 16px 0 12px;
-}
-
-.pipeline-segment {
-  height: 100%;
-  transition: width var(--transition);
-}
-
-.pipeline-legend {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  color: var(--silver);
-}
-
-.legend-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-}
-
-/* ─── Table ─── */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.data-table th {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--silver-dark);
-  padding: 10px 14px;
-  text-align: left;
-  border-bottom: 1px solid var(--glass-border);
-  font-weight: 500;
-}
-
-.data-table td {
-  padding: 12px 14px;
-  font-size: 0.82rem;
-  border-bottom: 1px solid rgba(255,255,255,0.02);
-  color: var(--silver-light);
-}
-
-.data-table tr:hover td { background: var(--glass-highlight); }
-
-/* ─── Content Cards ─── */
-.content-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.content-card {
-  padding: 20px;
-  border-radius: var(--radius-sm);
-  background: var(--glass-highlight);
-  border: 1px solid var(--glass-border);
-}
-
-.content-card h4 {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  color: var(--white);
-  margin-bottom: 8px;
-  font-weight: 400;
-}
-
-.content-card p {
-  font-size: 0.78rem;
-  color: var(--silver);
-  line-height: 1.5;
-}
-
-.content-card .meta {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.content-tag {
-  font-size: 0.62rem;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--glass-border);
-  color: var(--silver);
-  letter-spacing: 0.04em;
-}
-
-/* ─── Alert Banner ─── */
-.alert-banner {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 20px;
-  font-size: 0.82rem;
-}
-
-.alert-banner.info {
-  background: var(--teal-subtle);
-  border: 1px solid rgba(45,212,168,0.15);
-  color: var(--teal);
-}
-
-.alert-banner .alert-icon { font-size: 1rem; }
-
-/* ─── Finance Grid ─── */
-.finance-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.finance-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  font-size: 0.82rem;
-}
-
-.finance-row:last-child { border-bottom: none; }
-.finance-row .label { color: var(--silver); }
-.finance-row .value { color: var(--white); font-weight: 500; }
-
-/* ─── Empty State ─── */
-.empty-state {
-  text-align: center;
-  padding: 60px 24px;
-  color: var(--silver-dark);
-}
-
-.empty-state .icon { font-size: 2.5rem; margin-bottom: 16px; opacity: 0.4; }
-
-.empty-state h3 {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  color: var(--silver);
-  font-weight: 400;
-  margin-bottom: 8px;
-}
-
-.empty-state p { font-size: 0.8rem; line-height: 1.6; max-width: 400px; margin: 0 auto; }
-
-/* ─── Two-column layout ─── */
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-/* ─── Quick Links ─── */
-.quick-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.quick-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--glass-border);
-  color: var(--silver);
-  font-size: 0.72rem;
-  text-decoration: none;
-  transition: all var(--transition);
-  letter-spacing: 0.03em;
-}
-
-.quick-link:hover {
-  border-color: rgba(45,212,168,0.3);
-  color: var(--teal);
-  background: var(--teal-subtle);
-}
-
-/* ─── Loading shimmer ─── */
-.shimmer {
-  background: linear-gradient(90deg, var(--graphite) 25%, var(--slate) 50%, var(--graphite) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: var(--radius-sm);
-  height: 20px;
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-/* ─── Responsive ─── */
-@media (max-width: 900px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .mobile-toggle { display: flex; }
-  .main { margin-left: 0; padding: 24px 16px; padding-top: 64px; }
-  .grid-2 { grid-template-columns: 1fr; }
-  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 480px) {
-  .metrics-grid { grid-template-columns: 1fr; }
-  .section-header h2 { font-size: 1.5rem; }
-}
-
-/* ─── Scrollbar ─── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--graphite); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--slate); }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:var(--font-body);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;background:#0a0a0a}
+.bg-layer{position:fixed;inset:0;z-index:0;background:url('bg.jpg') center center/cover no-repeat}
+.bg-layer::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.15) 100%)}
+.app{display:flex;min-height:100vh;position:relative;z-index:2}
+.sidebar{width:var(--sidebar-w);min-height:100vh;position:fixed;left:0;top:0;background:var(--sidebar-bg);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);border-right:1px solid var(--glass-border);display:flex;flex-direction:column;z-index:100;transition:transform var(--transition);box-shadow:4px 0 30px rgba(0,0,0,0.06)}
+.sidebar-brand{padding:28px 22px 22px;border-bottom:1px solid var(--glass-border-subtle)}
+.sidebar-brand h1{font-family:var(--font-display);font-size:1.55rem;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:var(--black);line-height:1.2}
+.sidebar-brand .subtitle{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-top:5px;font-weight:500}
+.sidebar-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);font-size:0.84rem;font-weight:400;color:var(--text-secondary);border:1px solid transparent;user-select:none}
+.nav-item:hover{background:rgba(16,185,129,0.06);color:var(--text)}
+.nav-item.active{background:var(--teal-glow);color:var(--teal);border-color:rgba(16,185,129,0.18);font-weight:600}
+.nav-item .nav-icon{width:20px;text-align:center;font-size:0.85rem;opacity:0.6}
+.nav-item.active .nav-icon{opacity:1}
+.sidebar-links{padding:0 10px 14px;border-top:1px solid var(--glass-border-subtle);padding-top:14px}
+.sidebar-links-title{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.14em;color:var(--text-faint);margin-bottom:8px;padding-left:14px;font-weight:500}
+.sidebar-link{display:flex;align-items:center;gap:9px;padding:7px 14px;font-size:0.76rem;color:var(--text-muted);text-decoration:none;border-radius:var(--radius-sm);transition:all var(--transition)}
+.sidebar-link:hover{background:rgba(0,0,0,0.04);color:var(--text)}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--glass-border-subtle);font-size:0.68rem;color:var(--text-muted);letter-spacing:0.04em}
+.sidebar-footer .domain{color:var(--teal);font-weight:600;letter-spacing:0.06em}
+.mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;width:42px;height:42px;border-radius:var(--radius-sm);background:var(--glass-bg-heavy);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);color:var(--text);font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--glass-shadow)}
+.main{margin-left:var(--sidebar-w);flex:1;padding:30px 34px;min-height:100vh}
+.card{background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:all var(--transition);box-shadow:var(--glass-shadow)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.7) 50%,transparent 100%)}
+.card:hover{border-color:rgba(255,255,255,0.65);box-shadow:0 8px 40px rgba(0,0,0,0.1)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--black);letter-spacing:0.03em}
+.card-badge{font-size:0.6rem;padding:3px 10px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
+.badge-teal{background:var(--teal-glow);color:var(--teal);border:1px solid rgba(16,185,129,0.25)}
+.badge-amber{background:rgba(217,119,6,0.1);color:var(--amber);border:1px solid rgba(217,119,6,0.2)}
+.badge-red{background:rgba(220,74,74,0.1);color:var(--red-soft);border:1px solid rgba(220,74,74,0.2)}
+.badge-silver{background:rgba(100,100,100,0.08);color:#888;border:1px solid rgba(100,100,100,0.15)}
+.tab-panel{display:none;animation:fadeUp 0.4s ease}
+.tab-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.section-header{margin-bottom:24px}
+.section-header h2{font-family:var(--font-display);font-size:1.9rem;font-weight:400;color:var(--white);letter-spacing:0.05em;text-shadow:0 2px 12px rgba(0,0,0,0.3)}
+.section-header .updated{font-size:0.7rem;color:rgba(255,255,255,0.7);margin-top:4px;letter-spacing:0.03em;text-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:24px}
+.metric-tile{text-align:center;padding:20px 14px}
+.metric-value{font-family:var(--font-display);font-size:2.1rem;font-weight:400;color:var(--black);letter-spacing:0.02em;line-height:1}
+.metric-value.teal{color:var(--teal)}
+.metric-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-top:7px;font-weight:500}
+.status-list{display:flex;flex-direction:column;gap:8px}
+.status-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.4);transition:all var(--transition)}
+.status-item:hover{background:rgba(255,255,255,0.5)}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-dot.green{background:var(--green);box-shadow:0 0 6px rgba(22,163,74,0.4)}
+.status-dot.amber{background:var(--amber);box-shadow:0 0 6px rgba(217,119,6,0.4)}
+.status-dot.red{background:var(--red-soft);box-shadow:0 0 6px rgba(220,74,74,0.4)}
+.status-dot.teal{background:var(--teal-bright);box-shadow:0 0 6px rgba(16,185,129,0.4)}
+.status-text{font-size:0.8rem;color:var(--text-secondary);flex:1}
+.status-meta{font-size:0.68rem;color:var(--text-faint);font-weight:500}
+.pipeline-bar{display:flex;height:7px;border-radius:4px;overflow:hidden;background:rgba(0,0,0,0.06);margin:14px 0 10px}
+.pipeline-segment{height:100%;transition:width var(--transition)}
+.pipeline-legend{display:flex;gap:18px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:var(--text-muted)}
+.legend-dot{width:7px;height:7px;border-radius:50%}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-faint);padding:9px 13px;text-align:left;border-bottom:1px solid rgba(0,0,0,0.06);font-weight:600}
+.data-table td{padding:11px 13px;font-size:0.8rem;border-bottom:1px solid rgba(0,0,0,0.03);color:var(--text-secondary)}
+.data-table tr:hover td{background:rgba(255,255,255,0.3)}
+.content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.content-card{padding:18px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.4)}
+.content-card h4{font-family:var(--font-display);font-size:0.98rem;color:var(--black);margin-bottom:6px;font-weight:500}
+.content-card p{font-size:0.76rem;color:var(--text-muted);line-height:1.5}
+.content-card .meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.content-tag{font-size:0.58rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.5);color:var(--text-muted);letter-spacing:0.04em;font-weight:500}
+.alert-banner{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:0.8rem}
+.alert-banner.info{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:var(--teal);backdrop-filter:blur(10px)}
+.alert-banner .alert-icon{font-size:0.95rem}
+.finance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.finance-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:0.8rem}
+.finance-row:last-child{border-bottom:none}
+.finance-row .label{color:var(--text-muted)}
+.finance-row .value{color:var(--black);font-weight:600}
+.empty-state{text-align:center;padding:50px 20px;color:var(--text-muted)}
+.empty-state .icon{font-size:2.2rem;margin-bottom:14px;opacity:0.35}
+.empty-state h3{font-family:var(--font-display);font-size:1.15rem;color:var(--text-secondary);font-weight:400;margin-bottom:6px}
+.empty-state p{font-size:0.78rem;line-height:1.6;max-width:380px;margin:0 auto}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.quick-links{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.quick-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:18px;background:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.45);color:var(--text-muted);font-size:0.7rem;text-decoration:none;transition:all var(--transition);letter-spacing:0.03em;font-weight:500}
+.quick-link:hover{border-color:rgba(16,185,129,0.35);color:var(--teal);background:var(--teal-subtle)}
+.shimmer{background:linear-gradient(90deg,rgba(0,0,0,0.04) 25%,rgba(0,0,0,0.08) 50%,rgba(0,0,0,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm);height:20px}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.mobile-toggle{display:flex}.main{margin-left:0;padding:22px 14px;padding-top:62px}.grid-2{grid-template-columns:1fr}.metrics-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.metrics-grid{grid-template-columns:1fr}.section-header h2{font-size:1.45rem}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:3px}
 </style>
 </head>
 <body>
-
-<!-- Mobile Toggle -->
+<div class="bg-layer"></div>
 <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
-
 <div class="app">
-  <!-- ═══ Sidebar ═══ -->
   <aside class="sidebar">
-    <div class="sidebar-brand">
-      <h1>Hiatus</h1>
-      <div class="subtitle">Operations Hub</div>
-    </div>
-    
+    <div class="sidebar-brand"><h1>Hiatus</h1><div class="subtitle">Operations Hub</div></div>
     <nav class="sidebar-nav">
-      <div class="nav-item active" data-tab="overview">
-        <span class="nav-icon">◈</span>
-        <span>Overview</span>
-      </div>
-      <div class="nav-item" data-tab="products">
-        <span class="nav-icon">✦</span>
-        <span>Products</span>
-      </div>
-      <div class="nav-item" data-tab="content">
-        <span class="nav-icon">◉</span>
-        <span>Instagram / Content</span>
-      </div>
-      <div class="nav-item" data-tab="orders">
-        <span class="nav-icon">▤</span>
-        <span>Orders / Sales</span>
-      </div>
-      <div class="nav-item" data-tab="finance">
-        <span class="nav-icon">◇</span>
-        <span>Finance</span>
-      </div>
+      <div class="nav-item active" data-tab="overview"><span class="nav-icon">◈</span><span>Overview</span></div>
+      <div class="nav-item" data-tab="products"><span class="nav-icon">✦</span><span>Products</span></div>
+      <div class="nav-item" data-tab="content"><span class="nav-icon">◉</span><span>Instagram / Content</span></div>
+      <div class="nav-item" data-tab="orders"><span class="nav-icon">▤</span><span>Orders / Sales</span></div>
+      <div class="nav-item" data-tab="finance"><span class="nav-icon">◇</span><span>Finance</span></div>
     </nav>
-    
-    <div class="sidebar-footer">
-      <div class="domain">LUXE</div>
-      <div style="margin-top: 4px;">Hiatus Collection © 2026</div>
+    <div class="sidebar-links">
+      <div class="sidebar-links-title">Quick Links</div>
+      <a href="https://app.clickup.com" class="sidebar-link" target="_blank">☑ ClickUp</a>
+      <a href="https://www.instagram.com" class="sidebar-link" target="_blank">◉ Instagram</a>
     </div>
+    <div class="sidebar-footer"><div class="domain">LUXE</div><div style="margin-top:3px">Hiatus Collection © 2026</div></div>
   </aside>
-
-  <!-- ═══ Main Content ═══ -->
   <main class="main">
-    
-    <!-- ══════════ OVERVIEW ══════════ -->
     <div class="tab-panel active" id="tab-overview">
-      <div class="section-header">
-        <h2>Overview</h2>
-        <div class="updated" id="overview-updated">Loading...</div>
-      </div>
-      
+      <div class="section-header"><h2>Overview</h2><div class="updated" id="overview-updated">Loading...</div></div>
       <div id="overview-alerts"></div>
-      
       <div class="metrics-grid" id="overview-metrics">
-        <div class="card metric-tile"><div class="shimmer" style="width:60px;height:32px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
-        <div class="card metric-tile"><div class="shimmer" style="width:60px;height:32px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
-        <div class="card metric-tile"><div class="shimmer" style="width:60px;height:32px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
-        <div class="card metric-tile"><div class="shimmer" style="width:60px;height:32px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
+        <div class="card metric-tile"><div class="shimmer" style="width:50px;height:28px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
+        <div class="card metric-tile"><div class="shimmer" style="width:50px;height:28px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
+        <div class="card metric-tile"><div class="shimmer" style="width:50px;height:28px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
+        <div class="card metric-tile"><div class="shimmer" style="width:50px;height:28px;margin:0 auto"></div><div class="metric-label">Loading</div></div>
       </div>
-      
       <div class="grid-2">
         <div class="card">
-          <div class="card-header">
-            <span class="card-title">Brand Status</span>
-            <span class="card-badge badge-amber" id="store-status">Loading</span>
-          </div>
+          <div class="card-header"><span class="card-title">Brand Status</span><span class="card-badge badge-amber" id="store-status">Loading</span></div>
           <div class="status-list" id="overview-status"></div>
         </div>
-        
         <div class="card">
-          <div class="card-header">
-            <span class="card-title">Collections Planned</span>
-          </div>
+          <div class="card-header"><span class="card-title">Collections Planned</span></div>
           <div id="overview-collections"></div>
-          <div style="margin-top: 16px;">
-            <div class="card-title" style="font-size: 0.9rem; margin-bottom: 10px;">Quick Links</div>
+          <div style="margin-top:14px"><div class="card-title" style="font-size:0.88rem;margin-bottom:8px">Quick Links</div>
             <div class="quick-links">
               <a href="https://app.clickup.com" class="quick-link" target="_blank">☑ ClickUp</a>
               <a href="https://www.instagram.com" class="quick-link" target="_blank">◉ Instagram</a>
@@ -675,484 +177,45 @@ body::after {
         </div>
       </div>
     </div>
-
-    <!-- ══════════ PRODUCTS ══════════ -->
     <div class="tab-panel" id="tab-products">
-      <div class="section-header">
-        <h2>Products</h2>
-        <div class="updated" id="products-updated">Loading...</div>
-      </div>
-      
-      <div class="card" style="margin-bottom: 20px;">
-        <div class="card-header">
-          <span class="card-title">Product Pipeline</span>
-        </div>
-        <div class="metrics-grid" id="pipeline-metrics" style="margin-bottom:0"></div>
-        <div class="pipeline-bar" id="pipeline-bar"></div>
-        <div class="pipeline-legend" id="pipeline-legend"></div>
-      </div>
-      
+      <div class="section-header"><h2>Products</h2><div class="updated" id="products-updated">Loading...</div></div>
+      <div class="card" style="margin-bottom:18px"><div class="card-header"><span class="card-title">Product Pipeline</span></div><div class="metrics-grid" id="pipeline-metrics" style="margin-bottom:0"></div><div class="pipeline-bar" id="pipeline-bar"></div><div class="pipeline-legend" id="pipeline-legend"></div></div>
       <div id="collections-container"></div>
     </div>
-
-    <!-- ══════════ CONTENT ══════════ -->
     <div class="tab-panel" id="tab-content">
-      <div class="section-header">
-        <h2>Instagram / Content</h2>
-        <div class="updated" id="content-updated">Loading...</div>
-      </div>
-      
+      <div class="section-header"><h2>Instagram / Content</h2><div class="updated" id="content-updated">Loading...</div></div>
       <div class="metrics-grid" id="instagram-metrics"></div>
-      
       <div class="grid-2">
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">AI Image Generation</span>
-            <span class="card-badge badge-teal">Active</span>
-          </div>
-          <div id="ai-gen-info"></div>
-        </div>
-        
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">Video Production</span>
-          </div>
-          <div id="video-info"></div>
-        </div>
+        <div class="card"><div class="card-header"><span class="card-title">AI Image Generation</span><span class="card-badge badge-teal">Active</span></div><div id="ai-gen-info"></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">Video Production</span></div><div id="video-info"></div></div>
       </div>
-      
-      <div style="margin-top: 20px;">
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">Content Ideas</span>
-          </div>
-          <div class="content-grid" id="content-ideas"></div>
-        </div>
-      </div>
+      <div style="margin-top:18px"><div class="card"><div class="card-header"><span class="card-title">Content Ideas</span></div><div class="content-grid" id="content-ideas"></div></div></div>
     </div>
-
-    <!-- ══════════ ORDERS ══════════ -->
     <div class="tab-panel" id="tab-orders">
-      <div class="section-header">
-        <h2>Orders / Sales</h2>
-        <div class="updated" id="orders-updated">Loading...</div>
-      </div>
-      
+      <div class="section-header"><h2>Orders / Sales</h2><div class="updated" id="orders-updated">Loading...</div></div>
       <div id="orders-content"></div>
     </div>
-
-    <!-- ══════════ FINANCE ══════════ -->
     <div class="tab-panel" id="tab-finance">
-      <div class="section-header">
-        <h2>Finance</h2>
-        <div class="updated" id="finance-updated">Loading...</div>
-      </div>
-      
+      <div class="section-header"><h2>Finance</h2><div class="updated" id="finance-updated">Loading...</div></div>
       <div id="finance-content"></div>
     </div>
-    
   </main>
 </div>
-
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   HIATUS HUB — Data Loading & Tab Navigation
-   ═══════════════════════════════════════════════════════════════ */
-
-const DATA_BASE = 'data/';
-const DATA_FILES = {
-  overview: 'overview.json',
-  products: 'products.json',
-  content:  'content.json',
-  orders:   'orders.json',
-  finance:  'finance.json'
-};
-
-let appData = {};
-
-// ─── Tab Navigation ───
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    item.classList.add('active');
-    const tabId = 'tab-' + item.dataset.tab;
-    document.getElementById(tabId).classList.add('active');
-    // Close mobile sidebar
-    document.querySelector('.sidebar').classList.remove('open');
-  });
-});
-
-// ─── Data Loading ───
-async function loadData() {
-  const results = {};
-  for (const [key, file] of Object.entries(DATA_FILES)) {
-    try {
-      const res = await fetch(DATA_BASE + file + '?t=' + Date.now());
-      if (res.ok) results[key] = await res.json();
-    } catch (e) {
-      console.warn(`Failed to load ${file}:`, e);
-    }
-  }
-  appData = results;
-  renderAll();
-}
-
-function formatDate(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
-
-function currency(v) {
-  return '$' + Number(v || 0).toLocaleString('en-AU', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-}
-
-// ─── Render All Tabs ───
-function renderAll() {
-  renderOverview();
-  renderProducts();
-  renderContent();
-  renderOrders();
-  renderFinance();
-}
-
-// ─── OVERVIEW ───
-function renderOverview() {
-  const d = appData.overview;
-  if (!d) return;
-  
-  document.getElementById('overview-updated').textContent = 'Last synced: ' + formatDate(d.last_updated);
-  document.getElementById('store-status').textContent = d.status?.store || 'Unknown';
-  
-  // Alerts
-  const alertsEl = document.getElementById('overview-alerts');
-  alertsEl.innerHTML = (d.alerts || []).map(a => `
-    <div class="alert-banner ${a.type}">
-      <span class="alert-icon">${a.type === 'info' ? 'ℹ' : '⚠'}</span>
-      <span>${a.message}</span>
-    </div>
-  `).join('');
-  
-  // Metrics
-  const m = d.metrics || {};
-  document.getElementById('overview-metrics').innerHTML = `
-    <div class="card metric-tile">
-      <div class="metric-value">${m.total_products || 0}</div>
-      <div class="metric-label">Products</div>
-    </div>
-    <div class="card metric-tile">
-      <div class="metric-value">${m.instagram_followers || 0}</div>
-      <div class="metric-label">Followers</div>
-    </div>
-    <div class="card metric-tile">
-      <div class="metric-value teal">${currency(m.monthly_revenue)}</div>
-      <div class="metric-label">Revenue MTD</div>
-    </div>
-    <div class="card metric-tile">
-      <div class="metric-value">${m.pending_orders || 0}</div>
-      <div class="metric-label">Pending Orders</div>
-    </div>
-  `;
-  
-  // Status
-  const statusEl = document.getElementById('overview-status');
-  const statusItems = [];
-  statusItems.push({ dot: d.status?.store === 'Pre-launch' ? 'amber' : 'green', text: 'Store: ' + (d.status?.store || '—') });
-  statusItems.push({ dot: d.status?.content_pipeline === 'Building' ? 'amber' : 'green', text: 'Content Pipeline: ' + (d.status?.content_pipeline || '—') });
-  (d.status?.cad_pending || []).forEach(c => {
-    statusItems.push({ dot: 'red', text: 'CAD Pending: ' + c });
-  });
-  statusEl.innerHTML = statusItems.map(s => `
-    <div class="status-item">
-      <div class="status-dot ${s.dot}"></div>
-      <span class="status-text">${s.text}</span>
-    </div>
-  `).join('');
-  
-  // Collections
-  const colEl = document.getElementById('overview-collections');
-  const cols = d.status?.collections_planned || [];
-  const heroes = d.status?.hero_pieces || [];
-  colEl.innerHTML = `
-    <div class="status-list">
-      ${cols.map(c => `
-        <div class="status-item">
-          <div class="status-dot teal"></div>
-          <span class="status-text">${c}</span>
-          <span class="status-meta">Collection</span>
-        </div>
-      `).join('')}
-      ${heroes.map(h => `
-        <div class="status-item">
-          <div class="status-dot amber"></div>
-          <span class="status-text">${h}</span>
-          <span class="status-meta">Hero Piece</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-// ─── PRODUCTS ───
-function renderProducts() {
-  const d = appData.products;
-  if (!d) return;
-  
-  document.getElementById('products-updated').textContent = 'Last synced: ' + formatDate(d.last_updated);
-  
-  const ps = d.pipeline_summary || {};
-  const stages = [
-    { key: 'concept', label: 'Concept', color: var_silver() },
-    { key: 'cad_pending', label: 'CAD Pending', color: '#e8a84d' },
-    { key: 'manufacturing', label: 'Manufacturing', color: '#2dd4a8' },
-    { key: 'in_stock', label: 'In Stock', color: '#4de88a' },
-    { key: 'listed', label: 'Listed', color: '#fff' }
-  ];
-  
-  const total = Object.values(ps).reduce((a, b) => a + b, 0) || 1;
-  
-  document.getElementById('pipeline-metrics').innerHTML = stages.map(s => `
-    <div class="card metric-tile" style="padding:14px 10px">
-      <div class="metric-value" style="font-size:1.6rem;color:${s.color}">${ps[s.key] || 0}</div>
-      <div class="metric-label">${s.label}</div>
-    </div>
-  `).join('');
-  
-  document.getElementById('pipeline-bar').innerHTML = stages.map(s => {
-    const pct = ((ps[s.key] || 0) / total * 100);
-    return `<div class="pipeline-segment" style="width:${pct}%;background:${s.color}"></div>`;
-  }).join('');
-  
-  document.getElementById('pipeline-legend').innerHTML = stages.map(s => `
-    <div class="legend-item">
-      <div class="legend-dot" style="background:${s.color}"></div>
-      <span>${s.label}</span>
-    </div>
-  `).join('');
-  
-  // Collections
-  const container = document.getElementById('collections-container');
-  container.innerHTML = (d.collections || []).map(col => `
-    <div class="card" style="margin-top:16px">
-      <div class="card-header">
-        <span class="card-title">${col.name}</span>
-        <span class="card-badge badge-${col.status === 'Concept' ? 'amber' : 'teal'}">${col.status}</span>
-      </div>
-      <p style="font-size:0.8rem;color:var(--silver);margin-bottom:16px">${col.description || ''}</p>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Piece</th>
-            <th>Type</th>
-            <th>Style</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${(col.pieces || []).map(p => `
-            <tr>
-              <td style="color:var(--white)">${p.name}</td>
-              <td>${p.type}</td>
-              <td>${p.style || '—'}</td>
-              <td><span class="card-badge badge-${p.status.includes('pending') ? 'red' : 'amber'}" style="font-size:0.6rem">${p.status}</span></td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `).join('');
-}
-
-function var_silver() { return '#999'; }
-
-// ─── CONTENT ───
-function renderContent() {
-  const d = appData.content;
-  if (!d) return;
-  
-  document.getElementById('content-updated').textContent = 'Last synced: ' + formatDate(d.last_updated);
-  
-  const ig = d.instagram || {};
-  document.getElementById('instagram-metrics').innerHTML = `
-    <div class="card metric-tile">
-      <div class="metric-value">${ig.followers || 0}</div>
-      <div class="metric-label">Followers</div>
-    </div>
-    <div class="card metric-tile">
-      <div class="metric-value">${ig.posts || 0}</div>
-      <div class="metric-label">Posts</div>
-    </div>
-    <div class="card metric-tile">
-      <div class="metric-value teal">${ig.engagement_rate || 0}%</div>
-      <div class="metric-label">Engagement</div>
-    </div>
-    <div class="card metric-tile">
-      <div class="metric-value">${(d.content_pipeline?.scheduled || []).length}</div>
-      <div class="metric-label">Scheduled</div>
-    </div>
-  `;
-  
-  // AI Gen
-  const ai = d.ai_image_gen || {};
-  document.getElementById('ai-gen-info').innerHTML = `
-    <div class="status-list">
-      <div class="status-item">
-        <div class="status-dot teal"></div>
-        <span class="status-text">Prompt Library: ${ai.prompt_library || '—'}</span>
-      </div>
-      <div class="status-item">
-        <div class="status-dot green"></div>
-        <span class="status-text" style="font-size:0.75rem">${ai.aesthetic_notes || '—'}</span>
-      </div>
-    </div>
-  `;
-  
-  document.getElementById('video-info').innerHTML = `
-    <div class="status-list">
-      <div class="status-item">
-        <div class="status-dot teal"></div>
-        <span class="status-text">Tool: ${ai.video_tool || '—'}</span>
-      </div>
-    </div>
-  `;
-  
-  // Content Ideas
-  const ideas = d.content_pipeline?.ideas || [];
-  document.getElementById('content-ideas').innerHTML = ideas.length ? ideas.map(idea => `
-    <div class="content-card">
-      <h4>${idea.concept}</h4>
-      <p>${idea.aesthetic || ''}</p>
-      <div class="meta">
-        <span class="content-tag">${idea.platform || '—'}</span>
-        <span class="content-tag">${idea.format || '—'}</span>
-        <span class="content-tag">${idea.status || '—'}</span>
-      </div>
-    </div>
-  `).join('') : '<div class="empty-state"><div class="icon">◉</div><h3>No content ideas yet</h3><p>Content ideas will appear here as they\'re added to the pipeline.</p></div>';
-}
-
-// ─── ORDERS ───
-function renderOrders() {
-  const d = appData.orders;
-  if (!d) return;
-  
-  document.getElementById('orders-updated').textContent = 'Last synced: ' + formatDate(d.last_updated);
-  
-  if (d.store_status === 'Pre-launch') {
-    document.getElementById('orders-content').innerHTML = `
-      <div class="card">
-        <div class="empty-state">
-          <div class="icon">▤</div>
-          <h3>Pre-launch</h3>
-          <p>Order tracking will activate once the store goes live. Revenue, fulfillment, and top-product analytics will populate automatically.</p>
-        </div>
-      </div>
-    `;
-    return;
-  }
-  
-  const o = d.orders || {};
-  const r = d.revenue || {};
-  document.getElementById('orders-content').innerHTML = `
-    <div class="metrics-grid">
-      <div class="card metric-tile"><div class="metric-value">${o.total || 0}</div><div class="metric-label">Total Orders</div></div>
-      <div class="card metric-tile"><div class="metric-value">${o.pending || 0}</div><div class="metric-label">Pending</div></div>
-      <div class="card metric-tile"><div class="metric-value teal">${currency(r.mtd)}</div><div class="metric-label">Revenue MTD</div></div>
-      <div class="card metric-tile"><div class="metric-value">${currency(r.ytd)}</div><div class="metric-label">Revenue YTD</div></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><span class="card-title">Recent Orders</span></div>
-      ${(d.recent_orders || []).length ? `
-        <table class="data-table">
-          <thead><tr><th>Order</th><th>Product</th><th>Amount</th><th>Status</th></tr></thead>
-          <tbody>${(d.recent_orders || []).map(o => `
-            <tr><td style="color:var(--white)">${o.id}</td><td>${o.product}</td><td>${currency(o.amount)}</td><td>${o.status}</td></tr>
-          `).join('')}</tbody>
-        </table>
-      ` : '<div class="empty-state" style="padding:30px"><p>No orders yet.</p></div>'}
-    </div>
-  `;
-}
-
-// ─── FINANCE ───
-function renderFinance() {
-  const d = appData.finance;
-  if (!d) return;
-  
-  document.getElementById('finance-updated').textContent = 'Last synced: ' + formatDate(d.last_updated) + ' · Period: ' + (d.period || '—');
-  
-  const c = d.costs || {};
-  const r = d.revenue || {};
-  
-  document.getElementById('finance-content').innerHTML = `
-    <div class="metrics-grid" style="margin-bottom:20px">
-      <div class="card metric-tile">
-        <div class="metric-value">${currency(c.total_monthly)}</div>
-        <div class="metric-label">Monthly Costs</div>
-      </div>
-      <div class="card metric-tile">
-        <div class="metric-value teal">${currency(r.total_monthly)}</div>
-        <div class="metric-label">Monthly Revenue</div>
-      </div>
-      <div class="card metric-tile">
-        <div class="metric-value" style="color:${(d.margin?.net || 0) >= 0 ? 'var(--teal)' : 'var(--red-soft)'}">${(d.margin?.net || 0).toFixed(1)}%</div>
-        <div class="metric-label">Net Margin</div>
-      </div>
-      <div class="card metric-tile">
-        <div class="metric-value">${currency(d.investment_to_date)}</div>
-        <div class="metric-label">Total Investment</div>
-      </div>
-    </div>
-    
-    <div class="finance-grid">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Cost Breakdown</span>
-          <span class="card-badge badge-silver">${d.currency || 'AUD'}</span>
-        </div>
-        <div class="finance-row"><span class="label">Subscriptions</span><span class="value">${currency((c.subscriptions || []).reduce((a, s) => a + (s.cost || 0), 0))}</span></div>
-        <div class="finance-row"><span class="label">CAD / Design</span><span class="value">${currency(c.cad_design)}</span></div>
-        <div class="finance-row"><span class="label">Manufacturing</span><span class="value">${currency(c.manufacturing)}</span></div>
-        <div class="finance-row"><span class="label">Marketing</span><span class="value">${currency(c.marketing)}</span></div>
-        <div class="finance-row"><span class="label">Packaging</span><span class="value">${currency(c.packaging)}</span></div>
-        <div class="finance-row"><span class="label">Shipping</span><span class="value">${currency(c.shipping)}</span></div>
-        <div class="finance-row"><span class="label">Other</span><span class="value">${currency(c.other)}</span></div>
-        ${(c.subscriptions || []).length ? `
-          <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--glass-border)">
-            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--silver-dark);margin-bottom:8px">Active Subscriptions</div>
-            ${(c.subscriptions || []).map(s => `
-              <div class="finance-row"><span class="label">${s.name}</span><span class="value">${currency(s.cost)}/mo</span></div>
-            `).join('')}
-          </div>
-        ` : ''}
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Revenue Channels</span>
-        </div>
-        ${Object.keys(r.by_channel || {}).length ? Object.entries(r.by_channel).map(([ch, val]) => `
-          <div class="finance-row"><span class="label">${ch}</span><span class="value">${currency(val)}</span></div>
-        `).join('') : `
-          <div class="empty-state" style="padding:40px">
-            <div class="icon">◇</div>
-            <h3>Pre-launch</h3>
-            <p>Revenue channels will populate once the store goes live.</p>
-          </div>
-        `}
-        <div style="margin-top:20px;padding:14px;background:var(--glass-highlight);border-radius:var(--radius-sm);border:1px solid var(--glass-border)">
-          <div style="font-size:0.75rem;color:var(--silver)">${d.notes || ''}</div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-// ─── Init ───
-loadData();
-// Auto-refresh every 5 minutes
-setInterval(loadData, 5 * 60 * 1000);
+const DATA_BASE='data/';
+const DATA_FILES={overview:'overview.json',products:'products.json',content:'content.json',orders:'orders.json',finance:'finance.json'};
+let appData={};
+document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
+async function loadData(){for(const[key,file]of Object.entries(DATA_FILES)){try{const res=await fetch(DATA_BASE+file+'?t='+Date.now());if(res.ok)appData[key]=await res.json()}catch(e){console.warn(`Failed: ${file}`,e)}}renderAll()}
+function fmt(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function $(v){return'$'+Number(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}
+function renderAll(){renderOverview();renderProducts();renderContent();renderOrders();renderFinance()}
+function renderOverview(){const d=appData.overview;if(!d)return;document.getElementById('overview-updated').textContent='Last synced: '+fmt(d.last_updated);document.getElementById('store-status').textContent=d.status?.store||'Unknown';document.getElementById('overview-alerts').innerHTML=(d.alerts||[]).map(a=>`<div class="alert-banner ${a.type}"><span class="alert-icon">${a.type==='info'?'ℹ':'⚠'}</span><span>${a.message}</span></div>`).join('');const m=d.metrics||{};document.getElementById('overview-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value">${m.total_products||0}</div><div class="metric-label">Products</div></div><div class="card metric-tile"><div class="metric-value">${m.instagram_followers||0}</div><div class="metric-label">Followers</div></div><div class="card metric-tile"><div class="metric-value teal">${$(m.monthly_revenue)}</div><div class="metric-label">Revenue MTD</div></div><div class="card metric-tile"><div class="metric-value">${m.pending_orders||0}</div><div class="metric-label">Pending Orders</div></div>`;const items=[];items.push({dot:d.status?.store==='Pre-launch'?'amber':'green',text:'Store: '+(d.status?.store||'—')});items.push({dot:d.status?.content_pipeline==='Building'?'amber':'green',text:'Content Pipeline: '+(d.status?.content_pipeline||'—')});(d.status?.cad_pending||[]).forEach(c=>items.push({dot:'red',text:'CAD Pending: '+c}));document.getElementById('overview-status').innerHTML=items.map(s=>`<div class="status-item"><div class="status-dot ${s.dot}"></div><span class="status-text">${s.text}</span></div>`).join('');const cols=d.status?.collections_planned||[],heroes=d.status?.hero_pieces||[];document.getElementById('overview-collections').innerHTML=`<div class="status-list">${cols.map(c=>`<div class="status-item"><div class="status-dot teal"></div><span class="status-text">${c}</span><span class="status-meta">Collection</span></div>`).join('')}${heroes.map(h=>`<div class="status-item"><div class="status-dot amber"></div><span class="status-text">${h}</span><span class="status-meta">Hero Piece</span></div>`).join('')}</div>`}
+function renderProducts(){const d=appData.products;if(!d)return;document.getElementById('products-updated').textContent='Last synced: '+fmt(d.last_updated);const ps=d.pipeline_summary||{};const stages=[{key:'concept',label:'Concept',color:'#888'},{key:'cad_pending',label:'CAD Pending',color:'#d97706'},{key:'manufacturing',label:'Manufacturing',color:'#0d9373'},{key:'in_stock',label:'In Stock',color:'#16a34a'},{key:'listed',label:'Listed',color:'#111'}];const total=Object.values(ps).reduce((a,b)=>a+b,0)||1;document.getElementById('pipeline-metrics').innerHTML=stages.map(s=>`<div class="card metric-tile" style="padding:12px 8px"><div class="metric-value" style="font-size:1.5rem;color:${s.color}">${ps[s.key]||0}</div><div class="metric-label">${s.label}</div></div>`).join('');document.getElementById('pipeline-bar').innerHTML=stages.map(s=>`<div class="pipeline-segment" style="width:${(ps[s.key]||0)/total*100}%;background:${s.color}"></div>`).join('');document.getElementById('pipeline-legend').innerHTML=stages.map(s=>`<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div><span>${s.label}</span></div>`).join('');document.getElementById('collections-container').innerHTML=(d.collections||[]).map(col=>`<div class="card" style="margin-top:14px"><div class="card-header"><span class="card-title">${col.name}</span><span class="card-badge badge-${col.status==='Concept'?'amber':'teal'}">${col.status}</span></div><p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px">${col.description||''}</p><table class="data-table"><thead><tr><th>Piece</th><th>Type</th><th>Style</th><th>Status</th></tr></thead><tbody>${(col.pieces||[]).map(p=>`<tr><td style="color:var(--black);font-weight:500">${p.name}</td><td>${p.type}</td><td>${p.style||'—'}</td><td><span class="card-badge badge-${p.status.includes('pending')?'red':'amber'}" style="font-size:0.58rem">${p.status}</span></td></tr>`).join('')}</tbody></table></div>`).join('')}
+function renderContent(){const d=appData.content;if(!d)return;document.getElementById('content-updated').textContent='Last synced: '+fmt(d.last_updated);const ig=d.instagram||{};document.getElementById('instagram-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value">${ig.followers||0}</div><div class="metric-label">Followers</div></div><div class="card metric-tile"><div class="metric-value">${ig.posts||0}</div><div class="metric-label">Posts</div></div><div class="card metric-tile"><div class="metric-value teal">${ig.engagement_rate||0}%</div><div class="metric-label">Engagement</div></div><div class="card metric-tile"><div class="metric-value">${(d.content_pipeline?.scheduled||[]).length}</div><div class="metric-label">Scheduled</div></div>`;const ai=d.ai_image_gen||{};document.getElementById('ai-gen-info').innerHTML=`<div class="status-list"><div class="status-item"><div class="status-dot teal"></div><span class="status-text">Prompt Library: ${ai.prompt_library||'—'}</span></div><div class="status-item"><div class="status-dot green"></div><span class="status-text" style="font-size:0.73rem">${ai.aesthetic_notes||'—'}</span></div></div>`;document.getElementById('video-info').innerHTML=`<div class="status-list"><div class="status-item"><div class="status-dot teal"></div><span class="status-text">Tool: ${ai.video_tool||'—'}</span></div></div>`;const ideas=d.content_pipeline?.ideas||[];document.getElementById('content-ideas').innerHTML=ideas.length?ideas.map(i=>`<div class="content-card"><h4>${i.concept}</h4><p>${i.aesthetic||''}</p><div class="meta"><span class="content-tag">${i.platform||'—'}</span><span class="content-tag">${i.format||'—'}</span><span class="content-tag">${i.status||'—'}</span></div></div>`).join(''):'<div class="empty-state"><div class="icon">◉</div><h3>No content ideas yet</h3><p>Ideas will appear here as they\'re added.</p></div>'}
+function renderOrders(){const d=appData.orders;if(!d)return;document.getElementById('orders-updated').textContent='Last synced: '+fmt(d.last_updated);if(d.store_status==='Pre-launch'){document.getElementById('orders-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">▤</div><h3>Pre-launch</h3><p>Order tracking will activate once the store goes live.</p></div></div>`;return}const o=d.orders||{},r=d.revenue||{};document.getElementById('orders-content').innerHTML=`<div class="metrics-grid"><div class="card metric-tile"><div class="metric-value">${o.total||0}</div><div class="metric-label">Total Orders</div></div><div class="card metric-tile"><div class="metric-value">${o.pending||0}</div><div class="metric-label">Pending</div></div><div class="card metric-tile"><div class="metric-value teal">${$(r.mtd)}</div><div class="metric-label">Revenue MTD</div></div><div class="card metric-tile"><div class="metric-value">${$(r.ytd)}</div><div class="metric-label">Revenue YTD</div></div></div><div class="card"><div class="card-header"><span class="card-title">Recent Orders</span></div>${(d.recent_orders||[]).length?`<table class="data-table"><thead><tr><th>Order</th><th>Product</th><th>Amount</th><th>Status</th></tr></thead><tbody>${d.recent_orders.map(o=>`<tr><td style="color:var(--black)">${o.id}</td><td>${o.product}</td><td>${$(o.amount)}</td><td>${o.status}</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state" style="padding:24px"><p>No orders yet.</p></div>'}</div>`}
+function renderFinance(){const d=appData.finance;if(!d)return;document.getElementById('finance-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Period: '+(d.period||'—');const c=d.costs||{},r=d.revenue||{};document.getElementById('finance-content').innerHTML=`<div class="metrics-grid" style="margin-bottom:18px"><div class="card metric-tile"><div class="metric-value">${$(c.total_monthly)}</div><div class="metric-label">Monthly Costs</div></div><div class="card metric-tile"><div class="metric-value teal">${$(r.total_monthly)}</div><div class="metric-label">Monthly Revenue</div></div><div class="card metric-tile"><div class="metric-value" style="color:${(d.margin?.net||0)>=0?'var(--teal)':'var(--red-soft)'}">${(d.margin?.net||0).toFixed(1)}%</div><div class="metric-label">Net Margin</div></div><div class="card metric-tile"><div class="metric-value">${$(d.investment_to_date)}</div><div class="metric-label">Total Investment</div></div></div><div class="finance-grid"><div class="card"><div class="card-header"><span class="card-title">Cost Breakdown</span><span class="card-badge badge-silver">${d.currency||'AUD'}</span></div><div class="finance-row"><span class="label">Subscriptions</span><span class="value">${$((c.subscriptions||[]).reduce((a,s)=>a+(s.cost||0),0))}</span></div><div class="finance-row"><span class="label">CAD / Design</span><span class="value">${$(c.cad_design)}</span></div><div class="finance-row"><span class="label">Manufacturing</span><span class="value">${$(c.manufacturing)}</span></div><div class="finance-row"><span class="label">Marketing</span><span class="value">${$(c.marketing)}</span></div><div class="finance-row"><span class="label">Packaging</span><span class="value">${$(c.packaging)}</span></div><div class="finance-row"><span class="label">Shipping</span><span class="value">${$(c.shipping)}</span></div><div class="finance-row"><span class="label">Other</span><span class="value">${$(c.other)}</span></div></div><div class="card"><div class="card-header"><span class="card-title">Revenue Channels</span></div>${Object.keys(r.by_channel||{}).length?Object.entries(r.by_channel).map(([ch,val])=>`<div class="finance-row"><span class="label">${ch}</span><span class="value">${$(val)}</span></div>`).join(''):`<div class="empty-state" style="padding:36px"><div class="icon">◇</div><h3>Pre-launch</h3><p>Revenue channels will populate once the store goes live.</p></div>`}<div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.3);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.35)"><div style="font-size:0.73rem;color:var(--text-muted)">${d.notes||''}</div></div></div></div>`}
+loadData();setInterval(loadData,5*60*1000);
 </script>
 </body>
 </html>
