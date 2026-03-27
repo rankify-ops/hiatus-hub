@@ -303,9 +303,10 @@ document.getElementById('finance-content').innerHTML=`
   </div>
 </div>`}
 function renderStock(){const d=appData.stock;if(!d)return;
-document.getElementById('stock-updated').textContent='Last synced: '+fmt(d.last_updated);
+document.getElementById('stock-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: Shopify';
 const s=d.summary||{};
-if(d.store_status==='Pre-launch'||!(d.items||[]).length){
+const prods=d.products||[];
+if(d.store_status==='Pre-launch'||!prods.length){
 document.getElementById('stock-content').innerHTML=`
 <div class="metrics-grid">
   <div class="card metric-tile"><div class="metric-value">${s.total_skus||0}</div><div class="metric-label">Total SKUs</div></div>
@@ -323,31 +324,44 @@ document.getElementById('stock-content').innerHTML=`
   <div class="card metric-tile"><div class="metric-value" style="color:var(--amber)">${s.low_stock||0}</div><div class="metric-label">Low Stock</div></div>
   <div class="card metric-tile"><div class="metric-value" style="color:var(--red-soft)">${s.out_of_stock||0}</div><div class="metric-label">Out of Stock</div></div>
 </div>
-${(()=>{
-  const grouped={};
-  (d.items||[]).forEach(i=>{if(!grouped[i.product])grouped[i.product]=[];grouped[i.product].push(i)});
-  return Object.entries(grouped).map(([product,variants])=>{
-    const totalQty=variants.reduce((a,v)=>a+v.quantity,0);
-    const price=variants[0]?.price||0;
-    const hasLow=variants.some(v=>v.quantity>0&&v.quantity<=3);
-    const hasOos=variants.some(v=>v.quantity<=0);
-    const prodStatus=hasOos?'var(--red-soft)':hasLow?'var(--amber)':'var(--teal)';
-    return `<div class="card" style="margin-bottom:12px">
-      <div class="card-header">
-        <span class="card-title">${product}</span>
-        <div style="display:flex;gap:8px;align-items:center">
-          <span style="font-size:0.8rem;font-weight:600;color:var(--text-secondary)">$${price.toFixed(2)}</span>
-          <span style="font-size:0.75rem;font-weight:700;color:${prodStatus}">${totalQty} units</span>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">
+${prods.map(p=>{
+  const hasOos=p.variants_oos>0;
+  const hasLow=p.variants_low>0;
+  const statusCol=hasOos?'var(--red-soft)':hasLow?'var(--amber)':'var(--teal)';
+  const statusText=hasOos?'Has OOS':hasLow?'Low Stock':'Good';
+  const expanded=p.variants.length<=4;
+  return `<div class="card" style="padding:0;overflow:hidden">
+    ${p.image?`<div style="width:100%;height:200px;overflow:hidden;position:relative">
+      <img src="${p.image}" alt="${p.product}" style="width:100%;height:100%;object-fit:cover;display:block">
+      <div style="position:absolute;top:10px;right:10px">
+        <span class="card-badge" style="background:${statusCol}20;color:${statusCol};border:1px solid ${statusCol}35;font-size:0.58rem;backdrop-filter:blur(8px)">${statusText}</span>
+      </div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(0,0,0,0.4))"></div>
+      <div style="position:absolute;bottom:10px;left:14px;color:#fff;font-size:0.7rem;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.5)">$${p.price.toFixed(2)} AUD</div>
+    </div>`:''}
+    <div style="padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div>
+          <div style="font-size:0.9rem;font-weight:700;color:var(--black);line-height:1.3">${p.product}</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px">${p.variants.length} variants</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:1.3rem;font-weight:700;color:${statusCol};line-height:1">${p.total_quantity}</div>
+          <div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">units</div>
         </div>
       </div>
-      <table class="data-table"><thead><tr><th>Size / Variant</th><th>SKU</th><th>Qty</th><th>Status</th></tr></thead><tbody>
-        ${variants.map(v=>{
-          const sc=v.quantity<=0?'var(--red-soft)':v.quantity<=(v.reorder_point||3)?'var(--amber)':'var(--teal)';
-          const st=v.quantity<=0?'Out of Stock':v.quantity<=(v.reorder_point||3)?'Low Stock':'In Stock';
-          return `<tr><td style="font-weight:500;color:var(--black)">${v.variant}</td><td style="color:var(--text-muted);font-size:0.75rem">${v.sku||'—'}</td><td style="font-weight:700;color:${sc}">${v.quantity}</td><td><span class="card-badge" style="background:${sc}15;color:${sc};border:1px solid ${sc}30;font-size:0.58rem">${st}</span></td></tr>`}).join('')}
-      </tbody></table>
-    </div>`}).join('')
-})()}`}
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${p.variants.map(v=>{
+          const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';
+          return `<div style="display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.04);font-size:0.68rem">
+            <span style="color:var(--text-muted)">${v.variant}</span>
+            <span style="font-weight:700;color:${vc}">${v.quantity}</span>
+          </div>`}).join('')}
+      </div>
+    </div>
+  </div>`}).join('')}
+</div>`}
 
 function renderMarkets(){const d=appData.markets;if(!d)return;
 document.getElementById('markets-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: ClickUp Markets';
