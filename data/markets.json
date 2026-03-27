@@ -1,0 +1,69 @@
+{
+  "last_updated": "2026-03-27T21:30:00+10:00",
+  "source": "ClickUp — Hiatus Collection > Markets > Market Booking Calendar",
+  "clickup_config": {
+    "workspace_id": "90161465920",
+    "space_id": "90166312637",
+    "list_id": "901613517541"
+  },
+  "locations": ["Coolangatta", "Broadbeach", "Byron Bay", "Surfers Paradise", "Burleigh Heads"],
+  "markets": [
+    {
+      "name": "Byron Bay Markets",
+      "status": "bookable markets",
+      "location": "Byron Bay",
+      "due_date": "2026-04-03",
+      "booking_url": "https://www.byroncentre.com.au/bcm/byron-beachside-market",
+      "sales_target": 1500,
+      "actual_sales": null,
+      "description": "A seasonal quarterly market for artisans. Fri 3 Apr 8:00am",
+      "clickup_task_id": "86d1yt1z7",
+      "clickup_url": "https://app.clickup.com/t/86d1yt1z7"
+    },
+    {
+      "name": "Byron Bay Markets",
+      "status": "bookable markets",
+      "location": "Byron Bay",
+      "due_date": "2026-07-11",
+      "booking_url": "https://www.byroncentre.com.au/bcm/byron-beachside-market",
+      "sales_target": 1500,
+      "actual_sales": null,
+      "description": "A seasonal quarterly market for artisans. Sat 11 Jul 8:00am",
+      "clickup_task_id": "86d1yt7fg",
+      "clickup_url": "https://app.clickup.com/t/86d1yt7fg"
+    },
+    {
+      "name": "Byron Bay Markets",
+      "status": "completed markets",
+      "location": "Byron Bay",
+      "due_date": "2026-09-26",
+      "booking_url": "https://www.byroncentre.com.au/bcm/byron-beachside-market",
+      "sales_target": null,
+      "actual_sales": null,
+      "clickup_task_id": "86d1yt7gt",
+      "clickup_url": "https://app.clickup.com/t/86d1yt7gt"
+    },
+    {
+      "name": "Village Markets",
+      "status": "templates & info",
+      "location": null,
+      "due_date": null,
+      "booking_url": null,
+      "sales_target": null,
+      "actual_sales": null,
+      "clickup_task_id": "86d1yt1w6",
+      "clickup_url": "https://app.clickup.com/t/86d1yt1w6"
+    },
+    {
+      "name": "Art & Craft on the Coast",
+      "status": "templates & info",
+      "location": null,
+      "due_date": null,
+      "booking_url": null,
+      "sales_target": null,
+      "actual_sales": null,
+      "clickup_task_id": "86d1yt6dv",
+      "clickup_url": "https://app.clickup.com/t/86d1yt6dv"
+    }
+  ]
+}
