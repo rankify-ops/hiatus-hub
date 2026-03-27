@@ -1,10 +1,85 @@
 {
-  "last_updated": "2026-03-27T06:30:00+10:00",
+  "last_updated": "2026-03-27T21:00:00+10:00",
   "currency": "AUD",
   "period": "2026-03",
+  "source": "ClickUp — Hiatus Collection > Finance > Cost Tracking",
+  "clickup_config": {
+    "workspace_id": "90161465920",
+    "space_id": "90166595108",
+    "list_id": "901614213615",
+    "list_name": "Cost Tracking"
+  },
+  "subscriptions": [
+    {
+      "name": "Shopify Subscription",
+      "category": "Website",
+      "monthly_cost": 41.59,
+      "annual_cost": 499.00,
+      "billing_cycle": "Annual",
+      "payment_method": "Hiatus Business Card",
+      "account_owner": "Thomas Flood",
+      "login_url": "https://97850c.myshopify.com/admin",
+      "renewal_date": "2026-06-29",
+      "status": "active",
+      "clickup_task_id": "86d2epvtv"
+    },
+    {
+      "name": "XERO",
+      "category": "Accounting",
+      "monthly_cost": 35.00,
+      "annual_cost": 420.00,
+      "billing_cycle": "Monthly",
+      "payment_method": "Hiatus Business Card",
+      "account_owner": "Thomas Flood",
+      "login_url": "https://www.xero.com/",
+      "renewal_date": "2026-04-23",
+      "status": "active",
+      "clickup_task_id": "86d2epvte"
+    },
+    {
+      "name": "Microsoft 365 (Business Email)",
+      "category": "Email",
+      "monthly_cost": 13.95,
+      "annual_cost": 167.40,
+      "billing_cycle": "Annual",
+      "payment_method": "Hiatus Business Card",
+      "account_owner": "Thomas Flood",
+      "login_url": "https://www.godaddy.com/en-au",
+      "renewal_date": "2027-01-12",
+      "status": "active",
+      "clickup_task_id": "86d2epvu8"
+    },
+    {
+      "name": "Domain: hiatuscollection.com",
+      "category": "Domain",
+      "monthly_cost": 3.33,
+      "annual_cost": 40.00,
+      "billing_cycle": "Annual",
+      "payment_method": "Hiatus Business Card",
+      "account_owner": "Thomas Flood",
+      "login_url": "https://www.godaddy.com/en-au",
+      "renewal_date": "2027-01-12",
+      "status": "active",
+      "clickup_task_id": "86d2epvtf"
+    },
+    {
+      "name": "Domain: hiatuscollection.com.au",
+      "category": "Domain",
+      "monthly_cost": 2.00,
+      "annual_cost": 23.95,
+      "billing_cycle": "Annual",
+      "payment_method": "Hiatus Business Card",
+      "account_owner": "Thomas Flood",
+      "login_url": "https://www.godaddy.com/en-au",
+      "renewal_date": "2027-01-12",
+      "status": "active",
+      "clickup_task_id": "86d2epvur"
+    }
+  ],
   "costs": {
-    "total_monthly": 0,
-    "subscriptions": [],
+    "total_monthly": 95.87,
+    "total_annual": 1150.35,
+    "subscriptions": 95.87,
     "cad_design": 0,
     "manufacturing": 0,
     "marketing": 0,
@@ -21,5 +96,5 @@
     "net": 0
   },
   "investment_to_date": 0,
-  "notes": "Pre-launch phase — tracking setup costs and investments"
+  "notes": "Pre-launch phase — tracking active subscriptions via ClickUp Cost Tracking list. All payments via Hiatus Business Card."
 }

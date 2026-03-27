@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-27T06:30:00+10:00",
+  "last_updated": "2026-03-27T21:00:00+10:00",
   "brand": "Hiatus Collection",
   "tagline": "Premium Oxidised 925 Sterling Silver",
   "metrics": {
@@ -7,7 +7,7 @@
     "active_listings": 0,
     "instagram_followers": 0,
     "monthly_revenue": 0,
-    "monthly_costs": 0,
+    "monthly_costs": 95.87,
     "pending_orders": 0
   },
   "status": {
@@ -20,7 +20,7 @@
   "alerts": [
     {
       "type": "info",
-      "message": "Dashboard initialised — awaiting first data sync from Claude Code agents"
+      "message": "Finance tab now synced with ClickUp Cost Tracking — 5 active subscriptions totalling $95.87/mo"
     }
   ]
 }
