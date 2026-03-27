@@ -6,14 +6,14 @@
 <title>Hiatus Collection — Operations Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --black: #111;
   --text: #1a1a1a;
-  --text-secondary: #444;
-  --text-muted: #666;
-  --text-faint: #888;
+  --text-secondary: #333;
+  --text-muted: #555;
+  --text-faint: #777;
   --white: #fff;
   --teal: #0d9373;
   --teal-bright: #10b981;
@@ -22,15 +22,14 @@
   --red-soft: #dc4a4a;
   --amber: #d97706;
   --green: #16a34a;
-  --glass-bg: rgba(255,255,255,0.55);
-  --glass-bg-heavy: rgba(255,255,255,0.7);
-  --glass-border: rgba(255,255,255,0.5);
-  --glass-border-subtle: rgba(255,255,255,0.3);
-  --glass-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  --glass-blur: 24px;
-  --sidebar-bg: rgba(255,255,255,0.6);
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --glass-bg: rgba(255,255,255,0.72);
+  --glass-bg-heavy: rgba(255,255,255,0.82);
+  --glass-border: rgba(255,255,255,0.55);
+  --glass-border-subtle: rgba(255,255,255,0.35);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  --glass-blur: 28px;
+  --sidebar-bg: rgba(255,255,255,0.75);
+  --font: 'Inter', -apple-system, sans-serif;
   --sidebar-w: 256px;
   --radius: 16px;
   --radius-sm: 10px;
@@ -38,13 +37,13 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:15px}
-body{font-family:var(--font-body);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;background:#0a0a0a}
+body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;background:#0a0a0a}
 .bg-layer{position:fixed;inset:0;z-index:0;background:url('bg.jpg') center center/cover no-repeat}
 .bg-layer::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.15) 100%)}
 .app{display:flex;min-height:100vh;position:relative;z-index:2}
 .sidebar{width:var(--sidebar-w);min-height:100vh;position:fixed;left:0;top:0;background:var(--sidebar-bg);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);border-right:1px solid var(--glass-border);display:flex;flex-direction:column;z-index:100;transition:transform var(--transition);box-shadow:4px 0 30px rgba(0,0,0,0.06)}
 .sidebar-brand{padding:28px 22px 22px;border-bottom:1px solid var(--glass-border-subtle)}
-.sidebar-brand h1{font-family:var(--font-display);font-size:1.55rem;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:var(--black);line-height:1.2}
+.sidebar-brand h1{font-family:var(--font);font-size:1.3rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--black);line-height:1.2}
 .sidebar-brand .subtitle{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-top:5px;font-weight:500}
 .sidebar-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px}
 .nav-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);font-size:0.84rem;font-weight:400;color:var(--text-secondary);border:1px solid transparent;user-select:none}
@@ -64,7 +63,7 @@ body{font-family:var(--font-body);color:var(--text);min-height:100vh;overflow-x:
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.7) 50%,transparent 100%)}
 .card:hover{border-color:rgba(255,255,255,0.65);box-shadow:0 8px 40px rgba(0,0,0,0.1)}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--black);letter-spacing:0.03em}
+.card-title{font-family:var(--font);font-size:0.95rem;font-weight:600;color:var(--black);letter-spacing:0}
 .card-badge{font-size:0.6rem;padding:3px 10px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
 .badge-teal{background:var(--teal-glow);color:var(--teal);border:1px solid rgba(16,185,129,0.25)}
 .badge-amber{background:rgba(217,119,6,0.1);color:var(--amber);border:1px solid rgba(217,119,6,0.2)}
@@ -74,11 +73,11 @@ body{font-family:var(--font-body);color:var(--text);min-height:100vh;overflow-x:
 .tab-panel.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .section-header{margin-bottom:24px}
-.section-header h2{font-family:var(--font-display);font-size:1.9rem;font-weight:400;color:var(--white);letter-spacing:0.05em;text-shadow:0 2px 12px rgba(0,0,0,0.3)}
-.section-header .updated{font-size:0.7rem;color:rgba(255,255,255,0.7);margin-top:4px;letter-spacing:0.03em;text-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.section-header h2{font-family:var(--font);font-size:1.6rem;font-weight:600;color:var(--white);letter-spacing:-0.01em;text-shadow:0 2px 12px rgba(0,0,0,0.4)}
+.section-header .updated{font-size:0.7rem;color:rgba(255,255,255,0.8);margin-top:4px;letter-spacing:0.02em;text-shadow:0 1px 4px rgba(0,0,0,0.4)}
 .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:24px}
 .metric-tile{text-align:center;padding:20px 14px}
-.metric-value{font-family:var(--font-display);font-size:2.1rem;font-weight:400;color:var(--black);letter-spacing:0.02em;line-height:1}
+.metric-value{font-family:var(--font);font-size:1.8rem;font-weight:600;color:var(--black);letter-spacing:-0.01em;line-height:1}
 .metric-value.teal{color:var(--teal)}
 .metric-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-top:7px;font-weight:500}
 .status-list{display:flex;flex-direction:column;gap:8px}
@@ -102,7 +101,7 @@ body{font-family:var(--font-body);color:var(--text);min-height:100vh;overflow-x:
 .data-table tr:hover td{background:rgba(255,255,255,0.3)}
 .content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .content-card{padding:18px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.4)}
-.content-card h4{font-family:var(--font-display);font-size:0.98rem;color:var(--black);margin-bottom:6px;font-weight:500}
+.content-card h4{font-family:var(--font);font-size:0.98rem;color:var(--black);margin-bottom:6px;font-weight:500}
 .content-card p{font-size:0.76rem;color:var(--text-muted);line-height:1.5}
 .content-card .meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .content-tag{font-size:0.58rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.5);color:var(--text-muted);letter-spacing:0.04em;font-weight:500}
@@ -116,7 +115,7 @@ body{font-family:var(--font-body);color:var(--text);min-height:100vh;overflow-x:
 .finance-row .value{color:var(--black);font-weight:600}
 .empty-state{text-align:center;padding:50px 20px;color:var(--text-muted)}
 .empty-state .icon{font-size:2.2rem;margin-bottom:14px;opacity:0.35}
-.empty-state h3{font-family:var(--font-display);font-size:1.15rem;color:var(--text-secondary);font-weight:400;margin-bottom:6px}
+.empty-state h3{font-family:var(--font);font-size:1.15rem;color:var(--text-secondary);font-weight:400;margin-bottom:6px}
 .empty-state p{font-size:0.78rem;line-height:1.6;max-width:380px;margin:0 auto}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .quick-links{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
@@ -217,7 +216,10 @@ function renderOrders(){const d=appData.orders;if(!d)return;document.getElementB
 function renderFinance(){const d=appData.finance;if(!d)return;
 document.getElementById('finance-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: ClickUp Cost Tracking';
 const c=d.costs||{},r=d.revenue||{},subs=d.subscriptions||[];
-const catColors={Accounting:'#8b7cf5',Domain:'#6ba0e8',Website:'#5bb8e8',Email:'#5dbdad'};
+const catColors={Accounting:'#7c6cf5',Domain:'#4a8fe8',Website:'#3ba5e8',Email:'#3dada0'};
+// Sort upcoming renewals by date
+const upcoming=subs.filter(s=>s.renewal_date).map(s=>({...s,_renew:new Date(s.renewal_date)})).sort((a,b)=>a._renew-b._renew);
+const now=new Date();
 document.getElementById('finance-content').innerHTML=`
 <div class="metrics-grid" style="margin-bottom:18px">
   <div class="card metric-tile"><div class="metric-value">$${(c.total_monthly||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>
@@ -226,34 +228,58 @@ document.getElementById('finance-content').innerHTML=`
   <div class="card metric-tile"><div class="metric-value">${subs.length}</div><div class="metric-label">Active Subs</div></div>
 </div>
 <div class="card" style="margin-bottom:14px">
+  <div class="card-header"><span class="card-title">Upcoming Renewals</span></div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    ${upcoming.map(s=>{
+      const days=Math.ceil((s._renew-now)/(86400000));
+      const isUrgent=days<=30;
+      const isSoon=days<=90;
+      const dateStr=s._renew.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+      const statusCol=isUrgent?'var(--amber)':isSoon?'var(--teal)':'var(--text-muted)';
+      const bgCol=isUrgent?'rgba(217,119,6,0.06)':isSoon?'rgba(16,185,129,0.04)':'transparent';
+      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);background:${bgCol};border:1px solid rgba(0,0,0,0.04)">
+        <div style="width:8px;height:8px;border-radius:50%;background:${statusCol};box-shadow:0 0 6px ${statusCol}44;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="font-size:0.82rem;font-weight:600;color:var(--black)">${s.name}</div>
+          <div style="font-size:0.7rem;color:var(--text-muted)">${s.billing_cycle} · $${(s.billing_cycle==='Monthly'?s.monthly_cost:s.annual_cost||0).toFixed(2)} ${s.billing_cycle==='Monthly'?'/mo':'/yr'}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.8rem;font-weight:600;color:${statusCol}">${dateStr}</div>
+          <div style="font-size:0.65rem;color:var(--text-faint)">${days<=0?'Overdue':days===1?'Tomorrow':days+' days'}</div>
+        </div>
+      </div>`}).join('')}
+  </div>
+</div>
+<div class="card" style="margin-bottom:14px">
   <div class="card-header"><span class="card-title">Active Subscriptions</span><span class="card-badge badge-teal">from ClickUp</span></div>
   <table class="data-table"><thead><tr><th>Service</th><th>Category</th><th>Monthly</th><th>Annual</th><th>Billing</th><th>Renewal</th><th>Payment</th></tr></thead><tbody>
     ${subs.map(s=>{
       const cat=s.category||'—';
       const catCol=catColors[cat]||'#888';
       const renewal=s.renewal_date?new Date(s.renewal_date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'—';
-      const isExpiring=s.renewal_date&&(new Date(s.renewal_date)-new Date())<30*86400000;
+      const daysLeft=s.renewal_date?Math.ceil((new Date(s.renewal_date)-now)/86400000):999;
+      const isExpiring=daysLeft<=30;
       return `<tr>
-        <td style="color:var(--black);font-weight:500">${s.login_url?'<a href="'+s.login_url+'" target="_blank" style="color:var(--black);text-decoration:none;border-bottom:1px dotted var(--text-faint)">'+s.name+'</a>':s.name}</td>
-        <td><span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.6rem;font-weight:600;letter-spacing:0.05em;background:${catCol}22;color:${catCol};border:1px solid ${catCol}33">${cat}</span></td>
-        <td style="font-weight:500">$${(s.monthly_cost||0).toFixed(2)}</td>
-        <td>$${(s.annual_cost||0).toFixed(2)}</td>
-        <td>${s.billing_cycle||'—'}</td>
-        <td style="${isExpiring?'color:var(--amber);font-weight:600':''}">${renewal}</td>
+        <td style="color:var(--black);font-weight:600">${s.login_url?'<a href="'+s.login_url+'" target="_blank" style="color:var(--black);text-decoration:none;border-bottom:1px dotted var(--text-muted)">'+s.name+'</a>':s.name}</td>
+        <td><span style="display:inline-block;padding:3px 9px;border-radius:10px;font-size:0.62rem;font-weight:700;letter-spacing:0.03em;background:${catCol}18;color:${catCol};border:1px solid ${catCol}30">${cat}</span></td>
+        <td style="font-weight:600;color:var(--black)">$${(s.monthly_cost||0).toFixed(2)}</td>
+        <td style="color:var(--text-secondary)">$${(s.annual_cost||0).toFixed(2)}</td>
+        <td style="color:var(--text-secondary)">${s.billing_cycle||'—'}</td>
+        <td style="font-weight:${isExpiring?'700':'500'};color:${isExpiring?'var(--amber)':'var(--text-secondary)'}">${renewal}</td>
         <td style="font-size:0.72rem;color:var(--text-muted)">${s.payment_method||'—'}</td>
       </tr>`}).join('')}
   </tbody>
   <tfoot><tr style="border-top:2px solid rgba(0,0,0,0.08)">
-    <td style="font-weight:600;color:var(--black)">Total</td><td></td>
+    <td style="font-weight:700;color:var(--black)">Total</td><td></td>
     <td style="font-weight:700;color:var(--teal)">$${subs.reduce((a,s)=>a+(s.monthly_cost||0),0).toFixed(2)}</td>
-    <td style="font-weight:600">$${subs.reduce((a,s)=>a+(s.annual_cost||0),0).toFixed(2)}</td>
+    <td style="font-weight:700;color:var(--text-secondary)">$${subs.reduce((a,s)=>a+(s.annual_cost||0),0).toFixed(2)}</td>
     <td colspan="3"></td>
   </tr></tfoot></table>
 </div>
 <div class="finance-grid">
   <div class="card">
     <div class="card-header"><span class="card-title">Cost Breakdown</span><span class="card-badge badge-silver">${d.currency||'AUD'}</span></div>
-    <div class="finance-row"><span class="label">Subscriptions</span><span class="value">$${(c.subscriptions||0).toFixed?.(2)||c.subscriptions}</span></div>
+    <div class="finance-row"><span class="label">Subscriptions</span><span class="value" style="font-weight:700">$${(c.subscriptions||0).toFixed(2)}</span></div>
     <div class="finance-row"><span class="label">CAD / Design</span><span class="value">${$(c.cad_design)}</span></div>
     <div class="finance-row"><span class="label">Manufacturing</span><span class="value">${$(c.manufacturing)}</span></div>
     <div class="finance-row"><span class="label">Marketing</span><span class="value">${$(c.marketing)}</span></div>
