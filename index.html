@@ -267,7 +267,70 @@ document.querySelectorAll('.cat-item').forEach(c=>{c.style.display=(type==='all'
 }
 
 function renderContent(){const d=appData.content;if(!d)return;document.getElementById('content-updated').textContent='Last synced: '+fmt(d.last_updated);const ig=d.instagram||{};document.getElementById('instagram-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value">${ig.followers||0}</div><div class="metric-label">Followers</div></div><div class="card metric-tile"><div class="metric-value">${ig.posts||0}</div><div class="metric-label">Posts</div></div><div class="card metric-tile"><div class="metric-value teal">${ig.engagement_rate||0}%</div><div class="metric-label">Engagement</div></div><div class="card metric-tile"><div class="metric-value">${(d.content_pipeline?.scheduled||[]).length}</div><div class="metric-label">Scheduled</div></div>`;const ai=d.ai_image_gen||{};document.getElementById('ai-gen-info').innerHTML=`<div class="status-list"><div class="status-item"><div class="status-dot teal"></div><span class="status-text">Prompt Library: ${ai.prompt_library||'—'}</span></div><div class="status-item"><div class="status-dot green"></div><span class="status-text" style="font-size:0.73rem">${ai.aesthetic_notes||'—'}</span></div></div>`;document.getElementById('video-info').innerHTML=`<div class="status-list"><div class="status-item"><div class="status-dot teal"></div><span class="status-text">Tool: ${ai.video_tool||'—'}</span></div></div>`;const ideas=d.content_pipeline?.ideas||[];document.getElementById('content-ideas').innerHTML=ideas.length?ideas.map(i=>`<div class="content-card"><h4>${i.concept}</h4><p>${i.aesthetic||''}</p><div class="meta"><span class="content-tag">${i.platform||'—'}</span><span class="content-tag">${i.format||'—'}</span><span class="content-tag">${i.status||'—'}</span></div></div>`).join(''):'<div class="empty-state"><div class="icon">◉</div><h3>No content ideas yet</h3><p>Ideas will appear here as they\'re added.</p></div>'}
-function renderOrders(){const d=appData.orders;if(!d)return;document.getElementById('orders-updated').textContent='Last synced: '+fmt(d.last_updated);if(d.store_status==='Pre-launch'){document.getElementById('orders-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">▤</div><h3>Pre-launch</h3><p>Order tracking will activate once the store goes live.</p></div></div>`;return}const o=d.orders||{},r=d.revenue||{};document.getElementById('orders-content').innerHTML=`<div class="metrics-grid"><div class="card metric-tile"><div class="metric-value">${o.total||0}</div><div class="metric-label">Total Orders</div></div><div class="card metric-tile"><div class="metric-value">${o.pending||0}</div><div class="metric-label">Pending</div></div><div class="card metric-tile"><div class="metric-value teal">${$(r.mtd)}</div><div class="metric-label">Revenue MTD</div></div><div class="card metric-tile"><div class="metric-value">${$(r.ytd)}</div><div class="metric-label">Revenue YTD</div></div></div><div class="card"><div class="card-header"><span class="card-title">Recent Orders</span></div>${(d.recent_orders||[]).length?`<table class="data-table"><thead><tr><th>Order</th><th>Product</th><th>Amount</th><th>Status</th></tr></thead><tbody>${d.recent_orders.map(o=>`<tr><td style="color:var(--black)">${o.id}</td><td>${o.product}</td><td>${$(o.amount)}</td><td>${o.status}</td></tr>`).join('')}</tbody></table>`:'<div class="empty-state" style="padding:24px"><p>No orders yet.</p></div>'}</div>`}
+function renderOrders(){const d=appData.orders;if(!d)return;
+document.getElementById('orders-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: Shopify';
+if(d.store_status==='Pre-launch'){document.getElementById('orders-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">▤</div><h3>Pre-launch</h3><p>Order tracking will activate once the store goes live.</p></div></div>`;return}
+const o=d.orders||{},r=d.revenue||{},recent=d.recent_orders||[],top=d.top_products||[];
+const statusCol=s=>s==='paid'?'var(--teal)':s==='refunded'?'var(--red-soft)':'var(--amber)';
+const fulCol=s=>s==='fulfilled'?'var(--teal)':'var(--amber)';
+document.getElementById('orders-content').innerHTML=`
+<div class="metrics-grid">
+  <div class="card metric-tile"><div class="metric-value">${o.total||0}</div><div class="metric-label">Total Orders</div></div>
+  <div class="card metric-tile"><div class="metric-value teal">$${(r.all_time||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div></div>
+  <div class="card metric-tile"><div class="metric-value">${o.paid||0}</div><div class="metric-label">Paid</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="color:var(--amber)">${o.pending||0}</div><div class="metric-label">Unfulfilled</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="color:var(--red-soft)">${o.refunded||0}</div><div class="metric-label">Refunded</div></div>
+</div>
+<div class="grid-2" style="margin-bottom:14px">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Revenue</span><span class="card-badge badge-teal">AUD</span></div>
+    <div class="finance-row"><span class="label">This Month</span><span class="value" style="color:var(--teal);font-weight:700">$${(r.mtd||0).toFixed(2)}</span></div>
+    <div class="finance-row"><span class="label">This Quarter</span><span class="value">$${(r.qtd||0).toFixed(2)}</span></div>
+    <div class="finance-row"><span class="label">Year to Date</span><span class="value">$${(r.ytd||0).toFixed(2)}</span></div>
+    <div class="finance-row"><span class="label">All Time</span><span class="value" style="font-weight:700">$${(r.all_time||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Top Products</span></div>
+    ${top.slice(0,6).map((p,i)=>`<div class="finance-row">
+      <span class="label"><span style="color:var(--text-faint);font-size:0.7rem;margin-right:6px">${i+1}</span>${p.name}</span>
+      <span class="value" style="display:flex;gap:10px;align-items:center">
+        <span style="font-size:0.7rem;color:var(--text-muted)">${p.units} sold</span>
+        <span>$${p.revenue.toFixed(0)}</span>
+      </span>
+    </div>`).join('')}
+  </div>
+</div>
+${(d.monthly_revenue&&Object.keys(d.monthly_revenue).length)?`<div class="card" style="margin-bottom:14px">
+  <div class="card-header"><span class="card-title">Monthly Revenue</span></div>
+  <div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding:10px 0">
+    ${(()=>{
+      const months=Object.entries(d.monthly_revenue).slice(-12);
+      const max=Math.max(...months.map(m=>m[1]))||1;
+      return months.map(([mo,val])=>{
+        const h=Math.max((val/max)*100,2);
+        const label=mo.split('-')[1]+'/'+mo.split('-')[0].slice(2);
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div style="font-size:0.58rem;font-weight:600;color:var(--text-secondary)">$${val>999?(val/1000).toFixed(1)+'k':val.toFixed(0)}</div>
+          <div style="width:100%;height:${h}px;background:var(--teal);border-radius:4px 4px 0 0;min-width:16px;opacity:${val>0?1:0.2}"></div>
+          <div style="font-size:0.55rem;color:var(--text-faint)">${label}</div>
+        </div>`}).join('')
+    })()}
+  </div>
+</div>`:''}
+<div class="card">
+  <div class="card-header"><span class="card-title">Recent Orders</span><span class="card-badge badge-teal">from Shopify</span></div>
+  <table class="data-table"><thead><tr><th>#</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Fulfillment</th></tr></thead><tbody>
+    ${recent.map(o=>`<tr>
+      <td><a href="${o.shopify_url}" target="_blank" style="color:var(--teal);font-weight:700;text-decoration:none">#${o.order_number}</a></td>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${o.created_at}</td>
+      <td style="font-weight:500;color:var(--black)">${o.customer}</td>
+      <td style="font-size:0.72rem;color:var(--text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.items}</td>
+      <td style="font-weight:700;color:var(--black)">$${o.total.toFixed(2)}</td>
+      <td><span class="card-badge" style="background:${statusCol(o.financial_status)}15;color:${statusCol(o.financial_status)};border:1px solid ${statusCol(o.financial_status)}30;font-size:0.55rem">${o.financial_status}</span></td>
+      <td><span class="card-badge" style="background:${fulCol(o.fulfillment_status)}15;color:${fulCol(o.fulfillment_status)};border:1px solid ${fulCol(o.fulfillment_status)}30;font-size:0.55rem">${o.fulfillment_status}</span></td>
+    </tr>`).join('')}
+  </tbody></table>
+</div>`}
 function renderFinance(){const d=appData.finance;if(!d)return;
 document.getElementById('finance-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: ClickUp Cost Tracking';
 const c=d.costs||{},r=d.revenue||{},subs=d.subscriptions||[];
