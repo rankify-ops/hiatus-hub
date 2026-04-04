@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-04T23:30:27+10:00",
+  "last_updated": "2026-04-04T23:37:05+10:00",
   "source": "Shopify",
   "store_status": "Live",
   "summary": {
@@ -186,7 +186,7 @@
       "product_id": 7011734257707,
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/11_680d9bae-4556-4c04-828a-00bbd1899724.webp?v=1751674374",
-      "total_quantity": 315,
+      "total_quantity": 314,
       "variants_oos": 0,
       "variants_low": 3,
       "variants": [
@@ -221,7 +221,7 @@
         {
           "title": "10 (M)",
           "sku": "RNGUE10",
-          "quantity": 6,
+          "quantity": 5,
           "variant_id": 40560529408043,
           "inventory_item_id": 42657055113259
         },

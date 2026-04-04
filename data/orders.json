@@ -1,20 +1,18 @@
 {
-  "last_updated": "2026-03-27T05:28:16+10:00",
+  "last_updated": "2026-04-04T23:36:51+10:00",
   "source": "Shopify \u2014 97850c.myshopify.com",
   "store_status": "Live",
   "platform": "Shopify",
   "orders": {
-    "total": 43,
-    "paid": 41,
-    "refunded": 2,
-    "fulfilled": 41,
-    "pending": 2
+    "total": 1,
+    "pending": 0,
+    "fulfilled": 1,
+    "refunded": 0
   },
   "revenue": {
-    "mtd": 0,
-    "qtd": 0,
-    "ytd": 0,
-    "all_time": 4638.65
+    "mtd": 150.0,
+    "qtd": 150.0,
+    "ytd": 150.0
   },
   "monthly_revenue": {
     "2022-11": 10.0,
@@ -292,6 +290,25 @@
       "name": "The Creators Ring",
       "units": 2,
       "revenue": 288.0
+    }
+  ],
+  "market_sales": [
+    {
+      "order_number": "MKT-001",
+      "date": "2026-04-05",
+      "market_name": "Broadbeach Markets",
+      "location": "Broadbeach",
+      "items": [
+        {
+          "product": "UNEARTH RING (SILVER)",
+          "variant": "10 (M)",
+          "quantity": 1,
+          "price": 150.0
+        }
+      ],
+      "total": 150.0,
+      "payment_method": "Cash",
+      "status": "completed"
     }
   ]
 }

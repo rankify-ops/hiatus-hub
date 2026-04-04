@@ -1,13 +1,40 @@
 {
-  "last_updated": "2026-03-27T21:30:00+10:00",
-  "source": "ClickUp — Hiatus Collection > Markets > Market Booking Calendar",
+  "last_updated": "2026-04-04T23:36:44+10:00",
+  "source": "ClickUp \u2014 Hiatus Collection > Markets > Market Booking Calendar",
   "clickup_config": {
     "workspace_id": "90161465920",
     "space_id": "90166312637",
     "list_id": "901613517541"
   },
-  "locations": ["Coolangatta", "Broadbeach", "Byron Bay", "Surfers Paradise", "Burleigh Heads"],
+  "locations": [
+    "Coolangatta",
+    "Broadbeach",
+    "Byron Bay",
+    "Surfers Paradise",
+    "Burleigh Heads"
+  ],
   "markets": [
+    {
+      "name": "Broadbeach Markets",
+      "status": "completed markets",
+      "location": "Broadbeach",
+      "due_date": "2026-04-05",
+      "booking_url": null,
+      "sales_target": null,
+      "actual_sales": 150.0,
+      "description": "Market day \u2014 Broadbeach, 5 Apr 2026",
+      "sales_log": [
+        {
+          "product": "UNEARTH RING (SILVER)",
+          "variant": "10 (M)",
+          "quantity": 1,
+          "price": 150.0,
+          "note": "Cash sale at market"
+        }
+      ],
+      "clickup_task_id": null,
+      "clickup_url": null
+    },
     {
       "name": "Byron Bay Markets",
       "status": "bookable markets",
