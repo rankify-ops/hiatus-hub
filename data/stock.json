@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-03-27T08:34:27+10:00",
-  "source": "Shopify \u2014 97850c.myshopify.com",
+  "last_updated": "2026-04-04T23:30:27+10:00",
+  "source": "Shopify",
   "store_status": "Live",
   "summary": {
     "total_skus": 39,
@@ -186,7 +186,7 @@
       "product_id": 7011734257707,
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/11_680d9bae-4556-4c04-828a-00bbd1899724.webp?v=1751674374",
-      "total_quantity": 316,
+      "total_quantity": 315,
       "variants_oos": 0,
       "variants_low": 3,
       "variants": [
@@ -228,7 +228,7 @@
         {
           "title": "11 (M/L)",
           "sku": "RNGUE11",
-          "quantity": 3,
+          "quantity": 2,
           "variant_id": 40560529440811,
           "inventory_item_id": 42657055146027
         },
