@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-04T23:37:05+10:00",
+  "last_updated": "2026-04-04T23:37:59+10:00",
   "source": "Shopify",
   "store_status": "Live",
   "summary": {
@@ -221,14 +221,14 @@
         {
           "title": "10 (M)",
           "sku": "RNGUE10",
-          "quantity": 5,
+          "quantity": 6,
           "variant_id": 40560529408043,
           "inventory_item_id": 42657055113259
         },
         {
           "title": "11 (M/L)",
           "sku": "RNGUE11",
-          "quantity": 2,
+          "quantity": 1,
           "variant_id": 40560529440811,
           "inventory_item_id": 42657055146027
         },
