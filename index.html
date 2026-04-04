@@ -533,7 +533,7 @@ ${prods.map(p=>{
         ${p.variants.map(v=>{
           const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';
           return `<div style="display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.04);font-size:0.68rem">
-            <span style="color:var(--text-muted)">${v.variant}</span>
+            <span style="color:var(--text-muted)">${v.title||v.variant||'—'}</span>
             <span style="font-weight:700;color:${vc}">${v.quantity}</span>
           </div>`}).join('')}
       </div>
