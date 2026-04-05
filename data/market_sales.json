@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-05T15:00:00+10:00",
+  "last_updated": "2026-04-05T01:25:31+10:00",
   "sales": [
     {
       "id": "MKT-001",
@@ -12,10 +12,29 @@
           "name": "UNEARTH RING (SILVER)",
           "variant": "11 (M/L)",
           "qty": 1,
-          "price": 150.00
+          "price": 150.0
         }
       ],
-      "total": 150.00,
+      "total": 150.0,
+      "payment_method": "Cash",
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled"
+    },
+    {
+      "id": "MKT-002",
+      "date": "2026-04-05",
+      "market_name": "Broadbeach Markets",
+      "location": "Broadbeach",
+      "customer": "Walk-in",
+      "items": [
+        {
+          "name": "Sample Product",
+          "variant": "\u2014",
+          "qty": 1,
+          "price": 125.0
+        }
+      ],
+      "total": 125.0,
       "payment_method": "Cash",
       "financial_status": "paid",
       "fulfillment_status": "fulfilled"
