@@ -127,8 +127,34 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 .cat-filter.active{background:var(--teal-glow);color:var(--teal);border-color:rgba(16,185,129,0.25)}
 .cat-item img:hover{transform:scale(1.05)}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-@media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.mobile-toggle{display:flex}.main{margin-left:0;padding:22px 14px;padding-top:62px}.grid-2{grid-template-columns:1fr}.metrics-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.metrics-grid{grid-template-columns:1fr}.section-header h2{font-size:1.45rem}}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.mobile-toggle{display:flex}
+.main{margin-left:0;padding:16px 12px;padding-top:58px}
+.grid-2{grid-template-columns:1fr}
+.metrics-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.finance-grid{grid-template-columns:1fr}
+.content-grid{grid-template-columns:1fr}
+.card{padding:16px;border-radius:12px}
+.data-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.section-header h2{font-size:1.4rem}
+.metric-value{font-size:1.5rem}
+.metric-tile{padding:14px 10px}
+.nav-item{font-size:0.8rem;padding:9px 12px}
+.sidebar-brand h1{font-size:1.1rem}
+}
+@media(max-width:480px){
+.metrics-grid{grid-template-columns:1fr 1fr;gap:8px}
+.section-header h2{font-size:1.25rem}
+.metric-value{font-size:1.3rem}
+.metric-label{font-size:0.58rem}
+.card-title{font-size:0.85rem}
+.card{padding:14px}
+.main{padding:12px 10px;padding-top:54px}
+.card-badge{font-size:0.55rem;padding:2px 7px}
+select{width:100%}
+}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:3px}
 </style>
 </head>
@@ -144,7 +170,7 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
       <div class="nav-item" data-tab="content"><span class="nav-icon">◉</span><span>Instagram / Content</span></div>
       <div class="nav-item" data-tab="orders"><span class="nav-icon">▤</span><span>Orders / Sales</span></div>
       <div class="nav-item" data-tab="stock"><span class="nav-icon">☷</span><span>Stock Levels</span></div>
-      <div class="nav-item" data-tab="markets"><span class="nav-icon">⚑</span><span>Markets</span></div>
+      <div class="nav-item" data-tab="markets"><span class="nav-icon">⚑</span><span>Broadbeach Market</span></div>
       <div class="nav-item" data-tab="finance"><span class="nav-icon">◇</span><span>Finance</span></div>
     </nav>
     <div class="sidebar-links">
@@ -211,7 +237,11 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
       <div id="stock-content"></div>
     </div>
     <div class="tab-panel" id="tab-markets">
-      <div class="section-header"><h2>Markets</h2><div class="updated" id="markets-updated">Loading...</div></div>
+      <div class="section-header"><h2>Broadbeach Market</h2><div class="updated" id="markets-updated">Loading...</div></div>
+      <div style="margin-bottom:18px">
+        <select id="market-date-select" onchange="renderMarkets()" style="padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(10px);font-family:var(--font);font-size:0.82rem;color:var(--text);cursor:pointer;font-weight:500;min-width:220px">
+        </select>
+      </div>
       <div id="markets-content"></div>
     </div>
     <div class="tab-panel" id="tab-finance">
@@ -541,54 +571,68 @@ ${prods.map(p=>{
   </div>`}).join('')}
 </div>`}
 
-function renderMarkets(){const d=appData.markets;if(!d)return;
-document.getElementById('markets-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: ClickUp Markets';
+function renderMarkets(){
+const d=appData.markets;if(!d)return;
+const ms=appData.market_sales||{sales:[]};
 const mkts=d.markets||[];
-const now=new Date();
-const upcoming=mkts.filter(m=>m.due_date&&new Date(m.due_date)>=now&&m.status!=='templates & info').sort((a,b)=>new Date(a.due_date)-new Date(b.due_date));
-const past=mkts.filter(m=>m.due_date&&new Date(m.due_date)<now||m.status==='completed markets');
-const research=mkts.filter(m=>m.status==='templates & info');
-const locColors={'Byron Bay':'#e84393','Broadbeach':'#6c5ce7','Coolangatta':'#e84393','Surfers Paradise':'#00b894','Burleigh Heads':'#8b7cf5'};
+const sales=ms.sales||[];
+
+// Build date dropdown from all markets that have dates + sales
+const marketDates=mkts.filter(m=>m.due_date).sort((a,b)=>new Date(b.due_date)-new Date(a.due_date));
+const sel=document.getElementById('market-date-select');
+const currentVal=sel.value;
+sel.innerHTML=marketDates.map(m=>{
+  const d2=new Date(m.due_date);
+  const label=d2.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' — '+m.name+(m.location?' ('+m.location+')':'');
+  return `<option value="${m.due_date}">${label}</option>`
+}).join('');
+if(currentVal&&[...sel.options].some(o=>o.value===currentVal)){sel.value=currentVal}
+else if(marketDates.length){sel.value=marketDates[0].due_date}
+
+const selectedDate=sel.value;
+const selectedMarket=mkts.find(m=>m.due_date===selectedDate);
+const marketSales=sales.filter(s=>s.date===selectedDate);
+const totalRev=marketSales.reduce((a,s)=>a+s.total,0)+(selectedMarket?.actual_sales&&!marketSales.length?selectedMarket.actual_sales:0);
+const itemCount=marketSales.reduce((a,s)=>a+s.items.reduce((b,i)=>b+(i.qty||i.quantity||1),0),0);
+
+// Also get sales from the market's sales_log if present
+const logSales=selectedMarket?.sales_log||[];
+const allItems=[...marketSales.flatMap(s=>s.items),...logSales];
+const displayRev=totalRev||logSales.reduce((a,i)=>a+(i.price||0),0);
+const displayCount=itemCount||logSales.reduce((a,i)=>a+(i.quantity||i.qty||1),0);
+
+const mDate=selectedDate?new Date(selectedDate):new Date();
+const dateStr=mDate.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const isToday=selectedDate===new Date().toISOString().split('T')[0];
+
+document.getElementById('markets-updated').textContent=dateStr+(isToday?' — Today':'');
+
 document.getElementById('markets-content').innerHTML=`
 <div class="metrics-grid">
-  <div class="card metric-tile"><div class="metric-value">${upcoming.length}</div><div class="metric-label">Upcoming</div></div>
-  <div class="card metric-tile"><div class="metric-value">${past.length}</div><div class="metric-label">Completed</div></div>
-  <div class="card metric-tile"><div class="metric-value">${research.length}</div><div class="metric-label">Researching</div></div>
-  <div class="card metric-tile"><div class="metric-value teal">${mkts.filter(m=>m.sales_target).reduce((a,m)=>a+(m.sales_target||0),0)?'$'+mkts.filter(m=>m.sales_target).reduce((a,m)=>a+(m.sales_target||0),0).toLocaleString():'$0'}</div><div class="metric-label">Target Revenue</div></div>
+  <div class="card metric-tile"><div class="metric-value teal">$${displayRev.toFixed(2)}</div><div class="metric-label">Revenue</div></div>
+  <div class="card metric-tile"><div class="metric-value">${displayCount}</div><div class="metric-label">Items Sold</div></div>
+  <div class="card metric-tile"><div class="metric-value">${marketSales.length||logSales.length?marketSales.length||1:0}</div><div class="metric-label">Transactions</div></div>
+  <div class="card metric-tile"><div class="metric-value">${selectedMarket?.location||'—'}</div><div class="metric-label">Location</div></div>
 </div>
-${upcoming.length?`<div class="card" style="margin-bottom:14px">
-  <div class="card-header"><span class="card-title">Upcoming Markets</span><span class="card-badge badge-teal">from ClickUp</span></div>
-  <div style="display:flex;flex-direction:column;gap:10px">
-    ${upcoming.map(m=>{
-      const d2=new Date(m.due_date);
-      const days=Math.ceil((d2-now)/86400000);
-      const dateStr=d2.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-      const locCol=locColors[m.location]||'#888';
-      return `<div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.4)">
-        <div style="width:48px;height:48px;border-radius:var(--radius-sm);background:${locCol}15;border:1px solid ${locCol}25;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">⚑</div>
-        <div style="flex:1">
-          <div style="font-size:0.9rem;font-weight:700;color:var(--black)">${m.name}</div>
-          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px">${m.location?'<span style="display:inline-block;padding:1px 7px;border-radius:8px;font-size:0.6rem;font-weight:700;background:'+locCol+'15;color:'+locCol+';border:1px solid '+locCol+'25;margin-right:6px">'+m.location+'</span>':''}${m.description||''}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:0.85rem;font-weight:600;color:var(--black)">${dateStr}</div>
-          <div style="font-size:0.65rem;color:${days<=7?'var(--amber)':'var(--text-muted)'};font-weight:${days<=7?'700':'400'}">${days} days</div>
-          ${m.sales_target?'<div style="font-size:0.65rem;color:var(--teal);margin-top:2px">Target: $'+m.sales_target.toLocaleString()+'</div>':''}
-        </div>
-        ${m.booking_url?'<a href="'+m.booking_url+'" target="_blank" style="padding:6px 12px;border-radius:8px;background:var(--teal-glow);color:var(--teal);font-size:0.65rem;font-weight:700;text-decoration:none;border:1px solid rgba(16,185,129,0.2)">Book</a>':''}
-      </div>`}).join('')}
-  </div>
-</div>`:''}
-${research.length?`<div class="card" style="margin-bottom:14px">
-  <div class="card-header"><span class="card-title">Market Research</span><span class="card-badge badge-amber">Researching</span></div>
-  <div class="content-grid">
-    ${research.map(m=>`<div class="content-card">
-      <h4>${m.name}</h4>
-      <p style="color:var(--text-muted);font-size:0.75rem">Saved as template/research in ClickUp</p>
-      <div class="meta"><a href="${m.clickup_url}" target="_blank" class="content-tag" style="text-decoration:none">Open in ClickUp ↗</a></div>
-    </div>`).join('')}
-  </div>
-</div>`:''}`}
+<div class="card" style="margin-bottom:14px">
+  <div class="card-header"><span class="card-title">Sales</span>${isToday?'<span class="card-badge badge-teal">Today</span>':''}</div>
+  ${allItems.length?`
+  <table class="data-table"><thead><tr><th>Product</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead><tbody>
+    ${allItems.map(i=>`<tr>
+      <td style="font-weight:600;color:var(--black)">${i.product||i.name||'—'}</td>
+      <td>${i.variant||'—'}</td>
+      <td style="font-weight:700">${i.qty||i.quantity||1}</td>
+      <td style="font-weight:600;color:var(--teal)">$${(i.price||0).toFixed(2)}</td>
+    </tr>`).join('')}
+  </tbody>
+  <tfoot><tr style="border-top:2px solid rgba(0,0,0,0.08)">
+    <td style="font-weight:700;color:var(--black)">Total</td><td></td>
+    <td style="font-weight:700">${displayCount}</td>
+    <td style="font-weight:700;color:var(--teal)">$${displayRev.toFixed(2)}</td>
+  </tr></tfoot></table>
+  `:`<div class="empty-state" style="padding:30px"><div class="icon">⚑</div><h3>No sales recorded</h3><p>Sales will appear here when logged for this market date.</p></div>`}
+</div>
+${selectedMarket?.description?`<div class="card"><div class="card-header"><span class="card-title">Details</span></div><div style="font-size:0.8rem;color:var(--text-muted)">${selectedMarket.description}</div></div>`:''}`}
 
 loadData();setInterval(loadData,5*60*1000);
 </script>
