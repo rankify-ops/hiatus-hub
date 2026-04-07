@@ -9,26 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --black: #111;
-  --text: #1a1a1a;
-  --text-secondary: #333;
-  --text-muted: #555;
+  --black: #fff;
+  --text: #e8e8e8;
+  --text-secondary: #ccc;
+  --text-muted: #999;
   --text-faint: #777;
   --white: #fff;
-  --teal: #0d9373;
-  --teal-bright: #10b981;
-  --teal-glow: rgba(16,185,129,0.15);
-  --teal-subtle: rgba(16,185,129,0.07);
-  --red-soft: #dc4a4a;
-  --amber: #d97706;
-  --green: #16a34a;
-  --glass-bg: rgba(255,255,255,0.72);
-  --glass-bg-heavy: rgba(255,255,255,0.82);
-  --glass-border: rgba(255,255,255,0.55);
-  --glass-border-subtle: rgba(255,255,255,0.35);
-  --glass-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  --glass-blur: 28px;
-  --sidebar-bg: rgba(255,255,255,0.75);
+  --teal: #2dd4a8;
+  --teal-bright: #34eabd;
+  --teal-glow: rgba(45,212,168,0.15);
+  --teal-subtle: rgba(45,212,168,0.07);
+  --red-soft: #ef6b6b;
+  --amber: #f0a840;
+  --green: #34d399;
+  --glass-bg: rgba(255,255,255,0.08);
+  --glass-bg-heavy: rgba(255,255,255,0.12);
+  --glass-border: rgba(255,255,255,0.12);
+  --glass-border-subtle: rgba(255,255,255,0.08);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  --glass-blur: 30px;
+  --sidebar-bg: rgba(255,255,255,0.06);
   --font: 'Inter', -apple-system, sans-serif;
   --sidebar-w: 256px;
   --radius: 16px;
@@ -39,36 +39,36 @@
 html{font-size:15px;overflow-x:hidden}
 body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;background:#0a0a0a;max-width:100vw}
 .bg-layer{position:fixed;inset:0;z-index:0;background:url('bg.jpg') center center/cover no-repeat}
-.bg-layer::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.15) 100%)}
+.bg-layer::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.5)}
 .app{display:flex;min-height:100vh;position:relative;z-index:2}
-.sidebar{width:var(--sidebar-w);min-height:100vh;position:fixed;left:0;top:0;background:var(--sidebar-bg);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);border-right:1px solid var(--glass-border);display:flex;flex-direction:column;z-index:100;transition:transform var(--transition);box-shadow:4px 0 30px rgba(0,0,0,0.06)}
-.sidebar-brand{padding:28px 22px 22px;border-bottom:1px solid var(--glass-border-subtle)}
-.sidebar-brand h1{font-family:var(--font);font-size:1.3rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--black);line-height:1.2}
-.sidebar-brand .subtitle{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-top:5px;font-weight:500}
+.sidebar{width:var(--sidebar-w);min-height:100vh;position:fixed;left:0;top:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(40px) saturate(1.4);-webkit-backdrop-filter:blur(40px) saturate(1.4);border-right:1px solid var(--glass-border);display:flex;flex-direction:column;z-index:100;transition:transform var(--transition);box-shadow:4px 0 30px rgba(0,0,0,0.15)}
+.sidebar-brand{padding:28px 22px 22px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.sidebar-brand h1{font-family:var(--font);font-size:1.3rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#fff;line-height:1.2}
+.sidebar-brand .subtitle{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:5px;font-weight:500}
 .sidebar-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px}
-.nav-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);font-size:0.84rem;font-weight:400;color:var(--text-secondary);border:1px solid transparent;user-select:none}
-.nav-item:hover{background:rgba(16,185,129,0.06);color:var(--text)}
-.nav-item.active{background:var(--teal-glow);color:var(--teal);border-color:rgba(16,185,129,0.18);font-weight:600}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);font-size:0.84rem;font-weight:400;color:rgba(255,255,255,0.55);border:1px solid transparent;user-select:none}
+.nav-item:hover{background:rgba(45,212,168,0.06);color:var(--white)}
+.nav-item.active{background:rgba(45,212,168,0.1);color:var(--teal);border-color:rgba(45,212,168,0.18);font-weight:600}
 .nav-item .nav-icon{width:20px;text-align:center;font-size:0.85rem;opacity:0.6}
 .nav-item.active .nav-icon{opacity:1}
-.sidebar-links{padding:0 10px 14px;border-top:1px solid var(--glass-border-subtle);padding-top:14px}
-.sidebar-links-title{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.14em;color:var(--text-faint);margin-bottom:8px;padding-left:14px;font-weight:500}
-.sidebar-link{display:flex;align-items:center;gap:9px;padding:7px 14px;font-size:0.76rem;color:var(--text-muted);text-decoration:none;border-radius:var(--radius-sm);transition:all var(--transition)}
-.sidebar-link:hover{background:rgba(0,0,0,0.04);color:var(--text)}
-.sidebar-footer{padding:16px 20px;border-top:1px solid var(--glass-border-subtle);font-size:0.68rem;color:var(--text-muted);letter-spacing:0.04em}
+.sidebar-links{padding:0 10px 14px;border-top:1px solid rgba(255,255,255,0.06);padding-top:14px}
+.sidebar-links-title{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.14em;color:rgba(255,255,255,0.3);margin-bottom:8px;padding-left:14px;font-weight:500}
+.sidebar-link{display:flex;align-items:center;gap:9px;padding:7px 14px;font-size:0.76rem;color:rgba(255,255,255,0.5);text-decoration:none;border-radius:var(--radius-sm);transition:all var(--transition)}
+.sidebar-link:hover{background:rgba(255,255,255,0.06);color:var(--white)}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06);font-size:0.68rem;color:rgba(255,255,255,0.4);letter-spacing:0.04em}
 .sidebar-footer .domain{color:var(--teal);font-weight:600;letter-spacing:0.06em}
-.mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;width:42px;height:42px;border-radius:var(--radius-sm);background:var(--glass-bg-heavy);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);color:var(--text);font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--glass-shadow)}
+.mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;width:42px;height:42px;border-radius:var(--radius-sm);background:rgba(0,0,0,0.4);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--glass-shadow)}
 .main{margin-left:var(--sidebar-w);flex:1;padding:30px 34px;min-height:100vh;max-width:100%;overflow-x:hidden}
-.card{background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:all var(--transition);box-shadow:var(--glass-shadow)}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.7) 50%,transparent 100%)}
-.card:hover{border-color:rgba(255,255,255,0.65);box-shadow:0 8px 40px rgba(0,0,0,0.1)}
+.card{background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur)) saturate(1.3);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.3);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:all var(--transition);box-shadow:var(--glass-shadow)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.1) 50%,transparent 100%)}
+.card:hover{border-color:rgba(255,255,255,0.18);box-shadow:0 8px 40px rgba(0,0,0,0.25)}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .card-title{font-family:var(--font);font-size:0.95rem;font-weight:600;color:var(--black);letter-spacing:0}
 .card-badge{font-size:0.6rem;padding:3px 10px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600}
-.badge-teal{background:var(--teal-glow);color:var(--teal);border:1px solid rgba(16,185,129,0.25)}
-.badge-amber{background:rgba(217,119,6,0.1);color:var(--amber);border:1px solid rgba(217,119,6,0.2)}
-.badge-red{background:rgba(220,74,74,0.1);color:var(--red-soft);border:1px solid rgba(220,74,74,0.2)}
-.badge-silver{background:rgba(100,100,100,0.08);color:#888;border:1px solid rgba(100,100,100,0.15)}
+.badge-teal{background:rgba(45,212,168,0.12);color:var(--teal);border:1px solid rgba(45,212,168,0.25)}
+.badge-amber{background:rgba(240,168,64,0.12);color:var(--amber);border:1px solid rgba(240,168,64,0.2)}
+.badge-red{background:rgba(239,107,107,0.12);color:var(--red-soft);border:1px solid rgba(239,107,107,0.2)}
+.badge-silver{background:rgba(255,255,255,0.06);color:var(--text-muted);border:1px solid rgba(255,255,255,0.1)}
 .tab-panel{display:none;animation:fadeUp 0.4s ease}
 .tab-panel.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -83,8 +83,8 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 .metric-value.teal{color:var(--teal)}
 .metric-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-top:7px;font-weight:500}
 .status-list{display:flex;flex-direction:column;gap:8px}
-.status-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.4);transition:all var(--transition)}
-.status-item:hover{background:rgba(255,255,255,0.5)}
+.status-item{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);transition:all var(--transition)}
+.status-item:hover{background:rgba(255,255,255,0.08)}
 .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .status-dot.green{background:var(--green);box-shadow:0 0 6px rgba(22,163,74,0.4)}
 .status-dot.amber{background:var(--amber);box-shadow:0 0 6px rgba(217,119,6,0.4)}
@@ -92,47 +92,47 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 .status-dot.teal{background:var(--teal-bright);box-shadow:0 0 6px rgba(16,185,129,0.4)}
 .status-text{font-size:0.8rem;color:var(--text-secondary);flex:1}
 .status-meta{font-size:0.68rem;color:var(--text-faint);font-weight:500}
-.pipeline-bar{display:flex;height:7px;border-radius:4px;overflow:hidden;background:rgba(0,0,0,0.06);margin:14px 0 10px}
+.pipeline-bar{display:flex;height:7px;border-radius:4px;overflow:hidden;background:rgba(255,255,255,0.08);margin:14px 0 10px}
 .pipeline-segment{height:100%;transition:width var(--transition)}
 .pipeline-legend{display:flex;gap:18px;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:0.7rem;color:var(--text-muted)}
 .legend-dot{width:7px;height:7px;border-radius:50%}
 .data-table{width:100%;border-collapse:collapse}
-.data-table th{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-faint);padding:9px 13px;text-align:left;border-bottom:1px solid rgba(0,0,0,0.06);font-weight:600}
-.data-table td{padding:11px 13px;font-size:0.8rem;border-bottom:1px solid rgba(0,0,0,0.03);color:var(--text-secondary)}
-.data-table tr:hover td{background:rgba(255,255,255,0.3)}
+.data-table th{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-faint);padding:9px 13px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:600}
+.data-table td{padding:11px 13px;font-size:0.8rem;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text-secondary)}
+.data-table tr:hover td{background:rgba(255,255,255,0.04)}
 .content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.content-card{padding:18px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.4)}
+.content-card{padding:18px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)}
 .content-card h4{font-family:var(--font);font-size:0.98rem;color:var(--black);margin-bottom:6px;font-weight:500}
 .content-card p{font-size:0.76rem;color:var(--text-muted);line-height:1.5}
 .content-card .meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.content-tag{font-size:0.58rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.5);color:var(--text-muted);letter-spacing:0.04em;font-weight:500}
+.content-tag{font-size:0.58rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);letter-spacing:0.04em;font-weight:500}
 .alert-banner{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:0.8rem}
-.alert-banner.info{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:var(--teal);backdrop-filter:blur(10px)}
+.alert-banner.info{background:rgba(45,212,168,0.08);border:1px solid rgba(45,212,168,0.15);color:var(--teal);backdrop-filter:blur(10px)}
 .alert-banner .alert-icon{font-size:0.95rem}
 .finance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
-.finance-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:0.8rem}
+.finance-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.8rem}
 .finance-row:last-child{border-bottom:none}
 .finance-row .label{color:var(--text-muted)}
-.finance-row .value{color:var(--black);font-weight:600}
+.finance-row .value{color:var(--white);font-weight:600}
 .empty-state{text-align:center;padding:50px 20px;color:var(--text-muted)}
 .empty-state .icon{font-size:2.2rem;margin-bottom:14px;opacity:0.35}
-.empty-state h3{font-family:var(--font);font-size:1.15rem;color:var(--text-secondary);font-weight:400;margin-bottom:6px}
+.empty-state h3{font-family:var(--font);font-size:1.15rem;color:var(--text);font-weight:400;margin-bottom:6px}
 .empty-state p{font-size:0.78rem;line-height:1.6;max-width:380px;margin:0 auto}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .quick-links{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
-.quick-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:18px;background:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.45);color:var(--text-muted);font-size:0.7rem;text-decoration:none;transition:all var(--transition);letter-spacing:0.03em;font-weight:500}
-.quick-link:hover{border-color:rgba(16,185,129,0.35);color:var(--teal);background:var(--teal-subtle)}
-.shimmer{background:linear-gradient(90deg,rgba(0,0,0,0.04) 25%,rgba(0,0,0,0.08) 50%,rgba(0,0,0,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm);height:20px}
-.cat-filter{padding:5px 12px;border-radius:16px;border:1px solid rgba(0,0,0,0.08);background:rgba(255,255,255,0.4);color:var(--text-muted);font-size:0.68rem;font-weight:600;cursor:pointer;transition:all var(--transition);font-family:var(--font)}
-.cat-filter:hover{border-color:rgba(16,185,129,0.3);color:var(--teal)}
-.cat-filter.active{background:var(--teal-glow);color:var(--teal);border-color:rgba(16,185,129,0.25)}
+.quick-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:18px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-size:0.7rem;text-decoration:none;transition:all var(--transition);letter-spacing:0.03em;font-weight:500}
+.quick-link:hover{border-color:rgba(45,212,168,0.3);color:var(--teal);background:var(--teal-subtle)}
+.shimmer{background:linear-gradient(90deg,rgba(255,255,255,0.03) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm);height:20px}
+.cat-filter{padding:5px 12px;border-radius:16px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text-muted);font-size:0.68rem;font-weight:600;cursor:pointer;transition:all var(--transition);font-family:var(--font)}
+.cat-filter:hover{border-color:rgba(45,212,168,0.3);color:var(--teal)}
+.cat-filter.active{background:var(--teal-glow);color:var(--teal);border-color:rgba(45,212,168,0.25)}
 .cat-item img:hover{transform:scale(1.05)}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
 /* ─── Tablet (≤900px) ─── */
 @media(max-width:900px){
-.sidebar{transform:translateX(-100%);width:280px;background:rgba(245,245,245,0.97);backdrop-filter:none;-webkit-backdrop-filter:none}
+.sidebar{transform:translateX(-100%);width:280px;background:rgba(10,10,10,0.92);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px)}
 .sidebar.open{transform:translateX(0)}
 .mobile-toggle{display:flex}
 .main{margin-left:0;padding:16px 14px;padding-top:60px;max-width:100vw;overflow-x:hidden}
@@ -241,7 +241,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
 .sidebar-link{font-size:0.7rem;padding:6px 12px}
 .sidebar-footer{padding:12px 16px;font-size:0.6rem}
 }
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:3px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
 
 /* ─── PIN Screen ─── */
 .pin-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.5s ease,visibility 0.5s ease}
@@ -367,7 +367,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
     <div class="tab-panel" id="tab-markets">
       <div class="section-header"><h2>Market Stalls</h2><div class="updated" id="markets-updated">Loading...</div></div>
       <div style="margin-bottom:18px">
-        <select id="market-date-select" onchange="renderMarkets()" style="padding:8px 14px;border-radius:var(--radius-sm);border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(10px);font-family:var(--font);font-size:0.82rem;color:var(--text);cursor:pointer;font-weight:500;min-width:220px">
+        <select id="market-date-select" onchange="renderMarkets()" style="padding:8px 14px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);font-family:var(--font);font-size:0.82rem;color:#fff;cursor:pointer;font-weight:500;min-width:220px">
         </select>
       </div>
       <div id="markets-content"></div>
@@ -451,7 +451,7 @@ el.innerHTML=`
       <div style="font-size:0.82rem;font-weight:700;color:var(--black);line-height:1.3;margin-bottom:6px">${p.title}</div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <span style="font-size:0.85rem;font-weight:700;color:var(--teal)">$${p.price.toFixed(2)}</span>
-        <span style="font-size:0.62rem;padding:2px 8px;border-radius:8px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06);color:var(--text-muted);font-weight:600">${p.type||'Other'}</span>
+        <span style="font-size:0.62rem;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,0,0,0.06);color:var(--text-muted);font-weight:600">${p.type||'Other'}</span>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
         <span style="font-size:0.68rem;color:var(--text-muted)">${p.variant_count} variant${p.variant_count!==1?'s':''}</span>
@@ -500,7 +500,7 @@ document.getElementById('orders-content').innerHTML=`
     <div class="card-header"><span class="card-title">Revenue Breakdown</span></div>
     <div class="finance-row"><span class="label">Shopify (Online)</span><span class="value">$${(r.all_time||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
     <div class="finance-row"><span class="label">Markets (In-person)</span><span class="value">$${mRev.toFixed(2)}</span></div>
-    <div class="finance-row" style="border-top:2px solid rgba(0,0,0,0.06);padding-top:12px;margin-top:4px"><span class="label" style="font-weight:700">Combined Total</span><span class="value" style="font-weight:700;color:var(--teal)">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+    <div class="finance-row" style="border-top:2px solid rgba(255,255,255,0.06);padding-top:12px;margin-top:4px"><span class="label" style="font-weight:700">Combined Total</span><span class="value" style="font-weight:700;color:var(--teal)">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
   </div>
   <div class="card">
     <div class="card-header"><span class="card-title">Top Products (All Channels)</span></div>
@@ -620,7 +620,7 @@ document.getElementById('finance-content').innerHTML=`
       const dateStr=s._renew.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
       const statusCol=isUrgent?'var(--amber)':isSoon?'var(--teal)':'var(--text-muted)';
       const bgCol=isUrgent?'rgba(217,119,6,0.06)':isSoon?'rgba(16,185,129,0.04)':'transparent';
-      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);background:${bgCol};border:1px solid rgba(0,0,0,0.04)">
+      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);background:${bgCol};border:1px solid rgba(255,255,255,0.06)">
         <div style="width:8px;height:8px;border-radius:50%;background:${statusCol};box-shadow:0 0 6px ${statusCol}44;flex-shrink:0"></div>
         <div style="flex:1">
           <div style="font-size:0.82rem;font-weight:600;color:var(--black)">${s.name}</div>
@@ -652,7 +652,7 @@ document.getElementById('finance-content').innerHTML=`
         <td style="font-size:0.72rem;color:var(--text-muted)">${s.payment_method||'—'}</td>
       </tr>`}).join('')}
   </tbody>
-  <tfoot><tr style="border-top:2px solid rgba(0,0,0,0.08)">
+  <tfoot><tr style="border-top:2px solid rgba(255,255,255,0.08)">
     <td style="font-weight:700;color:var(--black)">Total</td><td></td>
     <td style="font-weight:700;color:var(--teal)">$${subs.reduce((a,s)=>a+(s.monthly_cost||0),0).toFixed(2)}</td>
     <td style="font-weight:700;color:var(--text-secondary)">$${subs.reduce((a,s)=>a+(s.annual_cost||0),0).toFixed(2)}</td>
@@ -672,7 +672,7 @@ document.getElementById('finance-content').innerHTML=`
   <div class="card">
     <div class="card-header"><span class="card-title">Revenue Channels</span></div>
     ${Object.keys(r.by_channel||{}).length?Object.entries(r.by_channel).map(([ch,val])=>`<div class="finance-row"><span class="label">${ch}</span><span class="value">${$(val)}</span></div>`).join(''):`<div class="empty-state" style="padding:36px"><div class="icon">◇</div><h3>Pre-launch</h3><p>Revenue channels will populate once the store goes live.</p></div>`}
-    <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.3);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.35)"><div style="font-size:0.73rem;color:var(--text-muted)">${d.notes||''}</div></div>
+    <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.06);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)"><div style="font-size:0.73rem;color:var(--text-muted)">${d.notes||''}</div></div>
   </div>
 </div>`}
 function renderStock(){const d=appData.stock;if(!d)return;
@@ -702,7 +702,7 @@ document.getElementById('stock-content').innerHTML=`
       const dt=new Date(c.timestamp);
       const dateStr=dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
       const srcCol=c.source.includes('Shopify')?'#4a8fe8':c.source.includes('Market')?'#e8a84d':'#888';
-      return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.03);flex-wrap:wrap">
+      return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);flex-wrap:wrap">
         <div style="width:28px;height:28px;border-radius:6px;background:${col}12;display:flex;align-items:center;justify-content:center;font-weight:800;color:${col};font-size:0.7rem;flex-shrink:0">${isUp?'+':''}${c.change}</div>
         <div style="flex:1;min-width:100px">
           <div style="font-size:0.72rem;font-weight:600;color:var(--black)">${c.product}</div>
@@ -737,17 +737,17 @@ ${prods.map((p,pi)=>{
       <div style="display:flex;flex-wrap:wrap;gap:2px">
         ${p.variants.map(v=>{
           const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';
-          return `<div style="padding:2px 4px;border-radius:4px;background:rgba(0,0,0,0.03);font-size:0.52rem"><span style="color:var(--text-faint)">${(v.title||'').replace(/\s*\(.*\)/,'')}</span> <span style="font-weight:700;color:${vc}">${v.quantity}</span></div>`}).join('')}
+          return `<div style="padding:2px 4px;border-radius:4px;background:rgba(255,255,255,0.05);font-size:0.52rem"><span style="color:var(--text-faint)">${(v.title||'').replace(/\s*\(.*\)/,'')}</span> <span style="font-weight:700;color:${vc}">${v.quantity}</span></div>`}).join('')}
       </div>
       ${prodChanges.length?'<div style="font-size:0.5rem;color:var(--teal);margin-top:4px;text-align:center">'+prodChanges.length+' changes ▾</div>':''}
     </div>
-    <div class="stock-detail" style="border-top:1px solid rgba(0,0,0,0.04)">
+    <div class="stock-detail" style="border-top:1px solid rgba(255,255,255,0.06)">
       <div style="padding:10px">
         <div style="font-size:0.65rem;font-weight:600;color:var(--black);margin-bottom:6px">History</div>
         ${prodChanges.length?prodChanges.slice().reverse().map(c=>{
           const col2=c.change>0?'var(--teal)':'var(--red-soft)';
           const dt2=new Date(c.timestamp);
-          return `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.02);font-size:0.6rem">
+          return `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.6rem">
             <span style="font-weight:700;color:${col2};min-width:22px">${c.change>0?'+':''}${c.change}</span>
             <span style="color:var(--text-secondary);flex:1">${c.variant}</span>
             <span style="color:var(--text-faint);font-size:0.5rem">${dt2.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
@@ -807,7 +807,7 @@ document.getElementById('markets-content').innerHTML=`
       <td style="font-weight:600;color:var(--teal)">$${(i.price||0).toFixed(2)}</td>
     </tr>`).join('')}
   </tbody>
-  <tfoot><tr style="border-top:2px solid rgba(0,0,0,0.08)">
+  <tfoot><tr style="border-top:2px solid rgba(255,255,255,0.08)">
     <td style="font-weight:700;color:var(--black)">Total</td><td></td>
     <td style="font-weight:700">${displayCount}</td>
     <td style="font-weight:700;color:var(--teal)">$${displayRev.toFixed(2)}</td>
