@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-07T22:02:43+10:00",
+  "last_updated": "2026-04-07T22:22:28+10:00",
   "source": "Shopify + Supplier Data",
   "store_status": "Live",
   "categories": [
@@ -7,14 +7,15 @@
     "Bracelet",
     "Necklace",
     "Other",
+    "Pendant",
     "Ring"
   ],
   "summary": {
-    "total_skus": 41,
+    "total_skus": 48,
     "in_stock": 14,
     "low_stock": 21,
-    "out_of_stock": 6,
-    "total_products": 11
+    "out_of_stock": 13,
+    "total_products": 16
   },
   "products": [
     {
@@ -85,7 +86,10 @@
         }
       ],
       "supplier_sku": "SR10242B",
-      "supplier": "Silver supplier"
+      "supplier": "Silver supplier",
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "CUBAN LINK BRACELET (SILVER)",
@@ -115,7 +119,10 @@
         }
       ],
       "supplier_sku": "BR02628A / BR02628B",
-      "supplier": "Silver supplier"
+      "supplier": "Silver supplier",
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "FREE RING SIZER",
@@ -136,7 +143,11 @@
         }
       ],
       "supplier_sku": null,
-      "supplier": null
+      "supplier": null,
+      "flags": [
+        "Needs supplier SKU",
+        "Needs supplier price"
+      ]
     },
     {
       "product": "PARADOX PEARLS (SILVER)",
@@ -167,7 +178,10 @@
       ],
       "supplier_sku": "BR02629C",
       "supplier": "Silver supplier",
-      "notes": "Supplier SKU not yet assigned"
+      "notes": "Supplier SKU not yet assigned",
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "SUN WORSHIPPER PENDANT (SILVER)",
@@ -199,7 +213,10 @@
           "supplier_sku": "NC03702C"
         }
       ],
-      "is_composite": true
+      "is_composite": true,
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "UNEARTH CUFF (SILVER)",
@@ -220,7 +237,10 @@
         }
       ],
       "supplier_sku": "BR02221B",
-      "supplier": "Silver supplier"
+      "supplier": "Silver supplier",
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "UNEARTH RING (SILVER)",
@@ -290,7 +310,10 @@
         }
       ],
       "supplier_sku": "SR10243B",
-      "supplier": "Silver supplier"
+      "supplier": "Silver supplier",
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "UNEARTH SIGNET RING (SILVER)",
@@ -360,7 +383,10 @@
         }
       ],
       "supplier_sku": "SR10453B",
-      "supplier": "Silver supplier"
+      "supplier": "Silver supplier",
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "UNEARTH STACKER RING SET (SILVER)",
@@ -430,7 +456,10 @@
         }
       ],
       "supplier_sku": "SR10397B",
-      "supplier": "Silver supplier"
+      "supplier": "Silver supplier",
+      "flags": [
+        "Needs supplier price"
+      ]
     },
     {
       "product": "3 HOOP CHAIN (STERLING SILVER)",
@@ -454,7 +483,11 @@
       "supplier": "Silver supplier",
       "is_component": true,
       "component_of": "SUN WORSHIPPER PENDANT (SILVER)",
-      "notes": "Component \u2014 used in Sun Worshipper Pendant. Track separately."
+      "notes": "Component \u2014 used in Sun Worshipper Pendant. Track separately.",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier price"
+      ]
     },
     {
       "product": "COMPASS PENDANT (SILVER)",
@@ -476,7 +509,179 @@
       ],
       "supplier_sku": "SP18158A",
       "supplier": "Silver supplier",
-      "notes": "New product \u2014 not yet on Shopify"
+      "notes": "New product \u2014 not yet on Shopify",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier price"
+      ]
+    },
+    {
+      "product": "ROPE CHAIN 50CM (STERLING SILVER)",
+      "product_id": null,
+      "product_type": "Necklace",
+      "price": 0,
+      "image": null,
+      "total_quantity": 0,
+      "variants_oos": 1,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "50cm",
+          "sku": "ROPE50-SS",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        }
+      ],
+      "supplier_sku": "TBD",
+      "supplier": "Silver supplier",
+      "is_component": true,
+      "component_of": "HIATUS H PENDANT (SILVER)",
+      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKU",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier SKU",
+        "Needs supplier price"
+      ]
+    },
+    {
+      "product": "ROPE CHAIN 55CM (STERLING SILVER)",
+      "product_id": null,
+      "product_type": "Necklace",
+      "price": 0,
+      "image": null,
+      "total_quantity": 0,
+      "variants_oos": 1,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "55cm",
+          "sku": "ROPE55-SS",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        }
+      ],
+      "supplier_sku": "TBD",
+      "supplier": "Silver supplier",
+      "is_component": true,
+      "component_of": "HIATUS H PENDANT (SILVER)",
+      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKU",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier SKU",
+        "Needs supplier price"
+      ]
+    },
+    {
+      "product": "ROPE CHAIN 61CM (STERLING SILVER)",
+      "product_id": null,
+      "product_type": "Necklace",
+      "price": 0,
+      "image": null,
+      "total_quantity": 0,
+      "variants_oos": 1,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "61cm",
+          "sku": "ROPE61-SS",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        }
+      ],
+      "supplier_sku": "TBD",
+      "supplier": "Silver supplier",
+      "is_component": true,
+      "component_of": "HIATUS H PENDANT (SILVER)",
+      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKU",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier SKU",
+        "Needs supplier price"
+      ]
+    },
+    {
+      "product": "HIATUS H PENDANT PIECE (SILVER)",
+      "product_id": null,
+      "product_type": "Pendant",
+      "price": 0,
+      "image": null,
+      "total_quantity": 0,
+      "variants_oos": 1,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "Default Title",
+          "sku": "PEN-H-SS",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        }
+      ],
+      "supplier_sku": "TBD",
+      "supplier": "Silver supplier",
+      "is_component": true,
+      "component_of": "HIATUS H PENDANT (SILVER)",
+      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKU",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier SKU",
+        "Needs supplier price"
+      ]
+    },
+    {
+      "product": "HIATUS H PENDANT (SILVER)",
+      "product_id": null,
+      "product_type": "Necklace",
+      "price": 0,
+      "image": null,
+      "total_quantity": 0,
+      "variants_oos": 3,
+      "variants_low": 0,
+      "variants": [
+        {
+          "title": "50cm Rope Chain",
+          "sku": "HPEN-50",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        },
+        {
+          "title": "55cm Rope Chain",
+          "sku": "HPEN-55",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        },
+        {
+          "title": "61cm Rope Chain",
+          "sku": "HPEN-61",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        }
+      ],
+      "supplier_sku": "TBD + TBD",
+      "supplier": "Silver supplier",
+      "is_composite": true,
+      "components": [
+        {
+          "name": "Hiatus H Pendant Piece (Silver)",
+          "supplier_sku": "TBD"
+        },
+        {
+          "name": "Rope Chain (1 of 3 sizes: 50cm / 55cm / 61cm)",
+          "supplier_sku": "TBD"
+        }
+      ],
+      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKUs \u00b7 Composite: 1x H pendant + 1x rope chain (any size)",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier SKU",
+        "Needs supplier price"
+      ]
     }
   ]
 }
