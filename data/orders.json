@@ -1,314 +1,322 @@
 {
-  "last_updated": "2026-04-04T23:37:59+10:00",
+  "last_updated": "2026-04-07T02:44:02+10:00",
   "source": "Shopify \u2014 97850c.myshopify.com",
   "store_status": "Live",
-  "platform": "Shopify",
   "orders": {
-    "total": 1,
-    "pending": 0,
-    "fulfilled": 1,
-    "refunded": 0
+    "total": 44,
+    "paid": 42,
+    "refunded": 2,
+    "pending": 42,
+    "unfulfilled": 2
   },
   "revenue": {
-    "mtd": 150.0,
-    "qtd": 150.0,
-    "ytd": 150.0
-  },
-  "monthly_revenue": {
-    "2022-11": 10.0,
-    "2023-03": 5.0,
-    "2023-04": 449.75,
-    "2023-06": 193.77,
-    "2023-07": 5.0,
-    "2023-08": 181.0,
-    "2023-09": 525.2,
-    "2023-10": 133.6,
-    "2023-11": 392.3,
-    "2023-12": 298.5,
-    "2024-03": 2.0,
-    "2024-04": 100.0,
-    "2024-05": 199.0,
-    "2024-06": 400.0,
-    "2024-07": 343.0,
-    "2024-09": 2.0,
-    "2024-11": 179.1,
-    "2024-12": 125.89,
-    "2025-03": 108.0,
-    "2025-06": 128.19,
-    "2025-07": 708.1,
-    "2025-12": 149.25
+    "mtd": 134.1,
+    "qtd": 134.1,
+    "ytd": 134.1,
+    "all_time": 4618.75
   },
   "recent_orders": [
     {
+      "order_number": 1045,
+      "created_at": "2026-04-06",
+      "customer": "Daniel Verstraten",
+      "items": "SUN WORSHIPPER PENDANT (SILVER)",
+      "total": 134.1,
+      "financial_status": "paid",
+      "fulfillment_status": "unfulfilled",
+      "shopify_url": "https://admin.shopify.com/store/97850c/orders/6333476634667"
+    },
+    {
       "order_number": 1044,
       "created_at": "2025-12-29",
-      "items": "CUBAN LINK BRACELET (SILVER) x1",
+      "customer": "Carl Duncan",
+      "items": "CUBAN LINK BRACELET (SILVER)",
       "total": 149.25,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Carl Duncan",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/6131969032235"
     },
     {
       "order_number": 1043,
       "created_at": "2025-07-19",
-      "items": "SUN WORSHIPPER PENDANT (SILVER) x1",
+      "customer": "Dhruv Mehra",
+      "items": "SUN WORSHIPPER PENDANT (SILVER)",
       "total": 96.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Dhruv Mehra",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5849549111339"
     },
     {
       "order_number": 1042,
       "created_at": "2025-07-17",
-      "items": "FREE RING SIZER x1",
+      "customer": "Joshua Alexandridis",
+      "items": "FREE RING SIZER",
       "total": 2.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Joshua Alexandridis",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5846474096683"
     },
     {
       "order_number": 1041,
       "created_at": "2025-07-16",
-      "items": "UNEARTH CUFF (SILVER) x1",
+      "customer": "Dhruv Mehra",
+      "items": "UNEARTH CUFF (SILVER)",
       "total": 199.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Dhruv Mehra",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5845402714155"
     },
     {
       "order_number": 1040,
       "created_at": "2025-07-16",
-      "items": "FREE RING SIZER x1",
+      "customer": "Brett Reid",
+      "items": "FREE RING SIZER",
       "total": 2.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Brett Reid",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5844986003499"
     },
     {
       "order_number": 1039,
       "created_at": "2025-07-15",
-      "items": "FREE RING SIZER x1, SUN WORSHIPPER PENDANT (SILVER) x1",
+      "customer": "Aloisia Cudmore",
+      "items": "FREE RING SIZER, SUN WORSHIPPER PENDANT (SILVER)",
       "total": 110.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Aloisia Cudmore",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5844042285099"
     },
     {
       "order_number": 1038,
       "created_at": "2025-07-15",
-      "items": "SUN WORSHIPPER PENDANT (SILVER) x1",
+      "customer": "eliza paroz",
+      "items": "SUN WORSHIPPER PENDANT (SILVER)",
       "total": 120.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "eliza paroz",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5843654705195"
     },
     {
       "order_number": 1037,
       "created_at": "2025-07-11",
-      "items": "UNEARTH CUFF (SILVER) x1",
+      "customer": "Richard Mcfadden",
+      "items": "UNEARTH CUFF (SILVER)",
       "total": 179.1,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Richard Mcfadden",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5838603747371"
     },
     {
       "order_number": 1036,
       "created_at": "2025-06-27",
-      "items": "SUN WORSHIPPER PENDANT (SILVER) x1",
+      "customer": "Jack Norman",
+      "items": "SUN WORSHIPPER PENDANT (SILVER)",
       "total": 128.19,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Jack Norman",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5819814314027"
     },
     {
       "order_number": 1035,
       "created_at": "2025-03-12",
-      "items": "SUN WORSHIPPER PENDANT (SILVER) x1",
+      "customer": "Sutasinee Phatrat",
+      "items": "SUN WORSHIPPER PENDANT (SILVER)",
       "total": 108.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Sutasinee Phatrat",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5677674463275"
     },
     {
       "order_number": 1034,
       "created_at": "2024-12-03",
-      "items": "Sun Worshipper Pendant x1",
+      "customer": "larissa newport",
+      "items": "Sun Worshipper Pendant",
       "total": 125.89,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "larissa newport",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5537158135851"
     },
     {
       "order_number": 1033,
       "created_at": "2024-11-17",
-      "items": "Unearthed Cuff x1",
+      "customer": "michael herskope",
+      "items": "Unearthed Cuff",
       "total": 179.1,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "michael herskope",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5508402348075"
     },
     {
       "order_number": 1032,
       "created_at": "2024-09-28",
-      "items": "Free Ring Sizer x1",
+      "customer": "Petria Nagel",
+      "items": "Free Ring Sizer",
       "total": 2.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Petria Nagel",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5441643839531"
     },
     {
       "order_number": 1031,
       "created_at": "2024-07-26",
-      "items": "Unearthed Stacker Ring Set x1",
+      "customer": "Thomas Flood",
+      "items": "Unearthed Stacker Ring Set",
       "total": 0.0,
       "financial_status": "paid",
       "fulfillment_status": "unfulfilled",
-      "customer": "Thomas Flood",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5348001939499"
     },
     {
       "order_number": 1030,
       "created_at": "2024-07-25",
-      "items": "Unearthed Stacker Ring Set x1",
+      "customer": "Thomas Flood",
+      "items": "Unearthed Stacker Ring Set",
       "total": 144.0,
       "financial_status": "refunded",
       "fulfillment_status": "unfulfilled",
-      "customer": "Thomas Flood",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5346534883371"
     },
     {
       "order_number": 1029,
       "created_at": "2024-07-09",
-      "items": "Cuban Link Bracelet x1",
+      "customer": "James De Maria",
+      "items": "Cuban Link Bracelet",
       "total": 199.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "James De Maria",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5323525718059"
     },
     {
       "order_number": 1028,
       "created_at": "2024-06-13",
-      "items": "Unearthed Cuff x1",
+      "customer": "Claudia Christenson",
+      "items": "Unearthed Cuff",
       "total": 199.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Claudia Christenson",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5291212242987"
     },
     {
       "order_number": 1027,
       "created_at": "2024-06-13",
-      "items": "Free Ring Sizer x1, Cuban Link Bracelet x1",
+      "customer": "Hakena Parore",
+      "items": "Free Ring Sizer, Cuban Link Bracelet",
       "total": 201.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Hakena Parore",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5290161668139"
     },
     {
       "order_number": 1026,
       "created_at": "2024-05-03",
-      "items": "Cuban Link Bracelet x1",
+      "customer": "Bryana Karanikos",
+      "items": "Cuban Link Bracelet",
       "total": 199.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Bryana Karanikos",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5237938618411"
     },
     {
       "order_number": 1025,
       "created_at": "2024-04-07",
-      "items": "Unearthed Ring x1",
+      "customer": "Isabel Mccabe",
+      "items": "Unearthed Ring",
       "total": 100.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
-      "customer": "Isabel Mccabe",
       "shopify_url": "https://admin.shopify.com/store/97850c/orders/5206669623339"
+    },
+    {
+      "order_number": 1024,
+      "created_at": "2024-03-09",
+      "customer": "Adrian Jewers",
+      "items": "Free Ring Sizer",
+      "total": 2.0,
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled",
+      "shopify_url": "https://admin.shopify.com/store/97850c/orders/5168286400555"
+    },
+    {
+      "order_number": 1023,
+      "created_at": "2023-12-07",
+      "customer": "Paris Portelli",
+      "items": "Paradox Pearls",
+      "total": 179.1,
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled",
+      "shopify_url": "https://admin.shopify.com/store/97850c/orders/5034946789419"
+    },
+    {
+      "order_number": 1022,
+      "created_at": "2023-12-02",
+      "customer": "Scott Hardiman",
+      "items": "Cuban Link Bracelet",
+      "total": 119.4,
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled",
+      "shopify_url": "https://admin.shopify.com/store/97850c/orders/5022877188139"
+    },
+    {
+      "order_number": 1021,
+      "created_at": "2023-11-24",
+      "customer": "Vincent Vecchio",
+      "items": "Sun Worshipper Pendant",
+      "total": 84.0,
+      "financial_status": "paid",
+      "fulfillment_status": "fulfilled",
+      "shopify_url": "https://admin.shopify.com/store/97850c/orders/5005916241963"
     }
   ],
   "top_products": [
     {
       "name": "Unearthed Cuff",
-      "units": 5,
-      "revenue": 969.49
+      "revenue": 969.49,
+      "units": 5
     },
     {
       "name": "Cuban Link Bracelet",
-      "units": 4,
-      "revenue": 796.0
+      "revenue": 796.0,
+      "units": 4
     },
     {
       "name": "SUN WORSHIPPER PENDANT (SILVER)",
-      "units": 5,
-      "revenue": 603.75
-    },
-    {
-      "name": "Unearthed Stacker Ring Set",
-      "units": 4,
-      "revenue": 576.0
+      "revenue": 752.75,
+      "units": 6
     },
     {
       "name": "Sun Worshipper Pendant",
-      "units": 4,
-      "revenue": 482.71
+      "revenue": 482.71,
+      "units": 4
+    },
+    {
+      "name": "Unearthed Stacker Ring Set",
+      "revenue": 432.0,
+      "units": 3
     },
     {
       "name": "UNEARTH CUFF (SILVER)",
-      "units": 2,
-      "revenue": 398.0
+      "revenue": 398.0,
+      "units": 2
     },
     {
       "name": "Paradox Pearls",
-      "units": 2,
-      "revenue": 398.0
+      "revenue": 398.0,
+      "units": 2
     },
     {
       "name": "Unearthed Stackers",
-      "units": 2,
-      "revenue": 298.0
+      "revenue": 298.0,
+      "units": 2
     },
     {
       "name": "Unearthed Ring",
-      "units": 2,
-      "revenue": 288.0
+      "revenue": 288.0,
+      "units": 2
     },
     {
       "name": "The Creators Ring",
-      "units": 2,
-      "revenue": 288.0
-    }
-  ],
-  "market_sales": [
-    {
-      "order_number": "MKT-001",
-      "date": "2026-04-05",
-      "market_name": "Broadbeach Markets",
-      "location": "Broadbeach",
-      "items": [
-        {
-          "product": "UNEARTH RING (SILVER)",
-          "variant": "11 (M/L)",
-          "quantity": 1,
-          "price": 150.0
-        }
-      ],
-      "total": 150.0,
-      "payment_method": "Cash",
-      "status": "completed"
+      "revenue": 288.0,
+      "units": 2
     }
   ]
 }

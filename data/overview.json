@@ -1,26 +1,41 @@
 {
-  "last_updated": "2026-03-27T21:00:00+10:00",
+  "last_updated": "2026-04-07T02:44:35+10:00",
   "brand": "Hiatus Collection",
   "tagline": "Premium Oxidised 925 Sterling Silver",
   "metrics": {
-    "total_products": 0,
-    "active_listings": 0,
+    "total_products": 9,
+    "active_listings": 9,
     "instagram_followers": 0,
-    "monthly_revenue": 0,
+    "monthly_revenue": 559.1,
     "monthly_costs": 95.87,
-    "pending_orders": 0
+    "all_time_revenue": 5043.75,
+    "pending_orders": 2,
+    "total_orders": 44,
+    "market_sales_total": 425.0
   },
   "status": {
-    "store": "Pre-launch",
+    "store": "Live",
     "content_pipeline": "Building",
-    "cad_pending": ["Ornate Cross Pendant (Filigree/Jerusalem)"],
-    "collections_planned": ["The Kingdom", "Seek First the Kingdom"],
-    "hero_pieces": ["Flaming Sword", "New Jerusalem"]
+    "cad_pending": [
+      "Ornate Cross Pendant (Filigree/Jerusalem)"
+    ],
+    "collections_planned": [
+      "The Kingdom",
+      "Seek First the Kingdom"
+    ],
+    "hero_pieces": [
+      "Flaming Sword",
+      "New Jerusalem"
+    ]
   },
   "alerts": [
     {
       "type": "info",
-      "message": "Finance tab now synced with ClickUp Cost Tracking — 5 active subscriptions totalling $95.87/mo"
+      "message": "New Shopify order #1045 \u2014 Sun Worshipper Pendant \u2014 $134.10"
+    },
+    {
+      "type": "info",
+      "message": "Broadbeach Market today \u2014 $425 in sales (3 transactions)"
     }
   ]
 }

@@ -1,12 +1,12 @@
 {
-  "last_updated": "2026-04-05T01:35:39+10:00",
+  "last_updated": "2026-04-07T02:44:17+10:00",
   "source": "Shopify",
   "store_status": "Live",
   "summary": {
     "total_skus": 39,
     "in_stock": 14,
-    "low_stock": 22,
-    "out_of_stock": 3,
+    "low_stock": 21,
+    "out_of_stock": 4,
     "total_products": 9
   },
   "products": [
@@ -150,14 +150,14 @@
       "product_id": 7153409654827,
       "price": 149.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_9.png?v=1767592068",
-      "total_quantity": 3,
+      "total_quantity": 2,
       "variants_oos": 0,
       "variants_low": 1,
       "variants": [
         {
           "title": "Default Title",
           "sku": "PENSWL",
-          "quantity": 3,
+          "quantity": 2,
           "variant_id": 40904660484139,
           "inventory_item_id": 43002461159467
         }
@@ -320,9 +320,9 @@
       "product_id": 7032101077035,
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409",
-      "total_quantity": 12,
-      "variants_oos": 1,
-      "variants_low": 7,
+      "total_quantity": 11,
+      "variants_oos": 2,
+      "variants_low": 6,
       "variants": [
         {
           "title": "6 (XXS)",
@@ -362,7 +362,7 @@
         {
           "title": "11 (M/L)",
           "sku": "RNGSUE11",
-          "quantity": 1,
+          "quantity": 0,
           "variant_id": 40597811298347,
           "inventory_item_id": 42694390906923
         },
