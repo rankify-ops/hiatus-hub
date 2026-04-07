@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-07T22:27:14+10:00",
+  "last_updated": "2026-04-07T23:01:18+10:00",
   "source": "Shopify + Supplier Data",
   "store_status": "Live",
   "categories": [
@@ -15,7 +15,7 @@
     "in_stock": 14,
     "low_stock": 21,
     "out_of_stock": 13,
-    "total_products": 16
+    "total_products": 14
   },
   "products": [
     {
@@ -527,96 +527,6 @@
       "material_type": "Sterling Silver"
     },
     {
-      "product": "ROPE CHAIN 50CM (STERLING SILVER)",
-      "product_id": null,
-      "product_type": "Necklace",
-      "price": 0,
-      "image": "img-rope-chain.png",
-      "total_quantity": 0,
-      "variants_oos": 1,
-      "variants_low": 0,
-      "variants": [
-        {
-          "title": "50cm",
-          "sku": "ROPE50-SS",
-          "quantity": 0,
-          "variant_id": null,
-          "inventory_item_id": null
-        }
-      ],
-      "supplier_sku": "TBD",
-      "supplier": "Silver supplier",
-      "is_component": true,
-      "component_of": "HIATUS H PENDANT (SILVER)",
-      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKU",
-      "flags": [
-        "Needs sell price",
-        "Needs supplier SKU",
-        "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver"
-    },
-    {
-      "product": "ROPE CHAIN 55CM (STERLING SILVER)",
-      "product_id": null,
-      "product_type": "Necklace",
-      "price": 0,
-      "image": "img-rope-chain.png",
-      "total_quantity": 0,
-      "variants_oos": 1,
-      "variants_low": 0,
-      "variants": [
-        {
-          "title": "55cm",
-          "sku": "ROPE55-SS",
-          "quantity": 0,
-          "variant_id": null,
-          "inventory_item_id": null
-        }
-      ],
-      "supplier_sku": "TBD",
-      "supplier": "Silver supplier",
-      "is_component": true,
-      "component_of": "HIATUS H PENDANT (SILVER)",
-      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKU",
-      "flags": [
-        "Needs sell price",
-        "Needs supplier SKU",
-        "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver"
-    },
-    {
-      "product": "ROPE CHAIN 61CM (STERLING SILVER)",
-      "product_id": null,
-      "product_type": "Necklace",
-      "price": 0,
-      "image": "img-rope-chain.png",
-      "total_quantity": 0,
-      "variants_oos": 1,
-      "variants_low": 0,
-      "variants": [
-        {
-          "title": "61cm",
-          "sku": "ROPE61-SS",
-          "quantity": 0,
-          "variant_id": null,
-          "inventory_item_id": null
-        }
-      ],
-      "supplier_sku": "TBD",
-      "supplier": "Silver supplier",
-      "is_component": true,
-      "component_of": "HIATUS H PENDANT (SILVER)",
-      "notes": "Needs sell price \u00b7 Needs supplier price \u00b7 Needs supplier SKU",
-      "flags": [
-        "Needs sell price",
-        "Needs supplier SKU",
-        "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver"
-    },
-    {
       "product": "HIATUS H PENDANT PIECE (SILVER)",
       "product_id": null,
       "product_type": "Pendant",
@@ -698,6 +608,50 @@
         "Needs supplier price"
       ],
       "material_type": "Sterling Silver"
+    },
+    {
+      "product": "ROPE CHAIN (STERLING SILVER)",
+      "product_id": null,
+      "product_type": "Necklace",
+      "price": 0,
+      "image": null,
+      "total_quantity": 0,
+      "variants_oos": 3,
+      "variants_low": 0,
+      "material_type": "Sterling Silver",
+      "variants": [
+        {
+          "title": "50cm",
+          "sku": "ROPE50-SS",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        },
+        {
+          "title": "55cm",
+          "sku": "ROPE55-SS",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        },
+        {
+          "title": "61cm",
+          "sku": "ROPE61-SS",
+          "quantity": 0,
+          "variant_id": null,
+          "inventory_item_id": null
+        }
+      ],
+      "supplier_sku": "TBD",
+      "supplier": "Silver supplier",
+      "is_component": true,
+      "component_of": "HIATUS H PENDANT (SILVER)",
+      "flags": [
+        "Needs sell price",
+        "Needs supplier SKU",
+        "Needs supplier price"
+      ],
+      "notes": "Component \u2014 used in Hiatus H Pendant. 3 sizes available."
     }
   ],
   "material_types": [
