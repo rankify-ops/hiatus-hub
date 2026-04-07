@@ -1,7 +1,14 @@
 {
-  "last_updated": "2026-04-07T02:44:17+10:00",
+  "last_updated": "2026-04-07T08:16:47+10:00",
   "source": "Shopify",
   "store_status": "Live",
+  "categories": [
+    "Accessory",
+    "Bracelet",
+    "Necklace",
+    "Other",
+    "Ring"
+  ],
   "summary": {
     "total_skus": 39,
     "in_stock": 14,
@@ -13,6 +20,7 @@
     {
       "product": "CREATORS RING (SILVER)",
       "product_id": 7012105781291,
+      "product_type": "Ring",
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/12_635b1c9b-b2bc-4f83-8d7f-aee9fe904e5b.webp?v=1751674402",
       "total_quantity": 311,
@@ -24,62 +32,71 @@
           "sku": "RNGCR6",
           "quantity": 99,
           "variant_id": 40739088760875,
-          "inventory_item_id": 42835911114795
+          "inventory_item_id": 42835911114795,
+          "barcode": ""
         },
         {
           "title": "7 (XS)",
           "sku": "RNGCR7",
           "quantity": 99,
           "variant_id": 40739088662571,
-          "inventory_item_id": 42835911016491
+          "inventory_item_id": 42835911016491,
+          "barcode": ""
         },
         {
           "title": "8 (S)",
           "sku": "RNGCR8",
           "quantity": 99,
           "variant_id": 40739083649067,
-          "inventory_item_id": 42835906002987
+          "inventory_item_id": 42835906002987,
+          "barcode": ""
         },
         {
           "title": "9 (S/M)",
           "sku": "RNGCR9",
           "quantity": 1,
           "variant_id": 40597810282539,
-          "inventory_item_id": 42694389891115
+          "inventory_item_id": 42694389891115,
+          "barcode": ""
         },
         {
           "title": "10 (M)",
           "sku": "RNGCR10",
           "quantity": 3,
           "variant_id": 40597810315307,
-          "inventory_item_id": 42694389923883
+          "inventory_item_id": 42694389923883,
+          "barcode": ""
         },
         {
           "title": "11 (M/L)",
           "sku": "RNGCR11",
           "quantity": 5,
           "variant_id": 40597810348075,
-          "inventory_item_id": 42694389956651
+          "inventory_item_id": 42694389956651,
+          "barcode": ""
         },
         {
           "title": "12 (L)",
           "sku": "RNGCR12",
           "quantity": 3,
           "variant_id": 40597810380843,
-          "inventory_item_id": 42694389989419
+          "inventory_item_id": 42694389989419,
+          "barcode": ""
         },
         {
           "title": "13 (XL)",
           "sku": "RNGCR13",
           "quantity": 2,
           "variant_id": 40597810413611,
-          "inventory_item_id": 42694390022187
+          "inventory_item_id": 42694390022187,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "CUBAN LINK BRACELET (SILVER)",
       "product_id": 7153409392683,
+      "product_type": "Bracelet",
       "price": 299.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_7.png?v=1751674498",
       "total_quantity": 198,
@@ -91,20 +108,23 @@
           "sku": "BLCLM",
           "quantity": 99,
           "variant_id": 40904650555435,
-          "inventory_item_id": 43002450640939
+          "inventory_item_id": 43002450640939,
+          "barcode": ""
         },
         {
           "title": "Large - (8 Inches) / Silver",
           "sku": "BLCLL",
           "quantity": 99,
           "variant_id": 40904650588203,
-          "inventory_item_id": 43002450673707
+          "inventory_item_id": 43002450673707,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "FREE RING SIZER",
       "product_id": 7011733340203,
+      "product_type": "Accessory",
       "price": 0.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/6_303c3692-5ae1-4da8-b03a-08ded9770274.webp?v=1751674357",
       "total_quantity": 50,
@@ -116,13 +136,15 @@
           "sku": "RSZ1",
           "quantity": 50,
           "variant_id": 40597817098283,
-          "inventory_item_id": 42694396706859
+          "inventory_item_id": 42694396706859,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "PARADOX PEARLS (SILVER)",
       "product_id": 7153408344107,
+      "product_type": "Bracelet",
       "price": 299.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/Untitled_design_-_2025-07-04T220628.962.png?v=1751632132",
       "total_quantity": 0,
@@ -134,20 +156,23 @@
           "sku": "BLPPM",
           "quantity": 0,
           "variant_id": 40904648032299,
-          "inventory_item_id": 43002447495211
+          "inventory_item_id": 43002447495211,
+          "barcode": ""
         },
         {
           "title": "Large - (8 Inches)",
           "sku": "BLPPL",
           "quantity": 0,
           "variant_id": 40904648065067,
-          "inventory_item_id": 43002447527979
+          "inventory_item_id": 43002447527979,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "SUN WORSHIPPER PENDANT (SILVER)",
       "product_id": 7153409654827,
+      "product_type": "Necklace",
       "price": 149.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_9.png?v=1767592068",
       "total_quantity": 2,
@@ -159,13 +184,15 @@
           "sku": "PENSWL",
           "quantity": 2,
           "variant_id": 40904660484139,
-          "inventory_item_id": 43002461159467
+          "inventory_item_id": 43002461159467,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "UNEARTH CUFF (SILVER)",
       "product_id": 7011734552619,
+      "product_type": "Bracelet",
       "price": 299.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/13.webp?v=1751674389",
       "total_quantity": 101,
@@ -177,13 +204,15 @@
           "sku": "CUFUE1",
           "quantity": 101,
           "variant_id": 40597810642987,
-          "inventory_item_id": 42694390251563
+          "inventory_item_id": 42694390251563,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "UNEARTH RING (SILVER)",
       "product_id": 7011734257707,
+      "product_type": "Ring",
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/11_680d9bae-4556-4c04-828a-00bbd1899724.webp?v=1751674374",
       "total_quantity": 315,
@@ -195,62 +224,71 @@
           "sku": "RNGUE6",
           "quantity": 99,
           "variant_id": 40739090006059,
-          "inventory_item_id": 42835912359979
+          "inventory_item_id": 42835912359979,
+          "barcode": ""
         },
         {
           "title": "7 (XS)",
           "sku": "RNGUE7",
           "quantity": 99,
           "variant_id": 40739090071595,
-          "inventory_item_id": 42835912425515
+          "inventory_item_id": 42835912425515,
+          "barcode": ""
         },
         {
           "title": "8 (S)",
           "sku": "RNGUE8",
           "quantity": 99,
           "variant_id": 40739089973291,
-          "inventory_item_id": 42835912327211
+          "inventory_item_id": 42835912327211,
+          "barcode": ""
         },
         {
           "title": "9 (S/M)",
           "sku": "RNGUE9",
           "quantity": 3,
           "variant_id": 40560529375275,
-          "inventory_item_id": 42657055080491
+          "inventory_item_id": 42657055080491,
+          "barcode": ""
         },
         {
           "title": "10 (M)",
           "sku": "RNGUE10",
           "quantity": 6,
           "variant_id": 40560529408043,
-          "inventory_item_id": 42657055113259
+          "inventory_item_id": 42657055113259,
+          "barcode": ""
         },
         {
           "title": "11 (M/L)",
           "sku": "RNGUE11",
           "quantity": 2,
           "variant_id": 40560529440811,
-          "inventory_item_id": 42657055146027
+          "inventory_item_id": 42657055146027,
+          "barcode": ""
         },
         {
           "title": "12 (L)",
           "sku": "RNGUE12",
           "quantity": 4,
           "variant_id": 40560529473579,
-          "inventory_item_id": 42657055178795
+          "inventory_item_id": 42657055178795,
+          "barcode": ""
         },
         {
           "title": "13 (XL)",
           "sku": "RNGUE13",
           "quantity": 3,
           "variant_id": 40560529506347,
-          "inventory_item_id": 42657055211563
+          "inventory_item_id": 42657055211563,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "UNEARTH SIGNET RING (SILVER)",
       "product_id": 7043490381867,
+      "product_type": "Ring",
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/9_012c12af-b7a4-47f3-8d70-dc6b1e340d4e.webp?v=1751674419",
       "total_quantity": 21,
@@ -262,62 +300,71 @@
           "sku": "RNGCR6",
           "quantity": 3,
           "variant_id": 40739090268203,
-          "inventory_item_id": 42835912622123
+          "inventory_item_id": 42835912622123,
+          "barcode": ""
         },
         {
           "title": "7 (XS)",
           "sku": "RNGSR7",
           "quantity": 3,
           "variant_id": 40641417281579,
-          "inventory_item_id": 42738090508331
+          "inventory_item_id": 42738090508331,
+          "barcode": ""
         },
         {
           "title": "8 (S)",
           "sku": "RNGSR8",
           "quantity": 1,
           "variant_id": 40641417314347,
-          "inventory_item_id": 42738090541099
+          "inventory_item_id": 42738090541099,
+          "barcode": ""
         },
         {
           "title": "9 (S/M)",
           "sku": "RNGSR9",
           "quantity": 3,
           "variant_id": 40634895237163,
-          "inventory_item_id": 42731549491243
+          "inventory_item_id": 42731549491243,
+          "barcode": ""
         },
         {
           "title": "10 (M)",
           "sku": "RNGSR10",
           "quantity": 4,
           "variant_id": 40634895269931,
-          "inventory_item_id": 42731549524011
+          "inventory_item_id": 42731549524011,
+          "barcode": ""
         },
         {
           "title": "11 (M/L)",
           "sku": "RNGSR11",
           "quantity": 2,
           "variant_id": 40634895302699,
-          "inventory_item_id": 42731549556779
+          "inventory_item_id": 42731549556779,
+          "barcode": ""
         },
         {
           "title": "12 (L)",
           "sku": "RNGSR12",
           "quantity": 3,
           "variant_id": 40634895335467,
-          "inventory_item_id": 42731549589547
+          "inventory_item_id": 42731549589547,
+          "barcode": ""
         },
         {
           "title": "13 (XL)",
           "sku": "RNGSR13",
           "quantity": 2,
           "variant_id": 40634895368235,
-          "inventory_item_id": 42731549622315
+          "inventory_item_id": 42731549622315,
+          "barcode": ""
         }
       ]
     },
     {
       "product": "UNEARTH STACKER RING SET (SILVER)",
       "product_id": 7032101077035,
+      "product_type": "Ring",
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409",
       "total_quantity": 11,
@@ -329,56 +376,64 @@
           "sku": "RNGSUE6",
           "quantity": 3,
           "variant_id": 40739092398123,
-          "inventory_item_id": 42835914752043
+          "inventory_item_id": 42835914752043,
+          "barcode": ""
         },
         {
           "title": "7 (XS)",
           "sku": "RNGSUE7",
           "quantity": 3,
           "variant_id": 40739092529195,
-          "inventory_item_id": 42835914883115
+          "inventory_item_id": 42835914883115,
+          "barcode": ""
         },
         {
           "title": "8 (S)",
           "sku": "RNGSUE8",
           "quantity": 1,
           "variant_id": 40739091415083,
-          "inventory_item_id": 42835913769003
+          "inventory_item_id": 42835913769003,
+          "barcode": ""
         },
         {
           "title": "9 (S/M)",
           "sku": "RNGSUE9",
           "quantity": 0,
           "variant_id": 40597811232811,
-          "inventory_item_id": 42694390841387
+          "inventory_item_id": 42694390841387,
+          "barcode": ""
         },
         {
           "title": "10 (M)",
           "sku": "RNGSUE10",
           "quantity": 1,
           "variant_id": 40597811265579,
-          "inventory_item_id": 42694390874155
+          "inventory_item_id": 42694390874155,
+          "barcode": ""
         },
         {
           "title": "11 (M/L)",
           "sku": "RNGSUE11",
           "quantity": 0,
           "variant_id": 40597811298347,
-          "inventory_item_id": 42694390906923
+          "inventory_item_id": 42694390906923,
+          "barcode": ""
         },
         {
           "title": "12 (L)",
           "sku": "RNGSUE12",
           "quantity": 1,
           "variant_id": 40597811331115,
-          "inventory_item_id": 42694390939691
+          "inventory_item_id": 42694390939691,
+          "barcode": ""
         },
         {
           "title": "13 (XL)",
           "sku": "RNGSUE13",
           "quantity": 2,
           "variant_id": 40597811363883,
-          "inventory_item_id": 42694390972459
+          "inventory_item_id": 42694390972459,
+          "barcode": ""
         }
       ]
     }

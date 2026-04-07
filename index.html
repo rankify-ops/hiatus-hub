@@ -362,7 +362,12 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
     </div>
     <div class="tab-panel" id="tab-stock">
       <div class="section-header"><h2>Stock Levels</h2><div class="updated" id="stock-updated">Loading...</div></div>
+      <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap" id="stock-filters"></div>
       <div id="stock-content"></div>
+      <div id="stock-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)" onclick="document.getElementById('stock-modal').style.display='none'"></div>
+        <div id="stock-modal-content" style="position:relative;z-index:1;width:500px;max-width:92vw;max-height:85vh;overflow-y:auto;background:rgba(20,20,20,0.92);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:0;box-shadow:0 24px 80px rgba(0,0,0,0.4)"></div>
+      </div>
     </div>
     <div class="tab-panel" id="tab-markets">
       <div class="section-header"><h2>Market Stalls</h2><div class="updated" id="markets-updated">Loading...</div></div>
@@ -675,17 +680,19 @@ document.getElementById('finance-content').innerHTML=`
     <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.06);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)"><div style="font-size:0.73rem;color:var(--text-muted)">${d.notes||''}</div></div>
   </div>
 </div>`}
-function renderStock(){const d=appData.stock;if(!d)return;
+function renderStock(filterCat){const d=appData.stock;if(!d)return;
 const cl=appData.stock_changelog||{changelog:[]};
 const changelog=cl.changelog||[];
 document.getElementById('stock-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: Shopify';
 const s=d.summary||{};
 const prods=d.products||[];
-if(d.store_status==='Pre-launch'||!prods.length){
-document.getElementById('stock-content').innerHTML=`<div class="metrics-grid"><div class="card metric-tile"><div class="metric-value">0</div><div class="metric-label">SKUs</div></div><div class="card metric-tile"><div class="metric-value">0</div><div class="metric-label">In Stock</div></div></div><div class="card"><div class="empty-state"><div class="icon">☷</div><h3>Pre-launch</h3><p>Stock tracking will activate once products are manufactured and listed.</p></div></div>`;
-return}
-// Inject toggle CSS once
-if(!document.getElementById('sd-css')){const st=document.createElement('style');st.id='sd-css';st.textContent='.stock-detail{max-height:0;overflow:hidden;transition:max-height 0.3s ease}.stock-detail.open{max-height:500px}';document.head.appendChild(st)}
+const cats=d.categories||[];
+const activeCat=filterCat||window._stockCat||'All';
+window._stockCat=activeCat;
+document.getElementById('stock-filters').innerHTML=`<button class="cat-filter ${activeCat==='All'?'active':''}" onclick="renderStock('All')">All</button>${cats.map(c=>`<button class="cat-filter ${activeCat===c?'active':''}" onclick="renderStock('${c}')">${c}s</button>`).join('')}`;
+const filtered=activeCat==='All'?prods:prods.filter(p=>p.product_type===activeCat);
+if(!prods.length){document.getElementById('stock-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">☷</div><h3>Pre-launch</h3></div></div>`;return}
+if(!document.getElementById('stock-css')){const st=document.createElement('style');st.id='stock-css';st.textContent='.stock-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}@media(max-width:1200px){.stock-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:768px){.stock-grid{grid-template-columns:repeat(2,1fr);gap:8px}}';document.head.appendChild(st)}
 document.getElementById('stock-content').innerHTML=`
 <div class="metrics-grid">
   <div class="card metric-tile"><div class="metric-value">${s.total_products||0}</div><div class="metric-label">Products</div></div>
@@ -695,67 +702,35 @@ document.getElementById('stock-content').innerHTML=`
   <div class="card metric-tile"><div class="metric-value" style="color:var(--red-soft)">${s.out_of_stock||0}</div><div class="metric-label">OOS</div></div>
 </div>
 <div class="card" style="margin-bottom:14px">
-  <div class="card-header"><span class="card-title">Stock Change Log</span><span class="card-badge badge-teal">${changelog.length} changes</span></div>
-  ${changelog.length?`<div style="display:flex;flex-direction:column;gap:6px">
-    ${changelog.slice().reverse().map(c=>{
-      const isUp=c.change>0;const col=isUp?'var(--teal)':'var(--red-soft)';
-      const dt=new Date(c.timestamp);
-      const dateStr=dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
-      const srcCol=c.source.includes('Shopify')?'#4a8fe8':c.source.includes('Market')?'#e8a84d':'#888';
-      return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);flex-wrap:wrap">
-        <div style="width:28px;height:28px;border-radius:6px;background:${col}12;display:flex;align-items:center;justify-content:center;font-weight:800;color:${col};font-size:0.7rem;flex-shrink:0">${isUp?'+':''}${c.change}</div>
-        <div style="flex:1;min-width:100px">
-          <div style="font-size:0.72rem;font-weight:600;color:var(--black)">${c.product}</div>
-          <div style="font-size:0.6rem;color:var(--text-muted)">${c.variant} · ${c.before}→${c.after}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:0.58rem;color:var(--text-faint)">${dateStr}</div>
-          <span style="display:inline-block;padding:1px 5px;border-radius:5px;font-size:0.48rem;font-weight:700;background:${srcCol}12;color:${srcCol};border:1px solid ${srcCol}20;margin-top:1px">${c.source}</span>
-        </div>
-      </div>`}).join('')}
-  </div>`:'<div style="font-size:0.75rem;color:var(--text-muted);padding:8px 0">No changes yet.</div>'}
+  <div class="card-header"><span class="card-title">Stock Change Log</span><span class="card-badge badge-teal">${changelog.length}</span></div>
+  ${changelog.length?`<div style="display:flex;flex-direction:column;gap:6px">${changelog.slice().reverse().slice(0,6).map(c=>{const isUp=c.change>0;const col=isUp?'var(--teal)':'var(--red-soft)';const dt=new Date(c.timestamp);const dateStr=dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'});const srcCol=c.source.includes('Shopify')?'#4a8fe8':c.source.includes('Market')?'#e8a84d':'#888';return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);flex-wrap:wrap"><div style="width:28px;height:28px;border-radius:6px;background:${col}12;display:flex;align-items:center;justify-content:center;font-weight:800;color:${col};font-size:0.7rem;flex-shrink:0">${isUp?'+':''}${c.change}</div><div style="flex:1;min-width:100px"><div style="font-size:0.72rem;font-weight:600;color:var(--white)">${c.product.replace(' (SILVER)','')}</div><div style="font-size:0.6rem;color:var(--text-muted)">${c.variant} · ${c.before}→${c.after}</div></div><div style="text-align:right"><div style="font-size:0.58rem;color:var(--text-faint)">${dateStr}</div><span style="display:inline-block;padding:1px 5px;border-radius:5px;font-size:0.48rem;font-weight:700;background:${srcCol}12;color:${srcCol};border:1px solid ${srcCol}20">${c.source}</span></div></div>`}).join('')}</div>`:'<div style="font-size:0.75rem;color:var(--text-muted);padding:8px 0">No changes yet.</div>'}
 </div>
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
-${prods.map((p,pi)=>{
-  const hasOos=p.variants_oos>0;const hasLow=p.variants_low>0;
-  const statusCol=hasOos?'var(--red-soft)':hasLow?'var(--amber)':'var(--teal)';
-  const statusText=hasOos?'OOS':hasLow?'Low':'OK';
-  const prodChanges=changelog.filter(c=>c.product===p.product);
-  return `<div class="card" style="padding:0;overflow:hidden;cursor:pointer" onclick="this.querySelector('.stock-detail').classList.toggle('open')">
-    ${p.image?`<div style="width:100%;height:120px;overflow:hidden;position:relative">
-      <img src="${p.image}" alt="${p.product}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
-      <div style="position:absolute;top:6px;right:6px"><span class="card-badge" style="background:${statusCol}20;color:${statusCol};border:1px solid ${statusCol}35;font-size:0.48rem">${statusText}</span></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,rgba(0,0,0,0.4))"></div>
-      <div style="position:absolute;bottom:6px;left:8px;color:#fff;font-size:0.6rem;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.5)">$${p.price.toFixed(2)}</div>
-    </div>`:''}
-    <div style="padding:10px">
-      <div style="font-size:0.7rem;font-weight:700;color:var(--black);line-height:1.2;margin-bottom:4px">${p.product.replace(' (SILVER)','')}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span style="font-size:0.58rem;color:var(--text-muted)">${p.variants.length} sizes</span>
-        <span style="font-size:1rem;font-weight:700;color:${statusCol}">${p.total_quantity}</span>
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:2px">
-        ${p.variants.map(v=>{
-          const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';
-          return `<div style="padding:2px 4px;border-radius:4px;background:rgba(255,255,255,0.05);font-size:0.52rem"><span style="color:var(--text-faint)">${(v.title||'').replace(/\s*\(.*\)/,'')}</span> <span style="font-weight:700;color:${vc}">${v.quantity}</span></div>`}).join('')}
-      </div>
-      ${prodChanges.length?'<div style="font-size:0.5rem;color:var(--teal);margin-top:4px;text-align:center">'+prodChanges.length+' changes ▾</div>':''}
-    </div>
-    <div class="stock-detail" style="border-top:1px solid rgba(255,255,255,0.06)">
-      <div style="padding:10px">
-        <div style="font-size:0.65rem;font-weight:600;color:var(--black);margin-bottom:6px">History</div>
-        ${prodChanges.length?prodChanges.slice().reverse().map(c=>{
-          const col2=c.change>0?'var(--teal)':'var(--red-soft)';
-          const dt2=new Date(c.timestamp);
-          return `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.6rem">
-            <span style="font-weight:700;color:${col2};min-width:22px">${c.change>0?'+':''}${c.change}</span>
-            <span style="color:var(--text-secondary);flex:1">${c.variant}</span>
-            <span style="color:var(--text-faint);font-size:0.5rem">${dt2.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
-          </div>`}).join(''):'<div style="font-size:0.6rem;color:var(--text-faint)">No changes</div>'}
-      </div>
-    </div>
-  </div>`}).join('')}
+<div class="stock-grid">
+${filtered.map((p,pi)=>{const hasOos=p.variants_oos>0;const hasLow=p.variants_low>0;const statusCol=hasOos?'var(--red-soft)':hasLow?'var(--amber)':'var(--teal)';const statusText=hasOos?'OOS':hasLow?'Low':'OK';const cleanName=p.product.replace(' (SILVER)','');return `<div class="card" style="padding:0;overflow:hidden;cursor:pointer" onclick="showStockDetail(${pi})">
+${p.image?`<div style="width:100%;height:180px;overflow:hidden;position:relative"><img src="${p.image}" alt="${cleanName}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy"><div style="position:absolute;top:8px;right:8px"><span class="card-badge" style="background:${statusCol}20;color:${statusCol};border:1px solid ${statusCol}35;font-size:0.52rem">${statusText}</span></div><div style="position:absolute;top:8px;left:8px"><span style="padding:2px 6px;border-radius:5px;font-size:0.45rem;font-weight:700;background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.7)">${p.product_type||''}</span></div><div style="position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,rgba(0,0,0,0.5))"></div></div>`:''}
+<div style="padding:12px"><div style="font-size:0.78rem;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:6px">${cleanName}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:0.65rem;color:var(--text-muted)">$${p.price.toFixed(2)}</span><span style="font-size:1.1rem;font-weight:700;color:${statusCol}">${p.total_quantity}</span></div><div style="display:flex;flex-wrap:wrap;gap:3px">${p.variants.slice(0,8).map(v=>{const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';return `<div style="padding:2px 5px;border-radius:4px;background:rgba(255,255,255,0.05);font-size:0.52rem"><span style="color:var(--text-faint)">${(v.title||'').replace(/\s*\(.*\)/,'')}</span> <span style="font-weight:700;color:${vc}">${v.quantity}</span></div>`}).join('')}</div></div></div>`}).join('')}
 </div>`}
+
+function showStockDetail(idx){
+const d=appData.stock;if(!d)return;
+const activeCat=window._stockCat||'All';
+const filtered=activeCat==='All'?d.products:d.products.filter(p=>p.product_type===activeCat);
+const p=filtered[idx];if(!p)return;
+const cl=appData.stock_changelog||{changelog:[]};
+const prodChanges=(cl.changelog||[]).filter(c=>c.product===p.product);
+const cleanName=p.product.replace(' (SILVER)','');
+const hasOos=p.variants_oos>0;const hasLow=p.variants_low>0;
+const statusCol=hasOos?'var(--red-soft)':hasLow?'var(--amber)':'var(--teal)';
+const modal=document.getElementById('stock-modal');
+document.getElementById('stock-modal-content').innerHTML=`
+${p.image?`<div style="width:100%;height:220px;overflow:hidden;position:relative"><img src="${p.image}" alt="${cleanName}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(0,0,0,0.6))"></div><div style="position:absolute;top:12px;right:12px;cursor:pointer;width:32px;height:32px;border-radius:8px;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem" onclick="event.stopPropagation();document.getElementById('stock-modal').style.display='none'">✕</div></div>`:''}
+<div style="padding:20px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px"><div><div style="font-size:1.1rem;font-weight:700;color:#fff">${cleanName}</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:2px">${p.product_type||''} · $${p.price.toFixed(2)} AUD</div></div><div style="text-align:right"><div style="font-size:1.6rem;font-weight:700;color:${statusCol}">${p.total_quantity}</div><div style="font-size:0.55rem;color:rgba(255,255,255,0.4);text-transform:uppercase">total units</div></div></div>
+<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Variants & SKUs</div>
+<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px">${p.variants.map(v=>{const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';const st=v.quantity<=0?'OOS':v.quantity<=3?'Low':'OK';return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)"><div style="flex:1"><div style="font-size:0.78rem;font-weight:600;color:#fff">${v.title||'—'}</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.4)">SKU: ${v.sku}</div></div><div style="font-size:1rem;font-weight:700;color:${vc}">${v.quantity}</div><span style="padding:2px 6px;border-radius:5px;font-size:0.5rem;font-weight:700;background:${vc}15;color:${vc};border:1px solid ${vc}25">${st}</span></div>`}).join('')}</div>
+${prodChanges.length?`<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Change History</div><div style="display:flex;flex-direction:column;gap:4px">${prodChanges.slice().reverse().map(c=>{const col2=c.change>0?'var(--teal)':'var(--red-soft)';const dt2=new Date(c.timestamp);return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.03);font-size:0.7rem"><span style="font-weight:700;color:${col2};min-width:28px">${c.change>0?'+':''}${c.change}</span><span style="color:rgba(255,255,255,0.7);flex:1">${c.variant} · ${c.reason}</span><span style="color:rgba(255,255,255,0.3);font-size:0.58rem">${dt2.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span></div>`}).join('')}</div>`:'<div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:8px">No stock changes recorded for this product.</div>'}
+</div>`;
+modal.style.display='flex'}
 
 function renderMarkets(){
 const d=appData.markets;if(!d)return;
