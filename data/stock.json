@@ -627,7 +627,7 @@
       "product_id": null,
       "product_type": "Necklace",
       "price": 0,
-      "image": null,
+      "image": "images/3-hoop-chain.png",
       "total_quantity": 0,
       "variants_oos": 3,
       "variants_low": 0,
