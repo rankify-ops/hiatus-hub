@@ -242,9 +242,51 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
 .sidebar-footer{padding:12px 16px;font-size:0.6rem}
 }
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:3px}
+
+/* ─── PIN Screen ─── */
+.pin-screen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.5s ease,visibility 0.5s ease}
+.pin-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.pin-bg{position:absolute;inset:0;background:url('bg.jpg') center center/cover no-repeat}
+.pin-bg::after{content:'';position:absolute;inset:0;backdrop-filter:blur(30px) saturate(1.2);-webkit-backdrop-filter:blur(30px) saturate(1.2);background:rgba(0,0,0,0.3)}
+.pin-card{position:relative;z-index:1;background:rgba(255,255,255,0.12);backdrop-filter:blur(40px) saturate(1.5);-webkit-backdrop-filter:blur(40px) saturate(1.5);border:1px solid rgba(255,255,255,0.15);border-radius:24px;padding:48px 40px;text-align:center;width:340px;max-width:90vw;box-shadow:0 24px 80px rgba(0,0,0,0.3)}
+.pin-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);border-radius:24px 24px 0 0}
+.pin-logo{width:64px;height:64px;margin:0 auto 20px;border-radius:16px;overflow:hidden}
+.pin-logo img{width:100%;height:100%;object-fit:contain}
+.pin-title{font-family:var(--font);font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}
+.pin-sub{font-family:var(--font);font-size:0.65rem;color:rgba(255,255,255,0.45);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:28px}
+.pin-divider{width:40px;height:1px;background:rgba(255,255,255,0.15);margin:0 auto 24px}
+.pin-label{font-size:0.6rem;color:rgba(255,255,255,0.5);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px}
+.pin-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+.pin-input{width:48px;height:56px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-family:var(--font);font-size:1.4rem;font-weight:600;text-align:center;outline:none;transition:all 0.2s ease;-webkit-appearance:none;-moz-appearance:textfield}
+.pin-input::-webkit-inner-spin-button,.pin-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.pin-input:focus{border-color:rgba(16,185,129,0.5);background:rgba(16,185,129,0.08);box-shadow:0 0 20px rgba(16,185,129,0.1)}
+.pin-input.error{border-color:rgba(220,74,74,0.6);background:rgba(220,74,74,0.08);animation:pinShake 0.4s ease}
+@keyframes pinShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.pin-error{font-size:0.7rem;color:#e85d5d;height:20px;margin-bottom:4px;opacity:0;transition:opacity 0.2s}
+.pin-error.show{opacity:1}
+@media(max-width:520px){.pin-card{padding:36px 28px;border-radius:20px}.pin-input{width:42px;height:48px;font-size:1.2rem;border-radius:10px}.pin-logo{width:52px;height:52px}.pin-title{font-size:0.95rem}}
 </style>
 </head>
 <body>
+<!-- PIN Screen -->
+<div class="pin-screen" id="pin-screen">
+  <div class="pin-bg"></div>
+  <div class="pin-card">
+    <div class="pin-logo"><img src="logo.png" alt="H"></div>
+    <div class="pin-title">Hiatus Hub</div>
+    <div class="pin-sub">Access</div>
+    <div class="pin-divider"></div>
+    <div class="pin-label">Enter PIN</div>
+    <div class="pin-inputs" id="pin-inputs">
+      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+    </div>
+    <div class="pin-error" id="pin-error">Incorrect PIN</div>
+  </div>
+</div>
+
 <div class="bg-layer"></div>
 <button class="mobile-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
 <div class="app">
@@ -337,6 +379,43 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
   </main>
 </div>
 <script>
+// ─── PIN Gate ───
+const PIN='6975';
+const pinInputs=document.querySelectorAll('.pin-input');
+const pinError=document.getElementById('pin-error');
+const pinScreen=document.getElementById('pin-screen');
+
+// Check if already authenticated this session
+if(sessionStorage.getItem('hiatus_auth')==='true'){
+  pinScreen.classList.add('hidden');
+}
+
+pinInputs.forEach((input,i)=>{
+  input.addEventListener('input',e=>{
+    const val=e.target.value;
+    if(val.length>1) e.target.value=val.slice(-1);
+    if(val&&i<pinInputs.length-1) pinInputs[i+1].focus();
+    // Check PIN when all 4 filled
+    const code=[...pinInputs].map(p=>p.value).join('');
+    if(code.length===4){
+      if(code===PIN){
+        sessionStorage.setItem('hiatus_auth','true');
+        pinScreen.classList.add('hidden');
+      } else {
+        pinError.classList.add('show');
+        pinInputs.forEach(p=>{p.classList.add('error');p.value=''});
+        pinInputs[0].focus();
+        setTimeout(()=>{pinError.classList.remove('show');pinInputs.forEach(p=>p.classList.remove('error'))},1500);
+      }
+    }
+  });
+  input.addEventListener('keydown',e=>{
+    if(e.key==='Backspace'&&!e.target.value&&i>0){pinInputs[i-1].focus();pinInputs[i-1].value=''}
+  });
+  input.addEventListener('focus',()=>e.target.select&&e.target.select());
+});
+// Auto-focus first input
+if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
 const DATA_BASE='data/';
 const DATA_FILES={overview:'overview.json',products:'products.json',content:'content.json',orders:'orders.json',market_sales:'market_sales.json',stock:'stock.json',stock_changelog:'stock_changelog.json',markets:'markets.json',finance:'finance.json'};
 let appData={};
