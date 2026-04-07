@@ -504,7 +504,7 @@
       "product_id": null,
       "product_type": "Necklace",
       "price": 0,
-      "image": null,
+      "image": "images/compass-pendant.png",
       "total_quantity": 0,
       "variants_oos": 1,
       "variants_low": 0,
