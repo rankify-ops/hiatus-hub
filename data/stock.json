@@ -102,18 +102,20 @@
           "sku": "BLCLM",
           "quantity": 99,
           "variant_id": 40904650555435,
-          "inventory_item_id": 43002450640939
+          "inventory_item_id": 43002450640939,
+          "supplier_sku": "BR02628A"
         },
         {
           "title": "Large - (8 Inches) / Silver",
           "sku": "BLCLL",
           "quantity": 99,
           "variant_id": 40904650588203,
-          "inventory_item_id": 43002450673707
+          "inventory_item_id": 43002450673707,
+          "supplier_sku": "BR02628B"
         }
       ],
-      "supplier_sku": null,
-      "supplier": null
+      "supplier_sku": "BR02628A / BR02628B",
+      "supplier": "Silver supplier"
     },
     {
       "product": "FREE RING SIZER",
@@ -162,7 +164,8 @@
         }
       ],
       "supplier_sku": null,
-      "supplier": null
+      "supplier": null,
+      "notes": "Supplier SKU not yet assigned"
     },
     {
       "product": "SUN WORSHIPPER PENDANT (SILVER)",
