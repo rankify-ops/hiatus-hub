@@ -153,18 +153,20 @@
           "sku": "BLPPM",
           "quantity": 0,
           "variant_id": 40904648032299,
-          "inventory_item_id": 43002447495211
+          "inventory_item_id": 43002447495211,
+          "supplier_sku": "BR02629C"
         },
         {
           "title": "Large - (8 Inches)",
           "sku": "BLPPL",
           "quantity": 0,
           "variant_id": 40904648065067,
-          "inventory_item_id": 43002447527979
+          "inventory_item_id": 43002447527979,
+          "supplier_sku": "BR02629C"
         }
       ],
-      "supplier_sku": null,
-      "supplier": null,
+      "supplier_sku": "BR02629C",
+      "supplier": "Silver supplier",
       "notes": "Supplier SKU not yet assigned"
     },
     {
