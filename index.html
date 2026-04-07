@@ -75,7 +75,7 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 .section-header{margin-bottom:24px}
 .section-header h2{font-family:var(--font);font-size:1.6rem;font-weight:600;color:var(--white);letter-spacing:-0.01em;text-shadow:0 2px 12px rgba(0,0,0,0.4)}
 .section-header .updated{font-size:0.7rem;color:rgba(255,255,255,0.8);margin-top:4px;letter-spacing:0.02em;text-shadow:0 1px 4px rgba(0,0,0,0.4)}
-.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:24px}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:24px}
 .metric-tile{text-align:center;padding:20px 14px}
 .metric-value{font-family:var(--font);font-size:1.8rem;font-weight:600;color:var(--black);letter-spacing:-0.01em;line-height:1}
 .metric-value.teal{color:var(--teal)}
@@ -661,7 +661,6 @@ const ms=appData.market_sales||{sales:[]};
 const mkts=d.markets||[];
 const sales=ms.sales||[];
 
-// Build date dropdown from all markets that have dates + sales
 const marketDates=mkts.filter(m=>m.due_date).sort((a,b)=>new Date(b.due_date)-new Date(a.due_date));
 const sel=document.getElementById('market-date-select');
 const currentVal=sel.value;
@@ -676,14 +675,11 @@ else if(marketDates.length){sel.value=marketDates[0].due_date}
 const selectedDate=sel.value;
 const selectedMarket=mkts.find(m=>m.due_date===selectedDate);
 const marketSales=sales.filter(s=>s.date===selectedDate);
-const totalRev=marketSales.reduce((a,s)=>a+s.total,0)+(selectedMarket?.actual_sales&&!marketSales.length?selectedMarket.actual_sales:0);
-const itemCount=marketSales.reduce((a,s)=>a+s.items.reduce((b,i)=>b+(i.qty||i.quantity||1),0),0);
 
-// Also get sales from the market's sales_log if present
-const logSales=selectedMarket?.sales_log||[];
-const allItems=[...marketSales.flatMap(s=>s.items),...logSales];
-const displayRev=totalRev||logSales.reduce((a,i)=>a+(i.price||0),0);
-const displayCount=itemCount||logSales.reduce((a,i)=>a+(i.quantity||i.qty||1),0);
+// Use market_sales.json as single source of truth — NOT both
+const allItems=marketSales.flatMap(s=>s.items);
+const displayRev=marketSales.reduce((a,s)=>a+s.total,0)||(selectedMarket?.actual_sales||0);
+const displayCount=allItems.reduce((a,i)=>a+(i.qty||i.quantity||1),0);
 
 const mDate=selectedDate?new Date(selectedDate):new Date();
 const dateStr=mDate.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -692,11 +688,11 @@ const isToday=selectedDate===new Date().toISOString().split('T')[0];
 document.getElementById('markets-updated').textContent=dateStr+(isToday?' — Today':'');
 
 document.getElementById('markets-content').innerHTML=`
-<div class="metrics-grid">
+<div class="metrics-grid" style="grid-template-columns:repeat(2,1fr)">
   <div class="card metric-tile"><div class="metric-value teal">$${displayRev.toFixed(2)}</div><div class="metric-label">Revenue</div></div>
   <div class="card metric-tile"><div class="metric-value">${displayCount}</div><div class="metric-label">Items Sold</div></div>
-  <div class="card metric-tile"><div class="metric-value">${marketSales.length||logSales.length?marketSales.length||1:0}</div><div class="metric-label">Transactions</div></div>
-  <div class="card metric-tile"><div class="metric-value">${selectedMarket?.location||'—'}</div><div class="metric-label">Location</div></div>
+  <div class="card metric-tile"><div class="metric-value">${marketSales.length}</div><div class="metric-label">Transactions</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="font-size:1rem">${selectedMarket?.location||'—'}</div><div class="metric-label">Location</div></div>
 </div>
 <div class="card" style="margin-bottom:14px">
   <div class="card-header"><span class="card-title">Sales</span>${isToday?'<span class="card-badge badge-teal">Today</span>':''}</div>
