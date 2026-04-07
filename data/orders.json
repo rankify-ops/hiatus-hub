@@ -1,12 +1,12 @@
 {
-  "last_updated": "2026-04-07T02:44:02+10:00",
-  "source": "Shopify \u2014 97850c.myshopify.com",
+  "last_updated": "2026-04-07T08:10:27+10:00",
+  "source": "Shopify",
   "store_status": "Live",
   "orders": {
     "total": 44,
     "paid": 42,
     "refunded": 2,
-    "pending": 42,
+    "pending": 0,
     "unfulfilled": 2
   },
   "revenue": {
@@ -20,7 +20,7 @@
       "order_number": 1045,
       "created_at": "2026-04-06",
       "customer": "Daniel Verstraten",
-      "items": "SUN WORSHIPPER PENDANT (SILVER)",
+      "items": "Sun Worshipper Pendant",
       "total": 134.1,
       "financial_status": "paid",
       "fulfillment_status": "unfulfilled",
@@ -30,7 +30,7 @@
       "order_number": 1044,
       "created_at": "2025-12-29",
       "customer": "Carl Duncan",
-      "items": "CUBAN LINK BRACELET (SILVER)",
+      "items": "Cuban Link Bracelet",
       "total": 149.25,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -40,7 +40,7 @@
       "order_number": 1043,
       "created_at": "2025-07-19",
       "customer": "Dhruv Mehra",
-      "items": "SUN WORSHIPPER PENDANT (SILVER)",
+      "items": "Sun Worshipper Pendant",
       "total": 96.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -50,7 +50,7 @@
       "order_number": 1042,
       "created_at": "2025-07-17",
       "customer": "Joshua Alexandridis",
-      "items": "FREE RING SIZER",
+      "items": "Free Ring Sizer",
       "total": 2.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -60,7 +60,7 @@
       "order_number": 1041,
       "created_at": "2025-07-16",
       "customer": "Dhruv Mehra",
-      "items": "UNEARTH CUFF (SILVER)",
+      "items": "Unearth Cuff",
       "total": 199.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -70,7 +70,7 @@
       "order_number": 1040,
       "created_at": "2025-07-16",
       "customer": "Brett Reid",
-      "items": "FREE RING SIZER",
+      "items": "Free Ring Sizer",
       "total": 2.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -80,7 +80,7 @@
       "order_number": 1039,
       "created_at": "2025-07-15",
       "customer": "Aloisia Cudmore",
-      "items": "FREE RING SIZER, SUN WORSHIPPER PENDANT (SILVER)",
+      "items": "Sun Worshipper Pendant",
       "total": 110.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -90,7 +90,7 @@
       "order_number": 1038,
       "created_at": "2025-07-15",
       "customer": "eliza paroz",
-      "items": "SUN WORSHIPPER PENDANT (SILVER)",
+      "items": "Sun Worshipper Pendant",
       "total": 120.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -100,7 +100,7 @@
       "order_number": 1037,
       "created_at": "2025-07-11",
       "customer": "Richard Mcfadden",
-      "items": "UNEARTH CUFF (SILVER)",
+      "items": "Unearth Cuff",
       "total": 179.1,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -110,7 +110,7 @@
       "order_number": 1036,
       "created_at": "2025-06-27",
       "customer": "Jack Norman",
-      "items": "SUN WORSHIPPER PENDANT (SILVER)",
+      "items": "Sun Worshipper Pendant",
       "total": 128.19,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -120,7 +120,7 @@
       "order_number": 1035,
       "created_at": "2025-03-12",
       "customer": "Sutasinee Phatrat",
-      "items": "SUN WORSHIPPER PENDANT (SILVER)",
+      "items": "Sun Worshipper Pendant",
       "total": 108.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -140,7 +140,7 @@
       "order_number": 1033,
       "created_at": "2024-11-17",
       "customer": "michael herskope",
-      "items": "Unearthed Cuff",
+      "items": "Unearth Cuff",
       "total": 179.1,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -160,7 +160,7 @@
       "order_number": 1031,
       "created_at": "2024-07-26",
       "customer": "Thomas Flood",
-      "items": "Unearthed Stacker Ring Set",
+      "items": "Unearth Stacker Ring Set",
       "total": 0.0,
       "financial_status": "paid",
       "fulfillment_status": "unfulfilled",
@@ -170,7 +170,7 @@
       "order_number": 1030,
       "created_at": "2024-07-25",
       "customer": "Thomas Flood",
-      "items": "Unearthed Stacker Ring Set",
+      "items": "Unearth Stacker Ring Set",
       "total": 144.0,
       "financial_status": "refunded",
       "fulfillment_status": "unfulfilled",
@@ -190,7 +190,7 @@
       "order_number": 1028,
       "created_at": "2024-06-13",
       "customer": "Claudia Christenson",
-      "items": "Unearthed Cuff",
+      "items": "Unearth Cuff",
       "total": 199.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -200,7 +200,7 @@
       "order_number": 1027,
       "created_at": "2024-06-13",
       "customer": "Hakena Parore",
-      "items": "Free Ring Sizer, Cuban Link Bracelet",
+      "items": "Cuban Link Bracelet",
       "total": 201.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -220,7 +220,7 @@
       "order_number": 1025,
       "created_at": "2024-04-07",
       "customer": "Isabel Mccabe",
-      "items": "Unearthed Ring",
+      "items": "Unearth Ring",
       "total": 100.0,
       "financial_status": "paid",
       "fulfillment_status": "fulfilled",
@@ -269,34 +269,24 @@
   ],
   "top_products": [
     {
-      "name": "Unearthed Cuff",
-      "revenue": 969.49,
-      "units": 5
-    },
-    {
-      "name": "Cuban Link Bracelet",
-      "revenue": 796.0,
-      "units": 4
-    },
-    {
-      "name": "SUN WORSHIPPER PENDANT (SILVER)",
-      "revenue": 752.75,
-      "units": 6
+      "name": "Unearth Cuff",
+      "revenue": 1367.49,
+      "units": 7
     },
     {
       "name": "Sun Worshipper Pendant",
-      "revenue": 482.71,
-      "units": 4
+      "revenue": 1235.46,
+      "units": 10
     },
     {
-      "name": "Unearthed Stacker Ring Set",
-      "revenue": 432.0,
-      "units": 3
+      "name": "Cuban Link Bracelet",
+      "revenue": 995.0,
+      "units": 5
     },
     {
-      "name": "UNEARTH CUFF (SILVER)",
-      "revenue": 398.0,
-      "units": 2
+      "name": "Unearth Stacker Ring Set",
+      "revenue": 730.0,
+      "units": 5
     },
     {
       "name": "Paradox Pearls",
@@ -304,17 +294,12 @@
       "units": 2
     },
     {
-      "name": "Unearthed Stackers",
-      "revenue": 298.0,
-      "units": 2
-    },
-    {
-      "name": "Unearthed Ring",
+      "name": "Unearth Ring",
       "revenue": 288.0,
       "units": 2
     },
     {
-      "name": "The Creators Ring",
+      "name": "Creators Ring",
       "revenue": 288.0,
       "units": 2
     }

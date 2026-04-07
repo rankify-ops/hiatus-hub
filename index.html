@@ -504,7 +504,7 @@ document.getElementById('orders-content').innerHTML=`
   </div>
   <div class="card">
     <div class="card-header"><span class="card-title">Top Products (All Channels)</span></div>
-    ${top.slice(0,5).map((p,i)=>`<div class="finance-row">
+    ${top.slice(0,10).map((p,i)=>`<div class="finance-row">
       <span class="label"><span style="color:var(--text-faint);font-size:0.7rem;margin-right:6px">${i+1}</span>${p.name}</span>
       <span class="value">$${p.revenue.toFixed(0)}</span>
     </div>`).join('')}
