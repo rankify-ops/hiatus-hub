@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Hiatus Collection — Operations Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,8 +36,8 @@
   --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:15px}
-body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;background:#0a0a0a}
+html{font-size:15px;overflow-x:hidden}
+body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;background:#0a0a0a;max-width:100vw}
 .bg-layer{position:fixed;inset:0;z-index:0;background:url('bg.jpg') center center/cover no-repeat}
 .bg-layer::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.15) 100%)}
 .app{display:flex;min-height:100vh;position:relative;z-index:2}
@@ -58,7 +58,7 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 .sidebar-footer{padding:16px 20px;border-top:1px solid var(--glass-border-subtle);font-size:0.68rem;color:var(--text-muted);letter-spacing:0.04em}
 .sidebar-footer .domain{color:var(--teal);font-weight:600;letter-spacing:0.06em}
 .mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;width:42px;height:42px;border-radius:var(--radius-sm);background:var(--glass-bg-heavy);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);color:var(--text);font-size:1.1rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:var(--glass-shadow)}
-.main{margin-left:var(--sidebar-w);flex:1;padding:30px 34px;min-height:100vh}
+.main{margin-left:var(--sidebar-w);flex:1;padding:30px 34px;min-height:100vh;max-width:100%;overflow-x:hidden}
 .card{background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4);border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden;transition:all var(--transition);box-shadow:var(--glass-shadow)}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.7) 50%,transparent 100%)}
 .card:hover{border-color:rgba(255,255,255,0.65);box-shadow:0 8px 40px rgba(0,0,0,0.1)}
@@ -75,9 +75,11 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 .section-header{margin-bottom:24px}
 .section-header h2{font-family:var(--font);font-size:1.6rem;font-weight:600;color:var(--white);letter-spacing:-0.01em;text-shadow:0 2px 12px rgba(0,0,0,0.4)}
 .section-header .updated{font-size:0.7rem;color:rgba(255,255,255,0.8);margin-top:4px;letter-spacing:0.02em;text-shadow:0 1px 4px rgba(0,0,0,0.4)}
-.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:24px}
+.metrics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+@media(min-width:768px){.metrics-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}}
 .metric-tile{text-align:center;padding:20px 14px}
-.metric-value{font-family:var(--font);font-size:1.8rem;font-weight:600;color:var(--black);letter-spacing:-0.01em;line-height:1}
+.metric-value{font-family:var(--font);font-size:1.4rem;font-weight:600;color:var(--black);letter-spacing:-0.01em;line-height:1}
+@media(min-width:768px){.metric-value{font-size:1.8rem}}
 .metric-value.teal{color:var(--teal)}
 .metric-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-top:7px;font-weight:500}
 .status-list{display:flex;flex-direction:column;gap:8px}
@@ -133,9 +135,9 @@ body{font-family:var(--font);color:var(--text);min-height:100vh;overflow-x:hidde
 .sidebar{transform:translateX(-100%);width:280px;background:rgba(245,245,245,0.97);backdrop-filter:none;-webkit-backdrop-filter:none}
 .sidebar.open{transform:translateX(0)}
 .mobile-toggle{display:flex}
-.main{margin-left:0;padding:16px 14px;padding-top:60px}
+.main{margin-left:0;padding:16px 14px;padding-top:60px;max-width:100vw;overflow-x:hidden}
 .grid-2{grid-template-columns:1fr}
-.metrics-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+
 .finance-grid{grid-template-columns:1fr}
 .content-grid{grid-template-columns:1fr}
 .card{padding:16px;border-radius:12px}
@@ -175,7 +177,7 @@ div[style*="display:flex;align-items:center;gap:14px"]{flex-wrap:wrap;gap:10px!i
 .section-header{margin-bottom:16px}
 .section-header h2{font-size:1.2rem}
 .section-header .updated{font-size:0.62rem}
-.metrics-grid{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+
 .metric-value{font-size:1.25rem}
 .metric-label{font-size:0.55rem;letter-spacing:0.08em}
 .metric-tile{padding:12px 8px}
