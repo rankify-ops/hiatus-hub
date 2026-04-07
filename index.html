@@ -265,6 +265,10 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
 .pin-error{font-size:0.7rem;color:#e85d5d;height:20px;margin-bottom:4px;opacity:0;transition:opacity 0.2s}
 .pin-error.show{opacity:1}
 @media(max-width:520px){.pin-card{padding:36px 28px;border-radius:20px}.pin-input{width:42px;height:48px;font-size:1.2rem;border-radius:10px}.pin-logo{width:52px;height:52px}.pin-title{font-size:0.95rem}}
+
+.live-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;animation:livePulse 2s infinite;flex-shrink:0}
+.live-dot-sm{width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;animation:livePulse 2s infinite}
+@keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,0.5)}50%{box-shadow:0 0 0 4px rgba(34,197,94,0)}}
 </style>
 </head>
 <body>
@@ -691,13 +695,19 @@ const activeCat=filterCat||window._stockCat||'All';
 window._stockCat=activeCat;
 const matTypes=d.material_types||['Sterling Silver','S/Silver 2.5G Micron','Brass 2.5G Micron'];
 if(!window._stockMats)window._stockMats=new Set(matTypes);
+if(window._stockLive===undefined)window._stockLive=false;
 const activeMats=window._stockMats;
 document.getElementById('stock-filters').innerHTML=`
 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
 <button class="cat-filter ${activeCat==='All'?'active':''}" onclick="renderStock('All')">All</button>
 ${cats.map(c=>`<button class="cat-filter ${activeCat===c?'active':''}" onclick="renderStock('${c}')">${c}s</button>`).join('')}
 </div>
-<div style="display:flex;gap:10px;flex-wrap:wrap">
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+<label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.65rem;color:var(--text-muted)">
+<input type="checkbox" ${window._stockLive?'checked':''} onchange="window._stockLive=!window._stockLive;renderStock()" style="accent-color:#22c55e;width:14px;height:14px;cursor:pointer">
+<span style="display:inline-flex;align-items:center;gap:4px"><span class="live-dot-sm"></span>Live on Shopify</span>
+</label>
+<span style="width:1px;height:14px;background:rgba(255,255,255,0.1)"></span>
 ${matTypes.map(m=>{
 const checked=activeMats.has(m);
 const colors={'Sterling Silver':'#c0c0c0','S/Silver 2.5G Micron':'#d4af37','Brass 2.5G Micron':'#cd7f32'};
@@ -707,7 +717,7 @@ return `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;fon
 <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:${col};display:inline-block;border:1px solid rgba(255,255,255,0.15)"></span>${m}</span>
 </label>`}).join('')}
 </div>`;
-const catFiltered=activeCat==='All'?prods:prods.filter(p=>p.product_type===activeCat);const filtered=catFiltered.filter(p=>activeMats.has(p.material_type));
+const catFiltered=activeCat==='All'?prods:prods.filter(p=>p.product_type===activeCat);const matFiltered=catFiltered.filter(p=>activeMats.has(p.material_type));const filtered=window._stockLive?matFiltered.filter(p=>p.is_live):matFiltered;
 if(!prods.length){document.getElementById('stock-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">☷</div><h3>Pre-launch</h3></div></div>`;return}
 if(!document.getElementById('stock-css')){const st=document.createElement('style');st.id='stock-css';st.textContent='.stock-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}@media(max-width:1200px){.stock-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:768px){.stock-grid{grid-template-columns:repeat(2,1fr);gap:8px}}';document.head.appendChild(st)}
 document.getElementById('stock-content').innerHTML=`
@@ -728,7 +738,7 @@ ${p.image?`<div style="width:100%;height:180px;overflow:hidden;position:relative
 <div style="position:absolute;bottom:8px;right:8px;display:flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)">
 <span style="width:8px;height:8px;border-radius:50%;background:${p.material_type==='Sterling Silver'?'#c0c0c0':p.material_type==='S/Silver 2.5G Micron'?'#d4af37':'#cd7f32'};display:inline-block;border:1px solid rgba(255,255,255,0.2)"></span>
 <span style="font-size:0.42rem;font-weight:600;color:rgba(255,255,255,0.8)">${p.material_type==='Sterling Silver'?'925 Silver':p.material_type}</span></div><div style="position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(transparent,rgba(0,0,0,0.5))"></div></div>`:''}
-<div style="padding:12px"><div style="font-size:0.78rem;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:2px">${cleanName}</div>${p.supplier_sku?`<div style="font-size:0.5rem;color:var(--teal);font-family:monospace;margin-bottom:4px">${p.supplier_sku}</div>`:`<div style="margin-bottom:4px"></div>`}<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:0.65rem;color:var(--text-muted)">$${p.price.toFixed(2)}</span><span style="font-size:1.1rem;font-weight:700;color:${statusCol}">${p.total_quantity}</span></div><div style="display:flex;flex-wrap:wrap;gap:3px">${p.variants.slice(0,8).map(v=>{const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';return `<div style="padding:2px 5px;border-radius:4px;background:rgba(255,255,255,0.05);font-size:0.52rem"><span style="color:var(--text-faint)">${(v.title||'').replace(/\s*\(.*\)/,'')}</span> <span style="font-weight:700;color:${vc}">${v.quantity}</span></div>`}).join('')}</div></div></div>`}).join('')}
+<div style="padding:12px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:2px"><div style="font-size:0.78rem;font-weight:700;color:var(--white);line-height:1.2">${cleanName}</div>${!p.image&&p.is_live?'<span class="live-dot-sm"></span>':''}</div>${p.supplier_sku?`<div style="font-size:0.5rem;color:var(--teal);font-family:monospace;margin-bottom:4px">${p.supplier_sku}</div>`:`<div style="margin-bottom:4px"></div>`}<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:0.65rem;color:var(--text-muted)">$${p.price.toFixed(2)}</span><span style="font-size:1.1rem;font-weight:700;color:${statusCol}">${p.total_quantity}</span></div><div style="display:flex;flex-wrap:wrap;gap:3px">${p.variants.slice(0,8).map(v=>{const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';return `<div style="padding:2px 5px;border-radius:4px;background:rgba(255,255,255,0.05);font-size:0.52rem"><span style="color:var(--text-faint)">${(v.title||'').replace(/\s*\(.*\)/,'')}</span> <span style="font-weight:700;color:${vc}">${v.quantity}</span></div>`}).join('')}</div></div></div>`}).join('')}
 </div>`}
 
 function showStockDetail(idx){

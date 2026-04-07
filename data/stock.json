@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-07T23:01:18+10:00",
+  "last_updated": "2026-04-07T23:05:51+10:00",
   "source": "Shopify + Supplier Data",
   "store_status": "Live",
   "categories": [
@@ -90,7 +90,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "CUBAN LINK BRACELET (SILVER)",
@@ -124,7 +125,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "FREE RING SIZER",
@@ -150,7 +152,8 @@
         "Needs supplier SKU",
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "PARADOX PEARLS (SILVER)",
@@ -185,7 +188,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "SUN WORSHIPPER PENDANT (SILVER)",
@@ -221,7 +225,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "UNEARTH CUFF (SILVER)",
@@ -246,7 +251,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "UNEARTH RING (SILVER)",
@@ -320,7 +326,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "UNEARTH SIGNET RING (SILVER)",
@@ -394,7 +401,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "UNEARTH STACKER RING SET (SILVER)",
@@ -468,7 +476,8 @@
       "flags": [
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": true
     },
     {
       "product": "3 HOOP CHAIN (STERLING SILVER)",
@@ -497,7 +506,8 @@
         "Needs sell price",
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": false
     },
     {
       "product": "COMPASS PENDANT (SILVER)",
@@ -524,7 +534,8 @@
         "Needs sell price",
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": false
     },
     {
       "product": "HIATUS H PENDANT PIECE (SILVER)",
@@ -554,7 +565,8 @@
         "Needs supplier SKU",
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": false
     },
     {
       "product": "HIATUS H PENDANT (SILVER)",
@@ -607,7 +619,8 @@
         "Needs supplier SKU",
         "Needs supplier price"
       ],
-      "material_type": "Sterling Silver"
+      "material_type": "Sterling Silver",
+      "is_live": false
     },
     {
       "product": "ROPE CHAIN (STERLING SILVER)",
@@ -651,7 +664,8 @@
         "Needs supplier SKU",
         "Needs supplier price"
       ],
-      "notes": "Component \u2014 used in Hiatus H Pendant. 3 sizes available."
+      "notes": "Component \u2014 used in Hiatus H Pendant. 3 sizes available.",
+      "is_live": false
     }
   ],
   "material_types": [
