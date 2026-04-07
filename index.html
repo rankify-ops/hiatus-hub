@@ -338,7 +338,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
 </div>
 <script>
 const DATA_BASE='data/';
-const DATA_FILES={overview:'overview.json',products:'products.json',content:'content.json',orders:'orders.json',market_sales:'market_sales.json',stock:'stock.json',markets:'markets.json',finance:'finance.json'};
+const DATA_FILES={overview:'overview.json',products:'products.json',content:'content.json',orders:'orders.json',market_sales:'market_sales.json',stock:'stock.json',stock_changelog:'stock_changelog.json',markets:'markets.json',finance:'finance.json'};
 let appData={};
 document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
 async function loadData(){for(const[key,file]of Object.entries(DATA_FILES)){try{const res=await fetch(DATA_BASE+file+'?t='+Date.now());if(res.ok)appData[key]=await res.json()}catch(e){console.warn(`Failed: ${file}`,e)}}renderAll()}
@@ -597,61 +597,82 @@ document.getElementById('finance-content').innerHTML=`
   </div>
 </div>`}
 function renderStock(){const d=appData.stock;if(!d)return;
+const cl=appData.stock_changelog||{changelog:[]};
+const changelog=cl.changelog||[];
 document.getElementById('stock-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: Shopify';
 const s=d.summary||{};
 const prods=d.products||[];
 if(d.store_status==='Pre-launch'||!prods.length){
-document.getElementById('stock-content').innerHTML=`
-<div class="metrics-grid">
-  <div class="card metric-tile"><div class="metric-value">${s.total_skus||0}</div><div class="metric-label">Total SKUs</div></div>
-  <div class="card metric-tile"><div class="metric-value teal">${s.in_stock||0}</div><div class="metric-label">In Stock</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="color:var(--amber)">${s.low_stock||0}</div><div class="metric-label">Low Stock</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="color:var(--red-soft)">${s.out_of_stock||0}</div><div class="metric-label">Out of Stock</div></div>
-</div>
-<div class="card"><div class="empty-state"><div class="icon">☷</div><h3>Pre-launch</h3><p>${d.notes||'Stock tracking will activate once products are manufactured and listed.'}</p></div></div>`;
+document.getElementById('stock-content').innerHTML=`<div class="metrics-grid"><div class="card metric-tile"><div class="metric-value">0</div><div class="metric-label">SKUs</div></div><div class="card metric-tile"><div class="metric-value">0</div><div class="metric-label">In Stock</div></div></div><div class="card"><div class="empty-state"><div class="icon">☷</div><h3>Pre-launch</h3><p>Stock tracking will activate once products are manufactured and listed.</p></div></div>`;
 return}
+// Inject toggle CSS once
+if(!document.getElementById('sd-css')){const st=document.createElement('style');st.id='sd-css';st.textContent='.stock-detail{max-height:0;overflow:hidden;transition:max-height 0.3s ease}.stock-detail.open{max-height:500px}';document.head.appendChild(st)}
 document.getElementById('stock-content').innerHTML=`
 <div class="metrics-grid">
   <div class="card metric-tile"><div class="metric-value">${s.total_products||0}</div><div class="metric-label">Products</div></div>
-  <div class="card metric-tile"><div class="metric-value">${s.total_skus||0}</div><div class="metric-label">Total SKUs</div></div>
+  <div class="card metric-tile"><div class="metric-value">${s.total_skus||0}</div><div class="metric-label">SKUs</div></div>
   <div class="card metric-tile"><div class="metric-value teal">${s.in_stock||0}</div><div class="metric-label">In Stock</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="color:var(--amber)">${s.low_stock||0}</div><div class="metric-label">Low Stock</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="color:var(--red-soft)">${s.out_of_stock||0}</div><div class="metric-label">Out of Stock</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="color:var(--amber)">${s.low_stock||0}</div><div class="metric-label">Low</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="color:var(--red-soft)">${s.out_of_stock||0}</div><div class="metric-label">OOS</div></div>
 </div>
-<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">
-${prods.map(p=>{
-  const hasOos=p.variants_oos>0;
-  const hasLow=p.variants_low>0;
-  const statusCol=hasOos?'var(--red-soft)':hasLow?'var(--amber)':'var(--teal)';
-  const statusText=hasOos?'Has OOS':hasLow?'Low Stock':'Good';
-  const expanded=p.variants.length<=4;
-  return `<div class="card" style="padding:0;overflow:hidden">
-    ${p.image?`<div style="width:100%;height:200px;overflow:hidden;position:relative">
-      <img src="${p.image}" alt="${p.product}" style="width:100%;height:100%;object-fit:cover;display:block">
-      <div style="position:absolute;top:10px;right:10px">
-        <span class="card-badge" style="background:${statusCol}20;color:${statusCol};border:1px solid ${statusCol}35;font-size:0.58rem;backdrop-filter:blur(8px)">${statusText}</span>
-      </div>
-      <div style="position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(0,0,0,0.4))"></div>
-      <div style="position:absolute;bottom:10px;left:14px;color:#fff;font-size:0.7rem;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.5)">$${p.price.toFixed(2)} AUD</div>
-    </div>`:''}
-    <div style="padding:16px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
-        <div>
-          <div style="font-size:0.9rem;font-weight:700;color:var(--black);line-height:1.3">${p.product}</div>
-          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px">${p.variants.length} variants</div>
+<div class="card" style="margin-bottom:14px">
+  <div class="card-header"><span class="card-title">Stock Change Log</span><span class="card-badge badge-teal">${changelog.length} changes</span></div>
+  ${changelog.length?`<div style="display:flex;flex-direction:column;gap:6px">
+    ${changelog.slice().reverse().map(c=>{
+      const isUp=c.change>0;const col=isUp?'var(--teal)':'var(--red-soft)';
+      const dt=new Date(c.timestamp);
+      const dateStr=dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+      const srcCol=c.source.includes('Shopify')?'#4a8fe8':c.source.includes('Market')?'#e8a84d':'#888';
+      return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.03);flex-wrap:wrap">
+        <div style="width:28px;height:28px;border-radius:6px;background:${col}12;display:flex;align-items:center;justify-content:center;font-weight:800;color:${col};font-size:0.7rem;flex-shrink:0">${isUp?'+':''}${c.change}</div>
+        <div style="flex:1;min-width:100px">
+          <div style="font-size:0.72rem;font-weight:600;color:var(--black)">${c.product}</div>
+          <div style="font-size:0.6rem;color:var(--text-muted)">${c.variant} · ${c.before}→${c.after}</div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:1.3rem;font-weight:700;color:${statusCol};line-height:1">${p.total_quantity}</div>
-          <div style="font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">units</div>
+          <div style="font-size:0.58rem;color:var(--text-faint)">${dateStr}</div>
+          <span style="display:inline-block;padding:1px 5px;border-radius:5px;font-size:0.48rem;font-weight:700;background:${srcCol}12;color:${srcCol};border:1px solid ${srcCol}20;margin-top:1px">${c.source}</span>
         </div>
+      </div>`}).join('')}
+  </div>`:'<div style="font-size:0.75rem;color:var(--text-muted);padding:8px 0">No changes yet.</div>'}
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
+${prods.map((p,pi)=>{
+  const hasOos=p.variants_oos>0;const hasLow=p.variants_low>0;
+  const statusCol=hasOos?'var(--red-soft)':hasLow?'var(--amber)':'var(--teal)';
+  const statusText=hasOos?'OOS':hasLow?'Low':'OK';
+  const prodChanges=changelog.filter(c=>c.product===p.product);
+  return `<div class="card" style="padding:0;overflow:hidden;cursor:pointer" onclick="this.querySelector('.stock-detail').classList.toggle('open')">
+    ${p.image?`<div style="width:100%;height:120px;overflow:hidden;position:relative">
+      <img src="${p.image}" alt="${p.product}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy">
+      <div style="position:absolute;top:6px;right:6px"><span class="card-badge" style="background:${statusCol}20;color:${statusCol};border:1px solid ${statusCol}35;font-size:0.48rem">${statusText}</span></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:40px;background:linear-gradient(transparent,rgba(0,0,0,0.4))"></div>
+      <div style="position:absolute;bottom:6px;left:8px;color:#fff;font-size:0.6rem;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,0.5)">$${p.price.toFixed(2)}</div>
+    </div>`:''}
+    <div style="padding:10px">
+      <div style="font-size:0.7rem;font-weight:700;color:var(--black);line-height:1.2;margin-bottom:4px">${p.product.replace(' (SILVER)','')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-size:0.58rem;color:var(--text-muted)">${p.variants.length} sizes</span>
+        <span style="font-size:1rem;font-weight:700;color:${statusCol}">${p.total_quantity}</span>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:4px">
+      <div style="display:flex;flex-wrap:wrap;gap:2px">
         ${p.variants.map(v=>{
           const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';
-          return `<div style="display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.04);font-size:0.68rem">
-            <span style="color:var(--text-muted)">${v.title||v.variant||'—'}</span>
-            <span style="font-weight:700;color:${vc}">${v.quantity}</span>
-          </div>`}).join('')}
+          return `<div style="padding:2px 4px;border-radius:4px;background:rgba(0,0,0,0.03);font-size:0.52rem"><span style="color:var(--text-faint)">${(v.title||'').replace(/\s*\(.*\)/,'')}</span> <span style="font-weight:700;color:${vc}">${v.quantity}</span></div>`}).join('')}
+      </div>
+      ${prodChanges.length?'<div style="font-size:0.5rem;color:var(--teal);margin-top:4px;text-align:center">'+prodChanges.length+' changes ▾</div>':''}
+    </div>
+    <div class="stock-detail" style="border-top:1px solid rgba(0,0,0,0.04)">
+      <div style="padding:10px">
+        <div style="font-size:0.65rem;font-weight:600;color:var(--black);margin-bottom:6px">History</div>
+        ${prodChanges.length?prodChanges.slice().reverse().map(c=>{
+          const col2=c.change>0?'var(--teal)':'var(--red-soft)';
+          const dt2=new Date(c.timestamp);
+          return `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.02);font-size:0.6rem">
+            <span style="font-weight:700;color:${col2};min-width:22px">${c.change>0?'+':''}${c.change}</span>
+            <span style="color:var(--text-secondary);flex:1">${c.variant}</span>
+            <span style="color:var(--text-faint);font-size:0.5rem">${dt2.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span>
+          </div>`}).join(''):'<div style="font-size:0.6rem;color:var(--text-faint)">No changes</div>'}
       </div>
     </div>
   </div>`}).join('')}

@@ -1,0 +1,53 @@
+{
+  "last_updated": "2026-04-07T03:00:00+10:00",
+  "changelog": [
+    {
+      "id": "SC-001",
+      "timestamp": "2026-04-05T12:00:00+10:00",
+      "product": "UNEARTH CUFF (SILVER)",
+      "variant": "One Size (Adjustable)",
+      "sku": "CUFUE1",
+      "before": 99,
+      "after": 101,
+      "change": 2,
+      "reason": "Stock adjustment — test",
+      "source": "Manual (Claude)"
+    },
+    {
+      "id": "SC-002",
+      "timestamp": "2026-04-05T13:00:00+10:00",
+      "product": "UNEARTH RING (SILVER)",
+      "variant": "11 (M/L)",
+      "sku": "RNGUE11",
+      "before": 3,
+      "after": 2,
+      "change": -1,
+      "reason": "Sold at Broadbeach Market",
+      "source": "Market Sale (MKT-001)"
+    },
+    {
+      "id": "SC-003",
+      "timestamp": "2026-04-05T14:00:00+10:00",
+      "product": "UNEARTH STACKER RING SET (SILVER)",
+      "variant": "11 (M/L)",
+      "sku": "RNGSUE11",
+      "before": 1,
+      "after": 0,
+      "change": -1,
+      "reason": "Sold at Broadbeach Market",
+      "source": "Market Sale (MKT-003)"
+    },
+    {
+      "id": "SC-004",
+      "timestamp": "2026-04-06T08:00:00+10:00",
+      "product": "SUN WORSHIPPER PENDANT (SILVER)",
+      "variant": "Default Title",
+      "sku": "PENSWL",
+      "before": 3,
+      "after": 2,
+      "change": -1,
+      "reason": "Shopify order #1045 — Daniel",
+      "source": "Shopify Order"
+    }
+  ]
+}
