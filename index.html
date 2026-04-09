@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiatus Collection — Premium Sterling Silver Men's Jewellery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.06);
+      --glass-bg-hover: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-border-hover: rgba(52, 211, 153, 0.35);
+      --blur: blur(12px) saturate(1.2);
+      --blur-heavy: blur(30px) saturate(1.4);
+      --accent: rgb(52, 211, 153);
+      --accent-dim: rgba(52, 211, 153, 0.15);
+      --accent-glow: rgba(52, 211, 153, 0.2);
+      --text: #e8e8e8;
+      --text-dim: #aaaaaa;
+      --text-bright: #ffffff;
+      --gold: #f0a840;
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background: #0a0a0a;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Fixed background */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: url('https://images.unsplash.com/photo-1619508422331-606e38f1f902?q=80&w=1920&auto=format&fit=crop') center / cover no-repeat;
+      opacity: 0.7;
+    }
+    .bg-layer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.1) 50%, rgba(10,10,10,0.4) 100%);
+    }
+
+    /* Content layer */
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    a { color: inherit; text-decoration: none; transition: color 0.3s ease; }
+    a:hover { color: var(--accent); }
+    img { max-width: 100%; display: block; }
+
+    /* ===== GLASS UTILITY ===== */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+    }
+
+    .glass-heavy {
+      background: rgba(10, 10, 10, 0.4);
+      backdrop-filter: var(--blur-heavy);
+      -webkit-backdrop-filter: var(--blur-heavy);
+      border: 1px solid var(--glass-border);
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 48px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10, 10, 10, 0.4);
+      backdrop-filter: blur(30px) saturate(1.5);
+      -webkit-backdrop-filter: blur(30px) saturate(1.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background 0.3s ease;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-actions {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-actions a {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .cart-count {
+      background: var(--accent);
+      color: #0a0a0a;
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 4px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.6);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 48px;
+      border-radius: var(--radius-lg);
+    }
+
+    .hero-tagline {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      margin-bottom: 36px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 36px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent-dim);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: var(--accent);
+      backdrop-filter: blur(16px);
+    }
+    .btn-primary:hover {
+      background: var(--accent-glow);
+      box-shadow: 0 0 30px rgba(52, 211, 153, 0.15);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text);
+      backdrop-filter: blur(16px);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.12);
+      color: var(--text-bright);
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      padding: 80px 48px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    /* ===== PRODUCT GRID ===== */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      border-color: var(--glass-border-hover);
+      background: var(--glass-bg-hover);
+    }
+
+    .product-card__image {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .product-card__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover .product-card__image img {
+      transform: scale(1.05);
+    }
+
+    .product-card__badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 10px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 6px;
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+    }
+
+    .product-card__badge--accent {
+      background: var(--accent-dim);
+      border-color: rgba(52, 211, 153, 0.3);
+      color: var(--accent);
+    }
+
+    .product-card__info {
+      padding: 20px;
+    }
+
+    .product-card__title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      letter-spacing: 0.03em;
+      margin-bottom: 8px;
+    }
+
+    .product-card__price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .product-card__type {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .product-card__stars {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .star { color: var(--gold); font-size: 0.75rem; }
+    .rating-text { font-size: 0.7rem; color: var(--text-dim); margin-left: 4px; }
+
+    /* ===== FEATURED BANNER ===== */
+    .featured-banner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .featured-banner__image {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/5;
+    }
+
+    .featured-banner__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .featured-banner__content {
+      padding: 48px;
+    }
+
+    .featured-banner__content .section-label {
+      text-align: left;
+    }
+
+    .featured-banner__content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--text-bright);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .featured-banner__content p {
+      color: var(--text-dim);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+
+    /* ===== PILLARS / VALUES ===== */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pillar-card {
+      padding: 40px 32px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .pillar-card:hover {
+      background: var(--glass-bg-hover);
+      border-color: var(--glass-border-hover);
+    }
+
+    .pillar-icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .pillar-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+    }
+
+    .pillar-card p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ===== NEWSLETTER ===== */
+    .newsletter {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 64px 48px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .newsletter-form input:focus {
+      border-color: var(--accent);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 48px;
+      background: rgba(10, 10, 10, 0.5);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      max-width: 1400px;
+      margin: 0 auto 40px;
+    }
+
+    .footer-brand .nav-logo {
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .footer-col h4 {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-bright);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-weight: 300;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .featured-banner { grid-template-columns: 1fr; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .section { padding: 48px 20px; }
+      .hero-title { font-size: 2.4rem; }
+      .hero-content { padding: 24px; }
+      .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .newsletter-form { flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed background -->
+  <div class="bg-layer"></div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Nav -->
+    <nav class="nav">
+      <a href="/" class="nav-logo">Hiatus</a>
+      <ul class="nav-links">
+        <li><a href="#rings">Rings</a></li>
+        <li><a href="#bracelets">Bracelets</a></li>
+        <li><a href="#necklaces">Necklaces</a></li>
+        <li><a href="#products">Shop All</a></li>
+        <li><a href="#sizing">Sizing Guide</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="/account">Account</a>
+        <a href="/cart">Cart <span class="cart-count">0</span></a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg">
+        <img src="https://hiatuscollection.com.au/cdn/shop/files/IMG_9254_b9e8e362-cbf0-42ce-b3e3-bbfc944f6a4c.jpg?v=1712284375&width=1920" alt="Hiatus Collection">
+      </div>
+      <div class="hero-content glass-heavy" style="border-radius: 24px;">
+        <div class="hero-tagline">Premium Sterling Silver</div>
+        <h1 class="hero-title">Refined Silver.<br>Like a Man Being Refined.</h1>
+        <p class="hero-sub">Handcrafted sterling silver jewellery built to last a lifetime. Waterproof. Timeless. Australian-made quality.</p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a href="#products" class="btn btn-primary">Shop Collection</a>
+          <a href="#story" class="btn btn-outline">Our Story</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section class="section" id="products">
+      <div class="section-header reveal">
+        <div class="section-label">Handcrafted Sterling Silver</div>
+        <h2 class="section-title">Best Sellers</h2>
+      </div>
+      <div class="product-grid reveal">
+        <div class="product-card">
+          <div class="product-card__image">
+            <img src="https://hiatuscollection.com.au/cdn/shop/files/1_8f6e6a3b-2a3b-47ce-a6b3-a2e2f6cc3ffc.png?v=1728885063&width=600" alt="Unearth Stacker Ring Set">
+            <span class="product-card__badge product-card__badge--accent">Best Seller</span>
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__title">Unearth Stacker Ring Set (Silver)</div>
+            <div class="product-card__price">$179.00</div>
+            <div class="product-card__type">Ring</div>
+            <div class="product-card__stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+              <span class="rating-text">(5.0)</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__image">
+            <img src="https://hiatuscollection.com.au/cdn/shop/files/1_7fd65e84-ce77-4c8a-b5e4-1e19e15cce57.png?v=1728884968&width=600" alt="Unearth Signet Ring">
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__title">Unearth Signet Ring (Silver)</div>
+            <div class="product-card__price">$179.00</div>
+            <div class="product-card__type">Ring</div>
+            <div class="product-card__stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+              <span class="rating-text">(5.0)</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__image">
+            <img src="https://hiatuscollection.com.au/cdn/shop/files/1_88ae64b3-b2e1-4e84-a8f3-4fa65e4b2df7.png?v=1728884863&width=600" alt="Unearth Ring">
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__title">Unearth Ring (Silver)</div>
+            <div class="product-card__price">$179.00</div>
+            <div class="product-card__type">Ring</div>
+            <div class="product-card__stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+              <span class="rating-text">(5.0)</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__image">
+            <img src="https://hiatuscollection.com.au/cdn/shop/files/1_d4ee2bff-7a92-4d15-a3e2-e7e63f2e28a3.png?v=1728884768&width=600" alt="Creators Ring">
+            <span class="product-card__badge product-card__badge--accent">New</span>
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__title">Creators Ring (Silver)</div>
+            <div class="product-card__price">$179.00</div>
+            <div class="product-card__type">Ring</div>
+            <div class="product-card__stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+              <span class="rating-text">(5.0)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured: Bracelets & Necklaces -->
+    <section class="section" id="bracelets">
+      <div class="product-grid reveal" style="grid-template-columns: repeat(3, 1fr); max-width: 1100px;">
+        <div class="product-card">
+          <div class="product-card__image">
+            <img src="https://hiatuscollection.com.au/cdn/shop/files/1_0a8b0f23-b2b5-4ec1-a7e5-a505eeb24d4b.png?v=1728885186&width=600" alt="Cuban Link Bracelet">
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__title">Cuban Link Bracelet (Silver)</div>
+            <div class="product-card__price">$299.00</div>
+            <div class="product-card__type">Bracelet</div>
+            <div class="product-card__stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+              <span class="rating-text">(5.0)</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__image">
+            <img src="https://hiatuscollection.com.au/cdn/shop/files/1_e5e98b7a-ff94-47a0-8e2b-4d3bb46f0cfa.png?v=1728885255&width=600" alt="Unearth Cuff">
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__title">Unearth Cuff (Silver)</div>
+            <div class="product-card__price">$299.00</div>
+            <div class="product-card__type">Bracelet</div>
+            <div class="product-card__stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+              <span class="rating-text">(5.0)</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__image">
+            <img src="https://hiatuscollection.com.au/cdn/shop/files/1_72fe4e10-d1f3-4ec1-a7a1-e6a78be3db0c.png?v=1728885349&width=600" alt="Sun Worshipper Pendant">
+          </div>
+          <div class="product-card__info">
+            <div class="product-card__title">Sun Worshipper Pendant (Silver)</div>
+            <div class="product-card__price">$149.00</div>
+            <div class="product-card__type">Necklace</div>
+            <div class="product-card__stars">
+              <span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span>
+              <span class="rating-text">(5.0)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Story -->
+    <section class="section" id="story">
+      <div class="featured-banner reveal">
+        <div class="featured-banner__image glass" style="border: 1px solid rgba(255,255,255,0.08);">
+          <img src="https://hiatuscollection.com.au/cdn/shop/files/IMG_9254_b9e8e362-cbf0-42ce-b3e3-bbfc944f6a4c.jpg?v=1712284375&width=800" alt="Hiatus lifestyle">
+        </div>
+        <div class="featured-banner__content">
+          <div class="section-label">The Hiatus Standard</div>
+          <h2>Crafted to Last<br>a Lifetime</h2>
+          <p>Every piece is handcrafted from premium 925 sterling silver. Waterproof. Tarnish-resistant. Built for the man who values quality over hype. Worn at the beach, in the boardroom, and everywhere between.</p>
+          <a href="#products" class="btn btn-primary">Explore Collection</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="section">
+      <div class="section-header reveal">
+        <div class="section-label">Why Hiatus</div>
+        <h2 class="section-title">The Difference</h2>
+      </div>
+      <div class="pillars-grid reveal">
+        <div class="pillar-card glass">
+          <span class="pillar-icon">&#9670;</span>
+          <h3>925 Sterling Silver</h3>
+          <p>Premium grade sterling silver that's built to be worn every single day. No cheap metals, no plating that fades.</p>
+        </div>
+        <div class="pillar-card glass">
+          <span class="pillar-icon">&#9676;</span>
+          <h3>Waterproof Guarantee</h3>
+          <p>Swim, surf, shower — our pieces handle whatever your day throws at them. Zero compromise on durability.</p>
+        </div>
+        <div class="pillar-card glass">
+          <span class="pillar-icon">&#10038;</span>
+          <h3>Lifetime Quality</h3>
+          <p>5-star rated by men who value quality over hype. Free shipping across Australia. Easy exchanges, zero risk.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="section">
+      <div class="newsletter glass reveal" style="border-radius: 24px; max-width: 700px;">
+        <div class="section-label">Stay in the Loop</div>
+        <h2 class="section-title" style="font-size: 1.8rem; margin-bottom: 12px;">Join the Collection</h2>
+        <p style="color: var(--text-dim); font-weight: 300;">Exclusive drops, early access, and offers straight to your inbox.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Enter your email">
+          <button class="btn btn-primary">Subscribe</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="nav-logo">Hiatus</span>
+          <p>Premium sterling silver jewellery for men. Handcrafted in Australia. Built to last a lifetime.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="#">Rings</a></li>
+            <li><a href="#">Bracelets</a></li>
+            <li><a href="#">Necklaces</a></li>
+            <li><a href="#">Gift Card</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Help</h4>
+          <ul>
+            <li><a href="#">Sizing Guide</a></li>
+            <li><a href="#">Shipping & Delivery</a></li>
+            <li><a href="#">Returns & Exchanges</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">TikTok</a></li>
+            <li><a href="#">Facebook</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 Hiatus Collection. All rights reserved.
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scroll reveal script -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
