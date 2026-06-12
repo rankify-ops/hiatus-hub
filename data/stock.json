@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-12T07:33:32+10:00",
+  "last_updated": "2026-06-12T07:36:04+10:00",
   "source": "Shopify + Supplier Data",
   "store_status": "Live",
   "categories": [
@@ -18,8 +18,8 @@
   "summary": {
     "total_skus": 48,
     "in_stock": 14,
-    "low_stock": 21,
-    "out_of_stock": 13,
+    "low_stock": 20,
+    "out_of_stock": 14,
     "total_products": 14
   },
   "products": [
@@ -415,13 +415,13 @@
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409",
       "total_quantity": 9,
-      "variants_oos": 2,
-      "variants_low": 6,
+      "variants_oos": 3,
+      "variants_low": 5,
       "variants": [
         {
           "title": "6 (XXS)",
           "sku": "RNGSUE6",
-          "quantity": 2,
+          "quantity": 3,
           "variant_id": 40739092398123,
           "inventory_item_id": 42835914752043
         },
@@ -456,7 +456,7 @@
         {
           "title": "11 (M/L)",
           "sku": "RNGSUE11",
-          "quantity": 1,
+          "quantity": 0,
           "variant_id": 40597811298347,
           "inventory_item_id": 42694390906923
         },
