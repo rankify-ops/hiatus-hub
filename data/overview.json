@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-12T07:31:12+10:00",
+  "last_updated": "2026-06-12T07:33:32+10:00",
   "brand": "Hiatus Collection",
   "tagline": "Premium Oxidised 925 Sterling Silver",
   "metrics": {
@@ -30,11 +30,11 @@
   "alerts": [
     {
       "type": "info",
-      "message": "Latest order: #1047 \u2014 Unearth Stacker Ring Set \u2014 $196.04"
+      "message": "Latest: #1047 \u2014 Unearth Stacker Ring Set \u2014 $196.04"
     },
     {
       "type": "info",
-      "message": "Synced 12 Jun 2026 07:31 AM \u2014 46 orders, $4975.89 all-time revenue"
+      "message": "Synced 12 Jun 2026 07:33 AM \u2014 46 orders"
     }
   ]
 }

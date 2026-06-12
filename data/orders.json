@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-12T07:30:56+10:00",
+  "last_updated": "2026-06-12T07:33:32+10:00",
   "source": "Shopify",
   "store_status": "Live",
   "orders": {
     "total": 46,
     "paid": 44,
-    "refunded": 2,
+    "refunded": 0,
     "pending": 0,
     "unfulfilled": 1
   },
