@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-07T23:05:51+10:00",
+  "last_updated": "2026-06-12T07:30:32+10:00",
   "source": "Shopify + Supplier Data",
   "store_status": "Live",
   "categories": [
@@ -9,6 +9,11 @@
     "Other",
     "Pendant",
     "Ring"
+  ],
+  "material_types": [
+    "Sterling Silver",
+    "S/Silver 2.5G Micron",
+    "Brass 2.5G Micron"
   ],
   "summary": {
     "total_skus": 48,
@@ -87,11 +92,11 @@
       ],
       "supplier_sku": "SR10242B",
       "supplier": "Silver supplier",
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "CUBAN LINK BRACELET (SILVER)",
@@ -122,11 +127,11 @@
       ],
       "supplier_sku": "BR02628A / BR02628B",
       "supplier": "Silver supplier",
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "FREE RING SIZER",
@@ -148,12 +153,12 @@
       ],
       "supplier_sku": null,
       "supplier": null,
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier SKU",
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "PARADOX PEARLS (SILVER)",
@@ -184,12 +189,11 @@
       ],
       "supplier_sku": "BR02629C",
       "supplier": "Silver supplier",
-      "notes": "Supplier SKU not yet assigned",
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "SUN WORSHIPPER PENDANT (SILVER)",
@@ -211,6 +215,9 @@
       ],
       "supplier_sku": "SP13540A + NC03702C",
       "supplier": "Silver supplier",
+      "material_type": "Sterling Silver",
+      "is_live": true,
+      "is_composite": true,
       "components": [
         {
           "name": "Sun Worshipper Pendant (Silver)",
@@ -221,12 +228,9 @@
           "supplier_sku": "NC03702C"
         }
       ],
-      "is_composite": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "UNEARTH CUFF (SILVER)",
@@ -248,11 +252,11 @@
       ],
       "supplier_sku": "BR02221B",
       "supplier": "Silver supplier",
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "UNEARTH RING (SILVER)",
@@ -323,11 +327,11 @@
       ],
       "supplier_sku": "SR10243B",
       "supplier": "Silver supplier",
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "UNEARTH SIGNET RING (SILVER)",
@@ -398,11 +402,11 @@
       ],
       "supplier_sku": "SR10453B",
       "supplier": "Silver supplier",
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "UNEARTH STACKER RING SET (SILVER)",
@@ -410,14 +414,14 @@
       "product_type": "Ring",
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409",
-      "total_quantity": 11,
+      "total_quantity": 9,
       "variants_oos": 2,
       "variants_low": 6,
       "variants": [
         {
           "title": "6 (XXS)",
           "sku": "RNGSUE6",
-          "quantity": 3,
+          "quantity": 2,
           "variant_id": 40739092398123,
           "inventory_item_id": 42835914752043
         },
@@ -445,14 +449,14 @@
         {
           "title": "10 (M)",
           "sku": "RNGSUE10",
-          "quantity": 1,
+          "quantity": 0,
           "variant_id": 40597811265579,
           "inventory_item_id": 42694390874155
         },
         {
           "title": "11 (M/L)",
           "sku": "RNGSUE11",
-          "quantity": 0,
+          "quantity": 1,
           "variant_id": 40597811298347,
           "inventory_item_id": 42694390906923
         },
@@ -466,18 +470,18 @@
         {
           "title": "13 (XL)",
           "sku": "RNGSUE13",
-          "quantity": 2,
+          "quantity": 1,
           "variant_id": 40597811363883,
           "inventory_item_id": 42694390972459
         }
       ],
       "supplier_sku": "SR10397B",
       "supplier": "Silver supplier",
+      "material_type": "Sterling Silver",
+      "is_live": true,
       "flags": [
         "Needs supplier price"
-      ],
-      "material_type": "Sterling Silver",
-      "is_live": true
+      ]
     },
     {
       "product": "3 HOOP CHAIN (STERLING SILVER)",
@@ -667,10 +671,5 @@
       "notes": "Component \u2014 used in Hiatus H Pendant. 3 sizes available.",
       "is_live": false
     }
-  ],
-  "material_types": [
-    "Sterling Silver",
-    "S/Silver 2.5G Micron",
-    "Brass 2.5G Micron"
   ]
 }

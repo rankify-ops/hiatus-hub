@@ -1,16 +1,15 @@
 {
-  "last_updated": "2026-04-07T02:44:35+10:00",
+  "last_updated": "2026-06-12T07:31:12+10:00",
   "brand": "Hiatus Collection",
   "tagline": "Premium Oxidised 925 Sterling Silver",
   "metrics": {
-    "total_products": 9,
+    "total_products": 14,
     "active_listings": 9,
-    "instagram_followers": 0,
-    "monthly_revenue": 559.1,
+    "monthly_revenue": 782.14,
     "monthly_costs": 95.87,
-    "all_time_revenue": 5043.75,
-    "pending_orders": 2,
-    "total_orders": 44,
+    "all_time_revenue": 5400.89,
+    "pending_orders": 1,
+    "total_orders": 46,
     "market_sales_total": 425.0
   },
   "status": {
@@ -31,11 +30,11 @@
   "alerts": [
     {
       "type": "info",
-      "message": "New Shopify order #1045 \u2014 Sun Worshipper Pendant \u2014 $134.10"
+      "message": "Latest order: #1047 \u2014 Unearth Stacker Ring Set \u2014 $196.04"
     },
     {
       "type": "info",
-      "message": "Broadbeach Market today \u2014 $425 in sales (3 transactions)"
+      "message": "Synced 12 Jun 2026 07:31 AM \u2014 46 orders, $4975.89 all-time revenue"
     }
   ]
 }
