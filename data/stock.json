@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-13T05:29:24+10:00",
+  "last_updated": "2026-06-13T07:03:48+10:00",
   "source": "Shopify + Supplier Data",
   "store_status": "Live",
   "categories": [
@@ -18,8 +18,8 @@
   "summary": {
     "total_skus": 48,
     "in_stock": 5,
-    "low_stock": 20,
-    "out_of_stock": 23,
+    "low_stock": 22,
+    "out_of_stock": 21,
     "total_products": 14
   },
   "products": [
@@ -166,14 +166,14 @@
       "product_type": "Bracelet",
       "price": 299.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/Untitled_design_-_2025-07-04T220628.962.png?v=1751632132",
-      "total_quantity": 0,
-      "variants_oos": 2,
-      "variants_low": 0,
+      "total_quantity": 1,
+      "variants_oos": 1,
+      "variants_low": 1,
       "variants": [
         {
           "title": "Medium - (7.5 Inches)",
           "sku": "BLPPM",
-          "quantity": 0,
+          "quantity": 1,
           "variant_id": 40904648032299,
           "inventory_item_id": 43002447495211,
           "supplier_sku": "BR02629C"
@@ -201,14 +201,14 @@
       "product_type": "Necklace",
       "price": 149.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_9.png?v=1767592068",
-      "total_quantity": 2,
+      "total_quantity": 1,
       "variants_oos": 0,
       "variants_low": 1,
       "variants": [
         {
           "title": "Default Title",
           "sku": "PENSWL",
-          "quantity": 2,
+          "quantity": 1,
           "variant_id": 40904660484139,
           "inventory_item_id": 43002461159467
         }
@@ -339,7 +339,7 @@
       "product_type": "Ring",
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/9_012c12af-b7a4-47f3-8d70-dc6b1e340d4e.webp?v=1751674419",
-      "total_quantity": 21,
+      "total_quantity": 20,
       "variants_oos": 0,
       "variants_low": 7,
       "variants": [
@@ -381,7 +381,7 @@
         {
           "title": "11 (M/L)",
           "sku": "RNGSR11",
-          "quantity": 2,
+          "quantity": 1,
           "variant_id": 40634895302699,
           "inventory_item_id": 42731549556779
         },
@@ -414,7 +414,7 @@
       "product_type": "Ring",
       "price": 179.0,
       "image": "https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409",
-      "total_quantity": 9,
+      "total_quantity": 10,
       "variants_oos": 3,
       "variants_low": 5,
       "variants": [
@@ -463,7 +463,7 @@
         {
           "title": "12 (L)",
           "sku": "RNGSUE12",
-          "quantity": 1,
+          "quantity": 2,
           "variant_id": 40597811331115,
           "inventory_item_id": 42694390939691
         },
@@ -489,14 +489,14 @@
       "product_type": "Necklace",
       "price": 0,
       "image": "images/3-hoop-chain.png",
-      "total_quantity": 0,
-      "variants_oos": 1,
-      "variants_low": 0,
+      "total_quantity": 2,
+      "variants_oos": 0,
+      "variants_low": 1,
       "variants": [
         {
           "title": "One Size",
           "sku": "NC03702C-CHAIN",
-          "quantity": 0,
+          "quantity": 2,
           "variant_id": null,
           "inventory_item_id": null
         }
