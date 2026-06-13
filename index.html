@@ -890,7 +890,7 @@ function renderSupplierOrder(){
               <div style="font-size:0.78rem;font-weight:600;color:#fff">${cleanName}</div>
               <div style="font-size:0.58rem;color:var(--teal);font-family:monospace">${p.supplier_sku}</div>
             </div>
-            <div style="font-size:0.65rem;color:var(--text-muted)">${p.variants.length} sizes</div>
+            <div style="text-align:right"><div style="font-size:0.65rem;color:var(--text-muted)">${p.variants.length} sizes</div><div style="font-size:0.55rem;color:${p.total_quantity<=0?'var(--red-soft)':p.total_quantity<=10?'var(--amber)':'var(--teal)'}">${p.total_quantity} in stock</div></div>
             ${orderQty>0?`<div style="min-width:24px;height:24px;border-radius:12px;background:var(--teal);color:#fff;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center">${orderQty}</div>`:''}
             <div style="font-size:0.8rem;color:rgba(255,255,255,0.3)">${inOrder?'▾':'▸'}</div>
           </div>
@@ -904,6 +904,10 @@ function renderSupplierOrder(){
                   <div style="flex:1">
                     <div style="font-size:0.68rem;color:#fff;font-weight:500">${v.title||'One Size'}</div>
                     <div style="font-size:0.5rem;color:var(--text-faint)">${v.sku}${supSku&&supSku!==p.supplier_sku?' · '+supSku:''}</div>
+                  </div>
+                  <div style="text-align:center;margin-right:6px">
+                    <div style="font-size:0.75rem;font-weight:700;color:${v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)'}">${v.quantity}</div>
+                    <div style="font-size:0.4rem;color:var(--text-faint);text-transform:uppercase">in stock</div>
                   </div>
                   <div style="display:flex;align-items:center;gap:4px">
                     <button onclick="event.stopPropagation();adjustOrderQty('${p.product.replace(/'/g,"\\'")}','${vKey}',-1)" style="width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center">−</button>
