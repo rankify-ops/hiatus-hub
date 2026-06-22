@@ -1,0 +1,10 @@
+{
+  "name": "hiatus-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hiatus Collection — Operations Hub (Vercel deployment)",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}
