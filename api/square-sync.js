@@ -78,19 +78,26 @@ module.exports = async function handler(req, res) {
   try {
     const shopifyProducts = await fetchAllShopifyProducts();
 
-    // Get existing Square catalog to avoid duplicates
+    // Delete all existing Square catalog items first for a clean sync
     const existing = await squareAPI('POST', '/catalog/search', {
       object_types: ['ITEM'],
       limit: 100,
     });
-    const existingNames = new Set((existing.objects || []).map(o => o.item_data?.name));
+    const existingItems = existing.objects || [];
+    let deleted = 0;
+    for (const item of existingItems) {
+      try {
+        await squareAPI('DELETE', `/catalog/object/${item.id}`);
+        deleted++;
+      } catch (e) {
+        console.warn('Failed to delete catalog item:', e.message);
+      }
+    }
 
     const batches = [];
     let batchObjects = [];
 
     for (const product of shopifyProducts) {
-      if (existingNames.has(product.title)) continue;
-
       const variants = product.variants.edges.map(e => e.node);
       const itemId = `#shopify_${product.handle}`;
 
@@ -127,7 +134,7 @@ module.exports = async function handler(req, res) {
     }
     if (batchObjects.length > 0) batches.push(batchObjects);
 
-    const results = { synced: 0, skipped: existingNames.size, errors: [] };
+    const results = { synced: 0, deleted, errors: [] };
 
     for (const batch of batches) {
       try {
@@ -143,7 +150,7 @@ module.exports = async function handler(req, res) {
     }
 
     // Sync inventory quantities
-    if (results.synced > 0) {
+    {
       // Get locations to find the default one
       const locations = await squareAPI('GET', '/locations');
       const locationId = locations.locations?.[0]?.id;
@@ -191,7 +198,7 @@ module.exports = async function handler(req, res) {
     }
 
     return res.status(200).json({
-      message: `Synced ${results.synced} products from Shopify to Square. ${results.skipped} already existed.`,
+      message: `Deleted ${deleted} old items, synced ${results.synced} products from Shopify to Square.`,
       ...results,
     });
   } catch (err) {
