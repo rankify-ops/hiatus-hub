@@ -364,6 +364,11 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
         <button class="cat-filter" data-subtab="markets" onclick="switchOrderTab('markets')">Markets</button>
       </div>
       <div id="orders-content"></div>
+      <!-- Order Detail Modal -->
+      <div id="order-detail-modal" style="display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)" onclick="document.getElementById('order-detail-modal').style.display='none'"></div>
+        <div id="order-detail-content" style="position:relative;z-index:1;width:600px;max-width:95vw;max-height:90vh;overflow-y:auto;background:rgba(20,20,20,0.92);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:0;box-shadow:0 24px 80px rgba(0,0,0,0.4)"></div>
+      </div>
     </div>
     <div class="tab-panel" id="tab-stock">
       <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
@@ -539,8 +544,9 @@ document.getElementById('orders-content').innerHTML=`
   <table class="data-table"><thead><tr><th>#</th><th>Date</th><th>Channel</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr></thead><tbody>
     ${allSales.slice(0,25).map(o=>{
       const chCol=o.channel==='Shopify'?'#4a8fe8':'#e8a84d';
-      return `<tr>
-      <td style="font-weight:700;color:var(--black)">${o.channel==='Shopify'?'<a href="'+(o.shopify_url||'')+'" target="_blank" style="color:var(--teal);text-decoration:none">#'+o.order_number+'</a>':'#'+o.order_number}</td>
+      const clickAttr=o.channel==='Shopify'?` onclick="showOrderDetail('${o.order_number}')" style="cursor:pointer"`:'';
+      return `<tr${clickAttr}>
+      <td style="font-weight:700;color:var(--black)">${o.channel==='Shopify'?'<span style="color:var(--teal)">#'+o.order_number+'</span>':'#'+o.order_number}</td>
       <td style="font-size:0.75rem;color:var(--text-muted)">${o.created_at}</td>
       <td><span style="display:inline-block;padding:2px 8px;border-radius:8px;font-size:0.58rem;font-weight:700;background:${chCol}15;color:${chCol};border:1px solid ${chCol}25">${o.channel}${o.market_name?' · '+o.market_name:''}</span></td>
       <td style="font-weight:500;color:var(--black)">${o.customer}</td>
@@ -585,8 +591,8 @@ ${(d.monthly_revenue&&Object.keys(d.monthly_revenue).length)?`<div class="card" 
 <div class="card">
   <div class="card-header"><span class="card-title">Recent Orders</span><span class="card-badge badge-teal">from Shopify</span></div>
   <table class="data-table"><thead><tr><th>#</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Fulfillment</th></tr></thead><tbody>
-    ${recent.map(o=>`<tr>
-      <td><a href="${o.shopify_url}" target="_blank" style="color:var(--teal);font-weight:700;text-decoration:none">#${o.order_number}</a></td>
+    ${recent.map(o=>`<tr onclick="showOrderDetail('${o.order_number}')" style="cursor:pointer">
+      <td><span style="color:var(--teal);font-weight:700">#${o.order_number}</span></td>
       <td style="font-size:0.75rem;color:var(--text-muted)">${o.created_at}</td>
       <td style="font-weight:500;color:var(--black)">${o.customer}</td>
       <td style="font-size:0.72rem;color:var(--text-secondary);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.items}</td>
@@ -1000,6 +1006,109 @@ function exportSupplierOrder(){
   const filename='Hiatus_Supplier_Order_'+new Date().toISOString().slice(0,10)+'.xlsx';
   XLSX.writeFile(wb,filename);
 }
+
+async function showOrderDetail(orderNumber){
+const modal=document.getElementById('order-detail-modal');
+const content=document.getElementById('order-detail-content');
+content.innerHTML='<div style="padding:40px;text-align:center"><div class="shimmer" style="width:200px;height:24px;margin:0 auto 12px"></div><div style="font-size:0.75rem;color:var(--text-muted)">Loading order details from Shopify...</div></div>';
+modal.style.display='flex';
+try{
+const res=await fetch('/api/order-detail?name='+encodeURIComponent(orderNumber)+'&t='+Date.now());
+if(!res.ok)throw new Error('Failed to fetch');
+const o=await res.json();
+const statusCol=s=>s==='paid'?'var(--teal)':s==='refunded'||s==='partially_refunded'?'var(--red-soft)':'var(--amber)';
+const fulCol=s=>s==='fulfilled'?'var(--teal)':'var(--amber)';
+const fmtDate=d=>d?new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+const addr=a=>a?[a.name,a.address1,a.address2,a.city+(a.province?', '+a.province:''),a.zip,a.country].filter(Boolean).join('<br>'):'—';
+
+content.innerHTML=`
+<div style="padding:24px">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+    <div>
+      <div style="font-size:1.3rem;font-weight:700;color:#fff">${o.name}</div>
+      <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px">${fmtDate(o.created_at)}</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="card-badge" style="background:${statusCol(o.financial_status)}15;color:${statusCol(o.financial_status)};border:1px solid ${statusCol(o.financial_status)}30;font-size:0.6rem">${o.financial_status}</span>
+      <span class="card-badge" style="background:${fulCol(o.fulfillment_status)}15;color:${fulCol(o.fulfillment_status)};border:1px solid ${fulCol(o.fulfillment_status)}30;font-size:0.6rem">${o.fulfillment_status||'unfulfilled'}</span>
+      <div style="cursor:pointer;width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem" onclick="document.getElementById('order-detail-modal').style.display='none'">✕</div>
+    </div>
+  </div>
+
+  ${o.customer?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)">
+      <div style="font-size:0.55rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Customer</div>
+      <div style="font-size:0.88rem;font-weight:600;color:#fff">${o.customer.name||'Guest'}</div>
+      ${o.customer.email?`<div style="font-size:0.7rem;color:var(--teal);margin-top:2px">${o.customer.email}</div>`:''}
+      ${o.customer.phone?`<div style="font-size:0.68rem;color:var(--text-muted);margin-top:2px">${o.customer.phone}</div>`:''}
+      <div style="font-size:0.6rem;color:var(--text-faint);margin-top:6px">${o.customer.order_count} order${o.customer.order_count!==1?'s':''} · $${o.customer.total_spent.toFixed(2)} spent</div>
+    </div>
+    <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)">
+      <div style="font-size:0.55rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Shipping Address</div>
+      <div style="font-size:0.72rem;color:var(--text-secondary);line-height:1.5">${addr(o.shipping_address)}</div>
+    </div>
+  </div>`:''}
+
+  <div style="font-size:0.6rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Items</div>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+    ${o.line_items.map(li=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)">
+      ${li.image?`<img src="${li.image}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0">`:'<div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.06);flex-shrink:0"></div>'}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.8rem;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${li.title}</div>
+        <div style="font-size:0.65rem;color:var(--text-muted)">${li.variant||''}${li.sku?' · SKU: '+li.sku:''}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:0.82rem;font-weight:700;color:#fff">$${(li.discounted_price*li.quantity).toFixed(2)}</div>
+        <div style="font-size:0.6rem;color:var(--text-muted)">${li.quantity>1?li.quantity+' × $'+li.discounted_price.toFixed(2):'1 item'}${li.discount>0?' <span style="color:var(--red-soft)">-$'+li.discount.toFixed(2)+'</span>':''}</div>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <div style="padding:14px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);margin-bottom:16px">
+    <div class="finance-row"><span class="label">Subtotal</span><span class="value">$${o.totals.subtotal.toFixed(2)}</span></div>
+    ${o.totals.discounts>0?`<div class="finance-row"><span class="label">Discount${o.discount_code?' ('+o.discount_code+')':''}</span><span class="value" style="color:var(--red-soft)">-$${o.totals.discounts.toFixed(2)}</span></div>`:''}
+    <div class="finance-row"><span class="label">Shipping</span><span class="value">${o.totals.shipping>0?'$'+o.totals.shipping.toFixed(2):'Free'}</span></div>
+    <div class="finance-row"><span class="label">Tax</span><span class="value">$${o.totals.tax.toFixed(2)}</span></div>
+    <div class="finance-row" style="border-top:2px solid rgba(255,255,255,0.08);padding-top:10px;margin-top:4px"><span class="label" style="font-weight:700;color:#fff">Total</span><span class="value" style="font-weight:700;color:var(--teal);font-size:1rem">$${o.totals.total.toFixed(2)} ${o.currency}</span></div>
+    ${o.totals.refunded>0?`<div class="finance-row"><span class="label" style="color:var(--red-soft)">Refunded</span><span class="value" style="color:var(--red-soft)">-$${o.totals.refunded.toFixed(2)}</span></div>`:''}
+  </div>
+
+  ${o.payment_gateways.length?`<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <div style="font-size:0.6rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;line-height:2">Payment:</div>
+    ${o.payment_gateways.map(g=>`<span style="font-size:0.65rem;padding:3px 10px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:var(--text-secondary)">${g}</span>`).join('')}
+  </div>`:''}
+
+  ${o.fulfillments.length?`<div style="margin-bottom:16px">
+    <div style="font-size:0.6rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Fulfillment</div>
+    ${o.fulfillments.map(f=>`<div style="padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="card-badge" style="background:${fulCol(f.status.toLowerCase())}15;color:${fulCol(f.status.toLowerCase())};border:1px solid ${fulCol(f.status.toLowerCase())}30;font-size:0.55rem">${f.status}</span>
+        <span style="font-size:0.65rem;color:var(--text-muted)">${fmtDate(f.created_at)}</span>
+      </div>
+      ${f.tracking.length?f.tracking.map(t=>`<div style="margin-top:6px;font-size:0.72rem;color:var(--text-secondary)">${t.company||'Tracking'}: ${t.url?'<a href="'+t.url+'" target="_blank" style="color:var(--teal);text-decoration:none">'+t.number+'</a>':t.number}</div>`).join(''):''}
+    </div>`).join('')}
+  </div>`:''}
+
+  ${o.refunds.length?`<div style="margin-bottom:16px">
+    <div style="font-size:0.6rem;font-weight:600;color:var(--red-soft);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Refunds</div>
+    ${o.refunds.map(r=>`<div style="padding:10px 12px;border-radius:10px;background:rgba(239,107,107,0.04);border:1px solid rgba(239,107,107,0.1);margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between"><span style="font-size:0.75rem;font-weight:600;color:var(--red-soft)">-$${r.amount.toFixed(2)}</span><span style="font-size:0.65rem;color:var(--text-muted)">${fmtDate(r.created_at)}</span></div>
+      ${r.note?`<div style="font-size:0.68rem;color:var(--text-muted);margin-top:4px">${r.note}</div>`:''}
+      ${r.items.map(i=>`<div style="font-size:0.68rem;color:var(--text-secondary);margin-top:2px">${i.quantity}× ${i.title}${i.variant?' ('+i.variant+')':''}</div>`).join('')}
+    </div>`).join('')}
+  </div>`:''}
+
+  ${o.note?`<div style="padding:10px 12px;border-radius:10px;background:rgba(240,168,64,0.06);border:1px solid rgba(240,168,64,0.12);margin-bottom:16px">
+    <div style="font-size:0.55rem;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Order Note</div>
+    <div style="font-size:0.75rem;color:var(--text-secondary)">${o.note}</div>
+  </div>`:''}
+
+  ${o.tags.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px">${o.tags.map(t=>`<span class="content-tag">${t}</span>`).join('')}</div>`:''}
+
+  <a href="${o.shopify_url}" target="_blank" style="display:block;text-align:center;padding:10px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--teal);font-size:0.75rem;font-weight:600;text-decoration:none;transition:all 0.2s" onmouseover="this.style.background='rgba(45,212,168,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">View in Shopify Admin →</a>
+</div>`;
+}catch(err){content.innerHTML=`<div style="padding:40px;text-align:center"><div style="font-size:1.5rem;margin-bottom:10px">⚠</div><div style="font-size:0.82rem;color:var(--red-soft)">Failed to load order details</div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px">${err.message}</div></div>`}}
+window.showOrderDetail=showOrderDetail;
 
 loadData();setInterval(loadData,5*60*1000);
 </script>
