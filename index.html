@@ -440,8 +440,8 @@ pinInputs.forEach((input,i)=>{
 // Auto-focus first input
 if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
 const DATA_BASE='data/';
-const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders'};
-const STATIC_FILES={products:'products.json',content:'content.json',market_sales:'market_sales.json',stock_changelog:'stock_changelog.json',markets:'markets.json',finance:'finance.json'};
+const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders',market_sales:'/api/market-sales'};
+const STATIC_FILES={products:'products.json',content:'content.json',stock_changelog:'stock_changelog.json',markets:'markets.json',finance:'finance.json'};
 let appData={};
 document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
 async function loadData(){
