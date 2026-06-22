@@ -39,8 +39,8 @@ module.exports = async function handler(req, res) {
             paymentGatewayNames
             customer {
               displayName email phone
-              ordersCount { count }
-              totalSpentV2 { amount currencyCode }
+              numberOfOrders
+              amountSpent { amount currencyCode }
             }
             shippingAddress {
               name address1 address2 city province zip country phone
@@ -122,8 +122,8 @@ module.exports = async function handler(req, res) {
         name: orderNode.customer.displayName,
         email: orderNode.customer.email,
         phone: orderNode.customer.phone,
-        order_count: orderNode.customer.ordersCount?.count || 0,
-        total_spent: money(orderNode.customer.totalSpentV2),
+        order_count: orderNode.customer.numberOfOrders || 0,
+        total_spent: money(orderNode.customer.amountSpent),
       } : null,
 
       shipping_address: orderNode.shippingAddress,
