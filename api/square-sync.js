@@ -115,7 +115,7 @@ module.exports = async function handler(req, res) {
         id: itemId,
         item_data: {
           name: product.title,
-          product_type: product.productType || 'REGULAR',
+          product_type: 'REGULAR',
           variations: itemVariations,
         },
       });
