@@ -56,9 +56,8 @@ async function refreshTokens(stored) {
 async function getTokens() {
   let stored = await kvGet('xero_tokens');
   if (!stored) throw new Error('Xero not connected — visit /api/xero/auth');
-  if (Date.now() > stored.expires_at - 60000) {
-    stored = await refreshTokens(stored);
-  }
+  // Always refresh — Xero access tokens only last 30 min
+  stored = await refreshTokens(stored);
   return stored;
 }
 
