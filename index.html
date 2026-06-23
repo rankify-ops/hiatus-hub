@@ -435,7 +435,7 @@ pinInputs.forEach((input,i)=>{
   input.addEventListener('keydown',e=>{
     if(e.key==='Backspace'&&!e.target.value&&i>0){pinInputs[i-1].focus();pinInputs[i-1].value=''}
   });
-  input.addEventListener('focus',()=>e.target.select&&e.target.select());
+  input.addEventListener('focus',function(){this.select&&this.select()});
 });
 // Auto-focus first input
 if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
@@ -453,7 +453,7 @@ renderAll()}
 function fmt(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function $(v){return'$'+Number(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}
 function renderAll(){renderOverview();renderProducts();renderContent();renderOrders();renderStock();renderMarkets();renderFinance()}
-function renderOverview(){const d=appData.overview;if(!d)return;document.getElementById('overview-updated').textContent='Last synced: '+fmt(d.last_updated);document.getElementById('store-status').textContent=d.status?.store||'Unknown';document.getElementById('overview-alerts').innerHTML=(d.alerts||[]).map(a=>`<div class="alert-banner ${a.type}"><span class="alert-icon">${a.type==='info'?'ℹ':'⚠'}</span><span>${a.message}</span></div>`).join('');const m=d.metrics||{};document.getElementById('overview-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value teal">$${(m.monthly_revenue||0).toFixed(2)}</div><div class="metric-label">Revenue MTD</div></div><div class="card metric-tile"><div class="metric-value">$${(m.all_time_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div></div><div class="card metric-tile"><div class="metric-value">${m.total_orders||0}</div><div class="metric-label">Total Orders</div></div><div class="card metric-tile"><div class="metric-value" style="color:${(m.pending_orders||0)>0?'var(--amber)':'var(--teal)'}">${m.pending_orders||0}</div><div class="metric-label">Unfulfilled</div></div><div class="card metric-tile"><div class="metric-value">${m.total_products||0}</div><div class="metric-label">Products</div></div><div class="card metric-tile"><div class="metric-value">$${(m.monthly_costs||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>`;const items=[];items.push({dot:d.status?.store==='Pre-launch'?'amber':'green',text:'Store: '+(d.status?.store||'—')});items.push({dot:d.status?.content_pipeline==='Building'?'amber':'green',text:'Content Pipeline: '+(d.status?.content_pipeline||'—')});(d.status?.cad_pending||[]).forEach(c=>items.push({dot:'red',text:'CAD Pending: '+c}));document.getElementById('overview-status').innerHTML=items.map(s=>`<div class="status-item"><div class="status-dot ${s.dot}"></div><span class="status-text">${s.text}</span></div>`).join('');const cols=d.status?.collections_planned||[],heroes=d.status?.hero_pieces||[];document.getElementById('overview-collections').innerHTML=`<div class="status-list">${cols.map(c=>`<div class="status-item"><div class="status-dot teal"></div><span class="status-text">${c}</span><span class="status-meta">Collection</span></div>`).join('')}${heroes.map(h=>`<div class="status-item"><div class="status-dot amber"></div><span class="status-text">${h}</span><span class="status-meta">Hero Piece</span></div>`).join('')}</div>`}
+function renderOverview(){const d=appData.overview;if(!d)return;document.getElementById('overview-updated').textContent='Last synced: '+fmt(d.last_updated);document.getElementById('store-status').textContent=d.status?.store||'Unknown';document.getElementById('overview-alerts').innerHTML=(d.alerts||[]).map(a=>`<div class="alert-banner ${a.type}"><span class="alert-icon">${a.type==='info'?'ℹ':'⚠'}</span><span>${a.message}</span></div>`).join('');const m=d.metrics||{};document.getElementById('overview-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value teal">$${(m.combined_revenue||m.all_time_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">Shopify $${(m.shopify_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">Markets $${(m.market_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div></div><div class="card metric-tile"><div class="metric-value teal">$${(m.monthly_revenue||0).toFixed(2)}</div><div class="metric-label">Shopify MTD</div></div><div class="card metric-tile"><div class="metric-value">${m.combined_sales||m.total_orders||0}</div><div class="metric-label">Total Sales</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">${m.total_orders||0} online</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">${m.market_sales||0} markets</span></div></div><div class="card metric-tile"><div class="metric-value" style="color:${(m.pending_orders||0)>0?'var(--amber)':'var(--teal)'}">${m.pending_orders||0}</div><div class="metric-label">Unfulfilled</div></div><div class="card metric-tile"><div class="metric-value">${m.total_products||0}</div><div class="metric-label">Products</div></div><div class="card metric-tile"><div class="metric-value">$${(m.monthly_costs||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>`;const items=[];items.push({dot:d.status?.store==='Pre-launch'?'amber':'green',text:'Store: '+(d.status?.store||'—')});items.push({dot:d.status?.content_pipeline==='Building'?'amber':'green',text:'Content Pipeline: '+(d.status?.content_pipeline||'—')});(d.status?.cad_pending||[]).forEach(c=>items.push({dot:'red',text:'CAD Pending: '+c}));document.getElementById('overview-status').innerHTML=items.map(s=>`<div class="status-item"><div class="status-dot ${s.dot}"></div><span class="status-text">${s.text}</span></div>`).join('');const cols=d.status?.collections_planned||[],heroes=d.status?.hero_pieces||[];document.getElementById('overview-collections').innerHTML=`<div class="status-list">${cols.map(c=>`<div class="status-item"><div class="status-dot teal"></div><span class="status-text">${c}</span><span class="status-meta">Collection</span></div>`).join('')}${heroes.map(h=>`<div class="status-item"><div class="status-dot amber"></div><span class="status-text">${h}</span><span class="status-meta">Hero Piece</span></div>`).join('')}</div>`}
 function renderProducts(){const d=appData.products;if(!d)return;document.getElementById('products-updated').textContent='Last synced: '+fmt(d.last_updated);const ps=d.pipeline_summary||{};const stages=[{key:'concept',label:'Concept',color:'#888'},{key:'cad_pending',label:'CAD Pending',color:'#d97706'},{key:'manufacturing',label:'Manufacturing',color:'#0d9373'},{key:'in_stock',label:'In Stock',color:'#16a34a'},{key:'listed',label:'Listed',color:'#111'}];const total=Object.values(ps).reduce((a,b)=>a+b,0)||1;document.getElementById('pipeline-metrics').innerHTML=stages.map(s=>`<div class="card metric-tile" style="padding:12px 8px"><div class="metric-value" style="font-size:1.5rem;color:${s.color}">${ps[s.key]||0}</div><div class="metric-label">${s.label}</div></div>`).join('');document.getElementById('pipeline-bar').innerHTML=stages.map(s=>`<div class="pipeline-segment" style="width:${(ps[s.key]||0)/total*100}%;background:${s.color}"></div>`).join('');document.getElementById('pipeline-legend').innerHTML=stages.map(s=>`<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div><span>${s.label}</span></div>`).join('');document.getElementById('collections-container').innerHTML=(d.collections||[]).map(col=>`<div class="card" style="margin-top:14px"><div class="card-header"><span class="card-title">${col.name}</span><span class="card-badge badge-${col.status==='Concept'?'amber':'teal'}">${col.status}</span></div><p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px">${col.description||''}</p><table class="data-table"><thead><tr><th>Piece</th><th>Type</th><th>Style</th><th>Status</th></tr></thead><tbody>${(col.pieces||[]).map(p=>`<tr><td style="color:var(--black);font-weight:500">${p.name}</td><td>${p.type}</td><td>${p.style||'—'}</td><td><span class="card-badge badge-${p.status.includes('pending')?'red':'amber'}" style="font-size:0.58rem">${p.status}</span></td></tr>`).join('')}</tbody></table></div>`).join('');renderCatalogue(d.catalogue||[])}
 
 function renderCatalogue(catalogue){
@@ -627,17 +627,21 @@ ${mSales.length?`<div class="card">
 </div>`:`<div class="card"><div class="empty-state"><div class="icon">⚑</div><h3>No market sales yet</h3><p>When you sell at a market, just tell me what you sold and I'll log it here and update your Shopify inventory.</p></div></div>`}
 `}}
 function renderFinance(){const d=appData.finance;if(!d)return;
-document.getElementById('finance-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: ClickUp Cost Tracking';
-const c=d.costs||{},r=d.revenue||{},subs=d.subscriptions||[];
+const ov=appData.overview||{};const ovm=ov.metrics||{};
+document.getElementById('finance-updated').textContent='Last synced: '+fmt(ov.last_updated||d.last_updated)+' · Costs: ClickUp · Revenue: Shopify + Square';
+const c=d.costs||{},subs=d.subscriptions||[];
+const shopifyRev=ovm.shopify_revenue||ovm.all_time_revenue||0;
+const marketRev=ovm.market_revenue||0;
+const combinedRev=ovm.combined_revenue||(shopifyRev+marketRev);
+const monthlyRev=ovm.monthly_revenue||0;
 const catColors={Accounting:'#7c6cf5',Domain:'#4a8fe8',Website:'#3ba5e8',Email:'#3dada0'};
-// Sort upcoming renewals by date
 const upcoming=subs.filter(s=>s.renewal_date).map(s=>({...s,_renew:new Date(s.renewal_date)})).sort((a,b)=>a._renew-b._renew);
 const now=new Date();
 document.getElementById('finance-content').innerHTML=`
 <div class="metrics-grid" style="margin-bottom:18px">
+  <div class="card metric-tile"><div class="metric-value teal">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div><div style="display:flex;gap:6px;justify-content:center;margin-top:5px;font-size:0.58rem"><span style="color:var(--text-muted)">Shopify $${shopifyRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">Markets $${marketRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div></div>
+  <div class="card metric-tile"><div class="metric-value teal">$${monthlyRev.toFixed(2)}</div><div class="metric-label">Revenue MTD</div></div>
   <div class="card metric-tile"><div class="metric-value">$${(c.total_monthly||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>
-  <div class="card metric-tile"><div class="metric-value">$${(c.total_annual||0).toFixed(2)}</div><div class="metric-label">Annual Costs</div></div>
-  <div class="card metric-tile"><div class="metric-value teal">${$(r.total_monthly)}</div><div class="metric-label">Monthly Revenue</div></div>
   <div class="card metric-tile"><div class="metric-value">${subs.length}</div><div class="metric-label">Active Subs</div></div>
 </div>
 <div class="card" style="margin-bottom:14px">
@@ -700,9 +704,11 @@ document.getElementById('finance-content').innerHTML=`
     <div class="finance-row"><span class="label">Shipping</span><span class="value">${$(c.shipping)}</span></div>
   </div>
   <div class="card">
-    <div class="card-header"><span class="card-title">Revenue Channels</span></div>
-    ${Object.keys(r.by_channel||{}).length?Object.entries(r.by_channel).map(([ch,val])=>`<div class="finance-row"><span class="label">${ch}</span><span class="value">${$(val)}</span></div>`).join(''):`<div class="empty-state" style="padding:36px"><div class="icon">◇</div><h3>Pre-launch</h3><p>Revenue channels will populate once the store goes live.</p></div>`}
-    <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.06);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)"><div style="font-size:0.73rem;color:var(--text-muted)">${d.notes||''}</div></div>
+    <div class="card-header"><span class="card-title">Revenue Channels</span><span class="card-badge badge-teal">Live</span></div>
+    <div class="finance-row"><span class="label">Shopify (Online)</span><span class="value" style="font-weight:700;color:var(--teal)">$${shopifyRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+    <div class="finance-row"><span class="label">Square (Markets)</span><span class="value" style="font-weight:700;color:var(--teal)">$${marketRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+    <div class="finance-row" style="border-top:2px solid rgba(255,255,255,0.08);padding-top:10px;margin-top:6px"><span class="label" style="font-weight:700">Combined</span><span class="value" style="font-weight:700;color:var(--teal)">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+    <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.06);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)"><div style="font-size:0.73rem;color:var(--text-muted)">Revenue pulled live from Shopify Admin API + Square POS. Costs tracked in ClickUp.</div></div>
   </div>
 </div>`}
 function renderStock(filterCat){const d=appData.stock;if(!d)return;
@@ -804,63 +810,87 @@ ${prodChanges.length?`<div style="font-size:0.65rem;font-weight:600;color:rgba(2
 modal.style.display='flex'}
 
 function renderMarkets(){
-const d=appData.markets;if(!d)return;
 const ms=appData.market_sales||{sales:[]};
-const mkts=d.markets||[];
 const sales=ms.sales||[];
 
-const marketDates=mkts.filter(m=>m.due_date).sort((a,b)=>new Date(b.due_date)-new Date(a.due_date));
+// Group sales by date
+const byDate={};
+sales.forEach(s=>{
+  const d=s.date||'unknown';
+  if(!byDate[d])byDate[d]={date:d,market_name:s.market_name||'Market',sales:[],revenue:0,items:0};
+  byDate[d].sales.push(s);
+  byDate[d].revenue+=s.total||0;
+  byDate[d].items+=s.items.reduce((a,i)=>a+(i.qty||1),0);
+});
+const marketDays=Object.values(byDate).sort((a,b)=>b.date>a.date?1:-1);
+const totalRev=sales.reduce((a,s)=>a+s.total,0);
+const totalItems=sales.reduce((a,s)=>a+s.items.reduce((b,i)=>b+(i.qty||1),0),0);
+
 const sel=document.getElementById('market-date-select');
 const currentVal=sel.value;
-sel.innerHTML=marketDates.map(m=>{
-  const d2=new Date(m.due_date);
-  const label=d2.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' — '+m.name+(m.location?' ('+m.location+')':'');
-  return `<option value="${m.due_date}">${label}</option>`
+sel.innerHTML=`<option value="all">All Market Days (${marketDays.length})</option>`+marketDays.map(md=>{
+  const d2=new Date(md.date+'T00:00:00');
+  const label=d2.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' — '+md.market_name+' ($'+md.revenue.toFixed(0)+')';
+  return `<option value="${md.date}">${label}</option>`
 }).join('');
 if(currentVal&&[...sel.options].some(o=>o.value===currentVal)){sel.value=currentVal}
-else if(marketDates.length){sel.value=marketDates[0].due_date}
 
 const selectedDate=sel.value;
-const selectedMarket=mkts.find(m=>m.due_date===selectedDate);
-const marketSales=sales.filter(s=>s.date===selectedDate);
 
-// Use market_sales.json as single source of truth — NOT both
-const allItems=marketSales.flatMap(s=>s.items);
-const displayRev=marketSales.reduce((a,s)=>a+s.total,0)||(selectedMarket?.actual_sales||0);
-const displayCount=allItems.reduce((a,i)=>a+(i.qty||i.quantity||1),0);
-
-const mDate=selectedDate?new Date(selectedDate):new Date();
-const dateStr=mDate.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-const isToday=selectedDate===new Date().toISOString().split('T')[0];
-
-document.getElementById('markets-updated').textContent=dateStr+(isToday?' — Today':'');
-
+if(selectedDate==='all'){
+document.getElementById('markets-updated').textContent='All Market Sales · Source: Square POS';
 document.getElementById('markets-content').innerHTML=`
 <div class="metrics-grid" style="grid-template-columns:repeat(2,1fr)">
-  <div class="card metric-tile"><div class="metric-value teal">$${displayRev.toFixed(2)}</div><div class="metric-label">Revenue</div></div>
-  <div class="card metric-tile"><div class="metric-value">${displayCount}</div><div class="metric-label">Items Sold</div></div>
-  <div class="card metric-tile"><div class="metric-value">${marketSales.length}</div><div class="metric-label">Transactions</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="font-size:1rem">${selectedMarket?.location||'—'}</div><div class="metric-label">Location</div></div>
+  <div class="card metric-tile"><div class="metric-value teal">$${totalRev.toFixed(2)}</div><div class="metric-label">Total Market Revenue</div></div>
+  <div class="card metric-tile"><div class="metric-value">${sales.length}</div><div class="metric-label">Total Transactions</div></div>
+  <div class="card metric-tile"><div class="metric-value">${totalItems}</div><div class="metric-label">Items Sold</div></div>
+  <div class="card metric-tile"><div class="metric-value">${marketDays.length}</div><div class="metric-label">Market Days</div></div>
+</div>
+${marketDays.map(md=>{
+  const d2=new Date(md.date+'T00:00:00');
+  const dateLabel=d2.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  return `<div class="card" style="margin-bottom:14px">
+  <div class="card-header"><span class="card-title">Market Stall — ${dateLabel}</span><span class="card-badge badge-teal">$${md.revenue.toFixed(2)}</span></div>
+  <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px">${md.market_name} · ${md.sales.length} transaction${md.sales.length!==1?'s':''} · ${md.items} item${md.items!==1?'s':''}</div>
+  <table class="data-table"><thead><tr><th>Product</th><th>Qty</th><th>Total</th><th>Payment</th></tr></thead><tbody>
+    ${md.sales.map(s=>`<tr>
+      <td style="font-weight:600;color:var(--black)">${s.items.map(i=>i.name+(i.qty>1?' x'+i.qty:'')).join(', ')}</td>
+      <td style="font-weight:500">${s.items.reduce((a,i)=>a+(i.qty||1),0)}</td>
+      <td style="font-weight:700;color:var(--teal)">$${s.total.toFixed(2)}</td>
+      <td><span class="card-badge" style="background:var(--teal)15;color:var(--teal);border:1px solid var(--teal)30;font-size:0.55rem">${s.payment_method||'Card'}</span></td>
+    </tr>`).join('')}
+  </tbody></table>
+</div>`}).join('')}`;
+} else {
+const md=byDate[selectedDate];
+if(!md){document.getElementById('markets-content').innerHTML='<div class="empty-state"><div class="icon">⚑</div><h3>No sales on this date</h3></div>';return}
+const d2=new Date(selectedDate+'T00:00:00');
+const dateLabel=d2.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+document.getElementById('markets-updated').textContent='Market Stall — '+dateLabel+' · Source: Square POS';
+document.getElementById('markets-content').innerHTML=`
+<div class="metrics-grid" style="grid-template-columns:repeat(2,1fr)">
+  <div class="card metric-tile"><div class="metric-value teal">$${md.revenue.toFixed(2)}</div><div class="metric-label">Revenue</div></div>
+  <div class="card metric-tile"><div class="metric-value">${md.items}</div><div class="metric-label">Items Sold</div></div>
+  <div class="card metric-tile"><div class="metric-value">${md.sales.length}</div><div class="metric-label">Transactions</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="font-size:1rem">${md.market_name}</div><div class="metric-label">Location</div></div>
 </div>
 <div class="card" style="margin-bottom:14px">
-  <div class="card-header"><span class="card-title">Sales</span>${isToday?'<span class="card-badge badge-teal">Today</span>':''}</div>
-  ${allItems.length?`
-  <table class="data-table"><thead><tr><th>Product</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead><tbody>
-    ${allItems.map(i=>`<tr>
-      <td style="font-weight:600;color:var(--black)">${i.product||i.name||'—'}</td>
-      <td>${i.variant||'—'}</td>
-      <td style="font-weight:700">${i.qty||i.quantity||1}</td>
-      <td style="font-weight:600;color:var(--teal)">$${(i.price||0).toFixed(2)}</td>
+  <div class="card-header"><span class="card-title">Sales</span><span class="card-badge badge-teal">Square POS</span></div>
+  <table class="data-table"><thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th><th>Payment</th></tr></thead><tbody>
+    ${md.sales.map(s=>`<tr>
+      <td style="font-weight:600;color:var(--black)">${s.items.map(i=>i.name).join(', ')}</td>
+      <td style="font-weight:500">${s.items.reduce((a,i)=>a+(i.qty||1),0)}</td>
+      <td style="font-size:0.75rem;color:var(--text-muted)">$${s.items[0]?.price?.toFixed(2)||'—'}</td>
+      <td style="font-weight:700;color:var(--teal)">$${s.total.toFixed(2)}</td>
+      <td><span class="card-badge" style="background:var(--teal)15;color:var(--teal);border:1px solid var(--teal)30;font-size:0.55rem">${s.payment_method||'Card'}</span></td>
     </tr>`).join('')}
   </tbody>
   <tfoot><tr style="border-top:2px solid rgba(255,255,255,0.08)">
-    <td style="font-weight:700;color:var(--black)">Total</td><td></td>
-    <td style="font-weight:700">${displayCount}</td>
-    <td style="font-weight:700;color:var(--teal)">$${displayRev.toFixed(2)}</td>
+    <td style="font-weight:700;color:var(--black)">Total</td>
+    <td style="font-weight:700">${md.items}</td><td></td>
+    <td style="font-weight:700;color:var(--teal)">$${md.revenue.toFixed(2)}</td><td></td>
   </tr></tfoot></table>
-  `:`<div class="empty-state" style="padding:30px"><div class="icon">⚑</div><h3>No sales recorded</h3><p>Sales will appear here when logged for this market date.</p></div>`}
-</div>
-${selectedMarket?.description?`<div class="card"><div class="card-header"><span class="card-title">Details</span></div><div style="font-size:0.8rem;color:var(--text-muted)">${selectedMarket.description}</div></div>`:''}`}
+</div>`}}
 
 // ─── Supplier Order Builder ───
 window._supplierOrder={};

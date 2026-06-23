@@ -27,14 +27,5 @@
       "New Jerusalem"
     ]
   },
-  "alerts": [
-    {
-      "type": "info",
-      "message": "Latest: #1047 \u2014 Unearth Stacker Ring Set \u2014 $196.04"
-    },
-    {
-      "type": "info",
-      "message": "Synced 12 Jun 2026 07:33 AM \u2014 46 orders"
-    }
-  ]
+  "alerts": []
 }
