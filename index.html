@@ -314,6 +314,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       <div class="nav-item" data-tab="finance"><span class="nav-icon">◇</span><span>Finance</span></div>
       <div class="nav-item" data-tab="reports"><span class="nav-icon">◎</span><span>Reports</span></div>
       <div class="nav-item" data-tab="checklists"><span class="nav-icon">☑</span><span>Checklists</span></div>
+      <div class="nav-item" data-tab="contributions"><span class="nav-icon">⊕</span><span>Director Contributions</span></div>
     </nav>
     <div id="sidebar-market-data" style="padding:12px 16px;margin:8px 10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
       <div style="font-size:0.55rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-faint);margin-bottom:8px;font-weight:600">Live Market</div>
@@ -442,6 +443,30 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       </div>
     </div>
 
+    <div class="tab-panel" id="tab-contributions">
+      <div class="section-header">
+        <h2>Director Contributions</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="updated" id="contributions-updated"></div>
+          <button onclick="showAddContribution()" style="padding:6px 14px;border-radius:8px;background:var(--teal);border:none;color:#000;font-weight:700;font-size:0.75rem;cursor:pointer;font-family:var(--font)">+ Add Entry</button>
+        </div>
+      </div>
+      <div id="contributions-content"></div>
+      <div id="contribution-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:1000;justify-content:center;align-items:center" onclick="if(event.target===this)this.style.display='none'">
+        <div style="background:#1a1a2e;border-radius:16px;border:1px solid rgba(255,255,255,0.08);padding:24px;width:90%;max-width:420px">
+          <div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:16px" id="contrib-modal-title">Add Contribution</div>
+          <input type="hidden" id="contrib-edit-id">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><label style="font-size:0.65rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:4px">Date</label><input type="date" id="contrib-date" style="width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:0.82rem;font-family:var(--font);outline:none;box-sizing:border-box"></div>
+            <div><label style="font-size:0.65rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:4px">Amount (AUD)</label><input type="number" step="0.01" id="contrib-amount" placeholder="0.00" style="width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:0.82rem;font-family:var(--font);outline:none;box-sizing:border-box"></div>
+            <div><label style="font-size:0.65rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:4px">Description</label><input type="text" id="contrib-desc" placeholder="e.g. Initial stock purchase, website costs..." style="width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:0.82rem;font-family:var(--font);outline:none;box-sizing:border-box"></div>
+            <div><label style="font-size:0.65rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:4px">Category</label><select id="contrib-cat" style="width:100%;padding:10px 12px;border-radius:8px;background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:0.82rem;font-family:var(--font);outline:none;box-sizing:border-box"><option value="Stock">Stock / Inventory</option><option value="Marketing">Marketing</option><option value="Tools">Tools / Software</option><option value="Equipment">Equipment</option><option value="Market">Market Stall Costs</option><option value="Shipping">Shipping / Packaging</option><option value="Other">Other</option></select></div>
+            <div style="display:flex;gap:8px;margin-top:4px"><button onclick="saveContribution()" style="flex:1;padding:10px;border-radius:8px;background:var(--teal);border:none;color:#000;font-weight:700;font-size:0.82rem;cursor:pointer;font-family:var(--font)">Save</button><button onclick="document.getElementById('contribution-modal').style.display='none'" style="padding:10px 16px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-size:0.82rem;cursor:pointer;font-family:var(--font)">Cancel</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="tab-panel" id="tab-checklists">
       <div class="section-header">
         <h2>Checklists</h2>
@@ -503,7 +528,7 @@ for(const[key,file]of Object.entries(STATIC_FILES)){try{const res=await fetch(DA
 renderAll()}
 function fmt(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function $(v){return'$'+Number(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}
-function renderAll(){renderOverview();renderProducts();renderOrders();renderStock();renderMarkets();renderSilver();renderFinance();renderReports();loadChecklists();updateSidebarMarket()}
+function renderAll(){renderOverview();renderProducts();renderOrders();renderStock();renderMarkets();renderSilver();renderFinance();renderReports();loadChecklists();loadContributions();updateSidebarMarket()}
 function updateSidebarMarket(){
 const sv=appData.silver;if(!sv||!sv.current)return;
 const c=sv.current;const ch=sv.change||{};
@@ -1564,6 +1589,94 @@ content.innerHTML=`
 </div>`;
 }catch(err){content.innerHTML=`<div style="padding:40px;text-align:center"><div style="font-size:1.5rem;margin-bottom:10px">⚠</div><div style="font-size:0.82rem;color:var(--red-soft)">Failed to load order details</div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px">${err.message}</div></div>`}}
 window.showOrderDetail=showOrderDetail;
+
+// ─── Director Contributions ───
+let _contributions=[];
+async function loadContributions(){
+try{const res=await fetch('/api/contributions?t='+Date.now());if(res.ok){const d=await res.json();_contributions=d.entries||[];if(d.updated)document.getElementById('contributions-updated').textContent='Saved: '+fmt(d.updated);renderContributions()}}catch(e){console.warn('Contributions load failed',e)}
+}
+function showAddContribution(){
+document.getElementById('contrib-edit-id').value='';
+document.getElementById('contrib-modal-title').textContent='Add Contribution';
+document.getElementById('contrib-date').value=new Date().toISOString().split('T')[0];
+document.getElementById('contrib-amount').value='';
+document.getElementById('contrib-desc').value='';
+document.getElementById('contrib-cat').value='Stock';
+document.getElementById('contribution-modal').style.display='flex';
+}
+function editContribution(id){
+const e=_contributions.find(c=>c.id===id);if(!e)return;
+document.getElementById('contrib-edit-id').value=id;
+document.getElementById('contrib-modal-title').textContent='Edit Contribution';
+document.getElementById('contrib-date').value=e.date||'';
+document.getElementById('contrib-amount').value=e.amount||'';
+document.getElementById('contrib-desc').value=e.description||'';
+document.getElementById('contrib-cat').value=e.category||'Other';
+document.getElementById('contribution-modal').style.display='flex';
+}
+async function saveContribution(){
+const editId=document.getElementById('contrib-edit-id').value;
+const date=document.getElementById('contrib-date').value;
+const amount=parseFloat(document.getElementById('contrib-amount').value);
+const description=document.getElementById('contrib-desc').value.trim();
+const category=document.getElementById('contrib-cat').value;
+if(!date||!amount||amount<=0){alert('Please enter a valid date and amount');return}
+try{
+if(editId){
+await fetch('/api/contributions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',id:editId,updates:{date,amount,description,category}})});
+}else{
+await fetch('/api/contributions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',entry:{date,amount,description,category}})});
+}
+document.getElementById('contribution-modal').style.display='none';
+await loadContributions();
+}catch(e){alert('Failed to save: '+e.message)}
+}
+async function deleteContribution(id){
+if(!confirm('Delete this contribution entry?'))return;
+try{await fetch('/api/contributions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',id})});await loadContributions()}catch(e){alert('Failed to delete: '+e.message)}
+}
+function renderContributions(){
+const el=document.getElementById('contributions-content');if(!el)return;
+if(!_contributions.length){
+el.innerHTML='<div style="text-align:center;padding:60px 20px"><div style="font-size:2rem;margin-bottom:12px;opacity:0.3">⊕</div><div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:6px">No contributions recorded</div><div style="font-size:0.75rem;color:var(--text-faint)">Add your first director contribution to start tracking</div></div>';
+return;
+}
+var sorted=_contributions.slice().sort(function(a,b){return a.date>b.date?-1:a.date<b.date?1:0});
+var total=_contributions.reduce(function(s,e){return s+e.amount},0);
+var byCat={};_contributions.forEach(function(e){var c=e.category||'Other';if(!byCat[c])byCat[c]=0;byCat[c]+=e.amount});
+var cats=Object.entries(byCat).sort(function(a,b){return b[1]-a[1]});
+var thisYear=new Date().getFullYear().toString();
+var ytd=_contributions.filter(function(e){return e.date&&e.date.startsWith(thisYear)}).reduce(function(s,e){return s+e.amount},0);
+var html='<div class="metrics-grid" style="margin-bottom:16px">';
+html+='<div class="card metric-tile"><div class="metric-value teal">$'+total.toLocaleString('en-AU',{minimumFractionDigits:2})+'</div><div class="metric-label">Total Contributed</div></div>';
+html+='<div class="card metric-tile"><div class="metric-value">$'+ytd.toLocaleString('en-AU',{minimumFractionDigits:2})+'</div><div class="metric-label">YTD ('+thisYear+')</div></div>';
+html+='<div class="card metric-tile"><div class="metric-value">'+_contributions.length+'</div><div class="metric-label">Entries</div></div>';
+html+='<div class="card metric-tile"><div class="metric-value">$'+(total/_contributions.length).toLocaleString('en-AU',{minimumFractionDigits:2})+'</div><div class="metric-label">Avg per Entry</div></div>';
+html+='</div>';
+if(cats.length>1){
+html+='<div class="card" style="margin-bottom:16px;padding:16px"><div style="font-size:0.65rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px">By Category</div><div style="display:flex;flex-direction:column;gap:6px">';
+var catCols={'Stock':'var(--teal)','Marketing':'#e8a84d','Tools':'#4a8fe8','Equipment':'#a78bfa','Market':'#f472b6','Shipping':'#67e8f9','Other':'var(--text-muted)'};
+cats.forEach(function(c){
+var pct=total>0?((c[1]/total)*100):0;
+var col=catCols[c[0]]||'var(--text-muted)';
+html+='<div style="display:flex;align-items:center;gap:10px"><div style="width:100px;font-size:0.72rem;color:var(--text-secondary)">'+c[0]+'</div><div style="flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden"><div style="width:'+pct+'%;height:100%;border-radius:3px;background:'+col+'"></div></div><div style="width:80px;text-align:right;font-size:0.72rem;font-weight:600;color:#fff">$'+c[1].toLocaleString('en-AU',{minimumFractionDigits:2})+'</div><div style="width:40px;text-align:right;font-size:0.6rem;color:var(--text-faint)">'+pct.toFixed(0)+'%</div></div>';
+});
+html+='</div></div>';
+}
+html+='<div class="card" style="padding:0"><div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.65rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em">All Contributions</div>';
+html+='<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th style="text-align:right">Amount</th><th style="text-align:right">Running Total</th><th></th></tr></thead><tbody>';
+var running=0;
+var chronological=_contributions.slice().sort(function(a,b){return a.date>b.date?1:a.date<b.date?-1:0});
+chronological.forEach(function(e){running+=e.amount});
+sorted.forEach(function(e,i){
+var runDown=running;for(var j=0;j<i;j++){runDown-=sorted[j].amount}
+var dateStr=e.date?new Date(e.date+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'—';
+var catCol=catCols[e.category]||'var(--text-muted)';
+html+='<tr><td style="white-space:nowrap">'+dateStr+'</td><td>'+( e.description||'<span style="color:var(--text-faint)">—</span>')+'</td><td><span style="padding:2px 8px;border-radius:5px;font-size:0.6rem;font-weight:600;background:'+catCol+'12;color:'+catCol+';border:1px solid '+catCol+'25">'+(e.category||'Other')+'</span></td><td style="text-align:right;font-weight:700;color:var(--teal)">$'+e.amount.toLocaleString('en-AU',{minimumFractionDigits:2})+'</td><td style="text-align:right;color:var(--text-muted)">$'+runDown.toLocaleString('en-AU',{minimumFractionDigits:2})+'</td><td style="text-align:right;white-space:nowrap"><button onclick="editContribution(\''+e.id+'\')" style="padding:3px 7px;border-radius:4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text-faint);font-size:0.55rem;cursor:pointer;font-family:var(--font);margin-right:4px">Edit</button><button onclick="deleteContribution(\''+e.id+'\')" style="padding:3px 7px;border-radius:4px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);color:var(--red-soft);font-size:0.55rem;cursor:pointer;font-family:var(--font)">Del</button></td></tr>';
+});
+html+='</tbody><tfoot><tr><td colspan="3" style="font-weight:700;color:var(--text-muted);border-top:1px solid rgba(255,255,255,0.08)">Total</td><td style="text-align:right;font-weight:700;color:var(--teal);font-size:0.9rem;border-top:1px solid rgba(255,255,255,0.08)">$'+total.toLocaleString('en-AU',{minimumFractionDigits:2})+'</td><td colspan="2" style="border-top:1px solid rgba(255,255,255,0.08)"></td></tr></tfoot></table></div></div>';
+el.innerHTML=html;
+}
 
 // ─── Checklists ───
 let _checklists=[];
