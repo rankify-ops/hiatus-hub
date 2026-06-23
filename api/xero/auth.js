@@ -15,6 +15,7 @@ module.exports = async function handler(req, res) {
     'accounting.reports.profitandloss.read',
     'accounting.reports.balancesheet.read',
     'accounting.settings.read',
+    'accounting.settings',
   ].join(' ');
 
   const params = new URLSearchParams({
