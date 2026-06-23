@@ -392,7 +392,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
     <div class="tab-panel" id="tab-markets">
       <div class="section-header"><h2>Market Stalls</h2><div class="updated" id="markets-updated">Loading...</div></div>
       <div style="margin-bottom:18px">
-        <select id="market-date-select" onchange="renderMarkets()" style="padding:8px 14px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.08);backdrop-filter:blur(10px);font-family:var(--font);font-size:0.82rem;color:#fff;cursor:pointer;font-weight:500;min-width:220px">
+        <select id="market-date-select" onchange="renderMarkets()" style="padding:8px 14px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.12);background:#1a1a2e;font-family:var(--font);font-size:0.82rem;color:#fff;cursor:pointer;font-weight:500;min-width:220px">
         </select>
       </div>
       <div id="markets-content"></div>
@@ -1118,10 +1118,10 @@ const totalItems=sales.reduce((a,s)=>a+s.items.reduce((b,i)=>b+(i.qty||1),0),0);
 
 const sel=document.getElementById('market-date-select');
 const currentVal=sel.value;
-sel.innerHTML=`<option value="all">All Market Days (${marketDays.length})</option>`+marketDays.map(md=>{
+sel.innerHTML=`<option value="all" style="background:#1a1a2e;color:#fff">All Market Days (${marketDays.length})</option>`+marketDays.map(md=>{
   const d2=new Date(md.date+'T00:00:00');
   const label=d2.toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' — '+md.market_name+' ($'+md.revenue.toFixed(0)+')';
-  return `<option value="${md.date}">${label}</option>`
+  return `<option value="${md.date}" style="background:#1a1a2e;color:#fff">${label}</option>`
 }).join('');
 if(currentVal&&[...sel.options].some(o=>o.value===currentVal)){sel.value=currentVal}
 
