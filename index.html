@@ -463,7 +463,7 @@ pinInputs.forEach((input,i)=>{
 // Auto-focus first input
 if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
 const DATA_BASE='data/';
-const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders',market_sales:'/api/market-sales',xero:'/api/xero/data'};
+const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders',market_sales:'/api/market-sales',xero:'/api/xero/data',silver:'/api/silver-price',costs:'/api/costs'};
 const STATIC_FILES={products:'products.json',content:'content.json',stock_changelog:'stock_changelog.json',markets:'markets.json'};
 let appData={};
 document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
@@ -810,13 +810,36 @@ return `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;fon
 const catFiltered=activeCat==='All'?prods:prods.filter(p=>p.product_type===activeCat);const matFiltered=catFiltered.filter(p=>activeMats.has(p.material_type));const filtered=window._stockLive?matFiltered.filter(p=>p.is_live):matFiltered;
 if(!prods.length){document.getElementById('stock-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">☷</div><h3>Pre-launch</h3></div></div>`;return}
 if(!document.getElementById('stock-css')){const st=document.createElement('style');st.id='stock-css';st.textContent='.stock-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}@media(max-width:1200px){.stock-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:768px){.stock-grid{grid-template-columns:repeat(2,1fr);gap:8px}}';document.head.appendChild(st)}
+const sv=appData.silver||{};
+const costData=appData.costs||{};
+const allCosts=costData.costs||{};
+let totalRetailValue=0,totalCostValue=0,totalUnits=0;
+prods.forEach(p=>{p.variants.forEach(v=>{
+  const qty=v.quantity||0;if(qty<=0)return;
+  totalUnits+=qty;
+  totalRetailValue+=qty*(p.price||0);
+  const c=allCosts[v.sku];
+  if(c&&c.cost_price)totalCostValue+=qty*c.cost_price;
+})});
 document.getElementById('stock-content').innerHTML=`
+${sv.silver_aud_oz?`<div class="card" style="margin-bottom:14px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#c0c0c0,#e8e8e8);display:flex;align-items:center;justify-content:center;font-size:1.1rem">Ag</div>
+    <div><div style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">Live Silver Price</div>
+    <div style="font-size:1rem;font-weight:700;color:#c0c0c0">$${sv.silver_aud_oz.toFixed(2)} <span style="font-size:0.6rem;color:var(--text-faint)">AUD/oz</span></div></div>
+  </div>
+  <div style="display:flex;gap:16px">
+    <div style="text-align:center"><div style="font-size:0.85rem;font-weight:700;color:#c0c0c0">$${sv.silver_aud_gram.toFixed(2)}</div><div style="font-size:0.55rem;color:var(--text-faint)">AUD/gram</div></div>
+    <div style="text-align:center"><div style="font-size:0.85rem;font-weight:700;color:var(--text-muted)">$${sv.silver_usd_oz.toFixed(2)}</div><div style="font-size:0.55rem;color:var(--text-faint)">USD/oz</div></div>
+    <div style="text-align:center"><div style="font-size:0.85rem;font-weight:700;color:var(--text-muted)">${sv.usd_aud_rate}</div><div style="font-size:0.55rem;color:var(--text-faint)">USD/AUD</div></div>
+  </div>
+</div>`:''}
 <div class="metrics-grid">
   <div class="card metric-tile"><div class="metric-value">${s.total_products||0}</div><div class="metric-label">Products</div></div>
-  <div class="card metric-tile"><div class="metric-value">${s.total_skus||0}</div><div class="metric-label">SKUs</div></div>
-  <div class="card metric-tile"><div class="metric-value teal">${s.in_stock||0}</div><div class="metric-label">In Stock</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="color:var(--amber)">${s.low_stock||0}</div><div class="metric-label">Low</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="color:var(--red-soft)">${s.out_of_stock||0}</div><div class="metric-label">OOS</div></div>
+  <div class="card metric-tile"><div class="metric-value teal">${totalUnits}</div><div class="metric-label">Total Units</div></div>
+  <div class="card metric-tile"><div class="metric-value teal">$${totalRetailValue.toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Retail Value</div></div>
+  <div class="card metric-tile"><div class="metric-value">${totalCostValue>0?'$'+totalCostValue.toLocaleString('en-AU',{minimumFractionDigits:2}):'—'}</div><div class="metric-label">Cost Value</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="color:${totalCostValue>0?'var(--teal)':'var(--text-muted)'}">${totalCostValue>0?'$'+(totalRetailValue-totalCostValue).toLocaleString('en-AU',{minimumFractionDigits:2}):'—'}</div><div class="metric-label">Margin</div></div>
 </div>
 <div class="card" style="margin-bottom:14px">
   <div class="card-header"><span class="card-title">Stock Change Log</span><span class="card-badge badge-teal">${changelog.length}</span></div>
@@ -865,12 +888,42 @@ ${p.is_component?`<div style="padding:10px 12px;border-radius:8px;background:rgb
 
 ${p.notes?`<div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-bottom:14px;font-style:italic">${p.notes}</div>`:''}
 
-<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Variants & SKUs</div>
-<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px">${p.variants.map(v=>{const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';const st=v.quantity<=0?'OOS':v.quantity<=3?'Low':'OK';return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)"><div style="flex:1"><div style="font-size:0.78rem;font-weight:600;color:#fff">${v.title||'—'}</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.4)">SKU: ${v.sku}${v.supplier_sku?' · Supplier: '+v.supplier_sku:''}</div></div><div style="font-size:1rem;font-weight:700;color:${vc}">${v.quantity}</div><span style="padding:2px 6px;border-radius:5px;font-size:0.5rem;font-weight:700;background:${vc}15;color:${vc};border:1px solid ${vc}25">${st}</span></div>`}).join('')}</div>
+<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Variants, Stock & Cost Prices</div>
+<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px">${p.variants.map(v=>{const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';const st=v.quantity<=0?'OOS':v.quantity<=3?'Low':'OK';const ck=(appData.costs||{}).costs||{};const cv=ck[v.sku]||{};const cp=cv.cost_price;const margin=cp?(p.price-cp):null;const marginPct=cp&&p.price?(((p.price-cp)/p.price)*100):null;return `<div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1"><div style="font-size:0.78rem;font-weight:600;color:#fff">${v.title||'—'}</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.4)">SKU: ${v.sku}${v.supplier_sku?' · Supplier: '+v.supplier_sku:''}</div></div><div style="font-size:1rem;font-weight:700;color:${vc}">${v.quantity}</div><span style="padding:2px 6px;border-radius:5px;font-size:0.5rem;font-weight:700;background:${vc}15;color:${vc};border:1px solid ${vc}25">${st}</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:4px"><span style="font-size:0.6rem;color:var(--text-faint)">Cost:</span><input type="number" step="0.01" min="0" value="${cp||''}" placeholder="0.00" data-sku="${v.sku}" class="cost-input" style="width:70px;padding:4px 6px;border-radius:4px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);color:#fff;font-size:0.72rem;text-align:right;outline:none"></div><span style="font-size:0.6rem;color:var(--text-faint)">Sell: $${p.price.toFixed(2)}</span>${margin!==null?`<span style="font-size:0.6rem;font-weight:600;color:${margin>0?'var(--teal)':'var(--red-soft)'}">Margin: $${margin.toFixed(2)} (${marginPct.toFixed(0)}%)</span>`:''}${cp&&v.quantity>0?`<span style="font-size:0.55rem;color:var(--text-faint)">Value: $${(cp*v.quantity).toFixed(2)}</span>`:''}</div></div>`}).join('')}</div>
+<div style="display:flex;gap:8px;margin-bottom:16px"><button onclick="saveStockCosts()" style="padding:8px 18px;border-radius:var(--radius-sm);background:var(--teal);color:#fff;border:none;font-size:0.75rem;font-weight:600;cursor:pointer">Save Cost Prices</button><span id="cost-save-status" style="font-size:0.7rem;color:var(--text-muted);align-self:center"></span></div>
 
-${prodChanges.length?`<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Change History</div><div style="display:flex;flex-direction:column;gap:4px">${prodChanges.slice().reverse().map(c=>{const col2=c.change>0?'var(--teal)':'var(--red-soft)';const dt2=new Date(c.timestamp);return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.03);font-size:0.7rem"><span style="font-weight:700;color:${col2};min-width:28px">${c.change>0?'+':''}${c.change}</span><span style="color:rgba(255,255,255,0.7);flex:1">${c.variant} · ${c.reason}</span><span style="color:rgba(255,255,255,0.3);font-size:0.58rem">${dt2.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span></div>`}).join('')}</div>`:'<div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:8px">No stock changes recorded for this product.</div>'}
+${(()=>{const ch=(appData.costs||{}).history||[];const skus=p.variants.map(v=>v.sku);const costHist=ch.filter(e=>skus.includes(e.sku));return costHist.length?`<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Cost Price History</div><div style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px">${costHist.slice(0,10).map(e=>{const dt=new Date(e.timestamp);return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.03);font-size:0.7rem"><span style="color:var(--text-faint);min-width:55px;font-size:0.58rem">${dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span><span style="color:rgba(255,255,255,0.5);min-width:60px;font-family:monospace;font-size:0.6rem">${e.sku}</span><span style="color:var(--red-soft)">${e.old_cost!==null?'$'+Number(e.old_cost).toFixed(2):'—'}</span><span style="color:var(--text-faint)">→</span><span style="color:var(--teal)">$${Number(e.new_cost).toFixed(2)}</span>${e.note?`<span style="color:var(--text-faint);font-size:0.58rem;font-style:italic">${e.note}</span>`:''}</div>`}).join('')}</div>`:''})()}
+${prodChanges.length?`<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Stock Change History</div><div style="display:flex;flex-direction:column;gap:4px">${prodChanges.slice().reverse().map(c=>{const col2=c.change>0?'var(--teal)':'var(--red-soft)';const dt2=new Date(c.timestamp);return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.03);font-size:0.7rem"><span style="font-weight:700;color:${col2};min-width:28px">${c.change>0?'+':''}${c.change}</span><span style="color:rgba(255,255,255,0.7);flex:1">${c.variant} · ${c.reason}</span><span style="color:rgba(255,255,255,0.3);font-size:0.58rem">${dt2.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span></div>`}).join('')}</div>`:'<div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:8px">No stock changes recorded for this product.</div>'}
 </div>`;
 modal.style.display='flex'}
+
+async function saveStockCosts(){
+const inputs=document.querySelectorAll('.cost-input');
+const items=[];
+inputs.forEach(inp=>{
+  const sku=inp.dataset.sku;
+  const val=inp.value.trim();
+  if(sku&&val!=='')items.push({sku,cost_price:parseFloat(val)});
+});
+if(!items.length){document.getElementById('cost-save-status').textContent='No costs entered';return}
+document.getElementById('cost-save-status').textContent='Saving...';
+try{
+  const res=await fetch('/api/costs',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
+  const data=await res.json();
+  if(data.success){
+    document.getElementById('cost-save-status').textContent=`Saved ${data.updated} cost prices`;
+    document.getElementById('cost-save-status').style.color='var(--teal)';
+    const costRes=await fetch('/api/costs?t='+Date.now());
+    if(costRes.ok)appData.costs=await costRes.json();
+    setTimeout(()=>renderStock(),500);
+  }else{
+    document.getElementById('cost-save-status').textContent='Error: '+(data.error||'Unknown');
+    document.getElementById('cost-save-status').style.color='var(--red-soft)';
+  }
+}catch(e){
+  document.getElementById('cost-save-status').textContent='Save failed';
+  document.getElementById('cost-save-status').style.color='var(--red-soft)';
+}}
 
 function renderMarkets(){
 const ms=appData.market_sales||{sales:[]};

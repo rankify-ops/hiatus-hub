@@ -141,8 +141,11 @@ module.exports = async function handler(req, res) {
       existingByCodes[item.Code] = item;
     }
 
-    // Fetch Shopify products
-    const shopifyProducts = await fetchAllShopifyProducts();
+    // Fetch Shopify products and KV cost prices
+    const [shopifyProducts, kvCosts] = await Promise.all([
+      fetchAllShopifyProducts(),
+      kvGet('product_costs').then(c => c || {}),
+    ]);
 
     const results = { created: 0, updated: 0, skipped: 0, errors: [] };
 
@@ -158,9 +161,7 @@ module.exports = async function handler(req, res) {
           ? product.title
           : `${product.title} — ${variant.title}`;
         const sellPrice = parseFloat(variant.price) || 0;
-        const costPrice = variant.inventoryItem?.unitCost?.amount
-          ? parseFloat(variant.inventoryItem.unitCost.amount)
-          : 0;
+        const costPrice = kvCosts[sku]?.cost_price || 0;
         const qty = variant.inventoryQuantity || 0;
 
         const itemPayload = {
