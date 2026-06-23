@@ -2,12 +2,12 @@ async function kvSet(key, value) {
   const url = process.env.KV_REST_API_URL;
   const token = process.env.KV_REST_API_TOKEN;
   if (!url || !token) throw new Error('Vercel KV not configured');
-  const res = await fetch(`${url}/set/${key}`, {
+  const res = await fetch(`${url}`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(value),
+    body: JSON.stringify(['SET', key, value]),
   });
-  if (!res.ok) throw new Error(`KV set failed: ${res.status}`);
+  if (!res.ok) throw new Error(`KV set failed: ${res.status} ${await res.text()}`);
 }
 
 module.exports = async function handler(req, res) {
@@ -51,12 +51,14 @@ module.exports = async function handler(req, res) {
   const connections = await connRes.json();
   const tenantId = connections[0]?.tenantId;
 
-  await kvSet('xero_tokens', JSON.stringify({
+  const tokenData = JSON.stringify({
     access_token: tokens.access_token,
     refresh_token: tokens.refresh_token,
     expires_at: Date.now() + (tokens.expires_in * 1000),
     tenant_id: tenantId,
-  }));
+  });
+
+  await kvSet('xero_tokens', tokenData);
 
   res.writeHead(302, { Location: '/?xero=connected' });
   res.end();

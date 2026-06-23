@@ -4,8 +4,10 @@ async function kvGet(key) {
   const url = process.env.KV_REST_API_URL;
   const token = process.env.KV_REST_API_TOKEN;
   if (!url || !token) return null;
-  const res = await fetch(`${url}/get/${key}`, {
-    headers: { Authorization: `Bearer ${token}` },
+  const res = await fetch(`${url}`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(['GET', key]),
   });
   if (!res.ok) return null;
   const data = await res.json();
@@ -16,10 +18,10 @@ async function kvSet(key, value) {
   const url = process.env.KV_REST_API_URL;
   const token = process.env.KV_REST_API_TOKEN;
   if (!url || !token) throw new Error('Vercel KV not configured');
-  const res = await fetch(`${url}/set/${key}`, {
+  const res = await fetch(`${url}`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(value),
+    body: JSON.stringify(['SET', key, value]),
   });
   if (!res.ok) throw new Error(`KV set failed: ${res.status}`);
 }
