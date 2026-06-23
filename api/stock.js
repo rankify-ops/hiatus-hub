@@ -5,6 +5,31 @@ const SHOP = '97850c.myshopify.com';
 const API_VERSION = '2024-10';
 const LOCATION_ID = 'gid://shopify/Location/64242647083';
 
+async function kvGet(key) {
+  const url = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  const res = await fetch(`${url}`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(['GET', key]),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.result ? JSON.parse(data.result) : null;
+}
+
+async function kvSet(key, value) {
+  const url = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return;
+  await fetch(`${url}`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(['SET', key, value]),
+  });
+}
+
 async function shopifyGQL(query, variables = {}) {
   const token = process.env.SHOPIFY_ADMIN_TOKEN;
   if (!token) throw new Error('SHOPIFY_ADMIN_TOKEN not set');
@@ -131,8 +156,51 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // --- Stock change detection ---
+    const now = new Date().toISOString();
+    const currentSnapshot = {};
+    for (const p of products) {
+      for (const v of p.variants) {
+        if (v.sku) currentSnapshot[v.sku] = { qty: v.quantity, product: p.product, variant: v.title };
+      }
+    }
+
+    let changelog = [];
+    try {
+      const [prevSnapshot, prevLog] = await Promise.all([
+        kvGet('stock_snapshot'),
+        kvGet('stock_changelog'),
+      ]);
+      changelog = prevLog || [];
+
+      if (prevSnapshot) {
+        const allSkus = new Set([...Object.keys(prevSnapshot), ...Object.keys(currentSnapshot)]);
+        for (const sku of allSkus) {
+          const prev = prevSnapshot[sku];
+          const curr = currentSnapshot[sku];
+          if (!prev && curr) {
+            changelog.unshift({ timestamp: now, product: curr.product, variant: curr.variant, sku, before: 0, after: curr.qty, change: curr.qty, reason: 'New product added', source: 'Shopify' });
+          } else if (prev && !curr) {
+            changelog.unshift({ timestamp: now, product: prev.product, variant: prev.variant, sku, before: prev.qty, after: 0, change: -prev.qty, reason: 'Product removed', source: 'Shopify' });
+          } else if (prev && curr && prev.qty !== curr.qty) {
+            const diff = curr.qty - prev.qty;
+            const reason = diff < 0 ? 'Sale / adjustment' : 'Restock / adjustment';
+            changelog.unshift({ timestamp: now, product: curr.product, variant: curr.variant, sku, before: prev.qty, after: curr.qty, change: diff, reason, source: 'Shopify' });
+          }
+        }
+      }
+
+      if (changelog.length > 1000) changelog.length = 1000;
+      await Promise.all([
+        kvSet('stock_snapshot', JSON.stringify(currentSnapshot)),
+        kvSet('stock_changelog', JSON.stringify(changelog)),
+      ]);
+    } catch (e) {
+      console.warn('Stock changelog error:', e.message);
+    }
+
     const result = {
-      last_updated: new Date().toISOString(),
+      last_updated: now,
       summary: {
         total_products: products.length,
         total_skus: totalSkus,
@@ -143,6 +211,7 @@ module.exports = async function handler(req, res) {
       categories: [...categoriesSet].sort(),
       material_types: [...materialTypesSet],
       products,
+      changelog: changelog.slice(0, 50),
     };
 
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=120');

@@ -469,7 +469,7 @@ pinInputs.forEach((input,i)=>{
 if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
 const DATA_BASE='data/';
 const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders',market_sales:'/api/market-sales',xero:'/api/xero/data',silver:'/api/silver-price',costs:'/api/costs'};
-const STATIC_FILES={products:'products.json',content:'content.json',stock_changelog:'stock_changelog.json',markets:'markets.json'};
+const STATIC_FILES={products:'products.json',content:'content.json',markets:'markets.json'};
 let appData={};
 document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
 async function loadData(){
@@ -962,7 +962,7 @@ ${invoices.length?`<div class="card" style="margin-top:14px">
   </tbody></table>
 </div>`:''}`}
 function renderStock(filterCat){const d=appData.stock;if(!d)return;
-const cl=appData.stock_changelog||{changelog:[]};
+const cl={changelog:(appData.stock||{}).changelog||[]};
 const changelog=cl.changelog||[];
 document.getElementById('stock-updated').textContent='Last synced: '+fmt(d.last_updated)+' · Source: Shopify';
 const s=d.summary||{};
@@ -1033,7 +1033,7 @@ const d=appData.stock;if(!d)return;
 const activeCat=window._stockCat||'All';
 const activeMats2=window._stockMats||new Set(['Sterling Silver','S/Silver 2.5G Micron','Brass 2.5G Micron']);const catF=activeCat==='All'?d.products:d.products.filter(p=>p.product_type===activeCat);const filtered=catF.filter(p=>activeMats2.has(p.material_type));
 const p=filtered[idx];if(!p)return;
-const cl=appData.stock_changelog||{changelog:[]};
+const cl={changelog:(appData.stock||{}).changelog||[]};
 const prodChanges=(cl.changelog||[]).filter(c=>c.product===p.product);
 const cleanName=p.product.replace(' (SILVER)','').replace(' (STERLING SILVER)','');
 const hasOos=p.variants_oos>0;const hasLow=p.variants_low>0;
