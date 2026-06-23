@@ -348,12 +348,30 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
     </div>
     <div class="tab-panel" id="tab-products">
       <div class="section-header"><h2>Supplier Catalog</h2><div class="updated" id="products-updated">Loading...</div></div>
-      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap" id="products-filters">
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center" id="products-filters">
         <button class="cat-filter active" data-pf="all" onclick="filterProducts('all')">All</button>
         <button class="cat-filter" data-pf="silver" onclick="filterProducts('silver')">Silver</button>
         <button class="cat-filter" data-pf="gold" onclick="filterProducts('gold')">Brass Gold</button>
         <button class="cat-filter" data-pf="shopify" onclick="filterProducts('shopify')">On Shopify</button>
         <button class="cat-filter" data-pf="not-shopify" onclick="filterProducts('not-shopify')">Not on Shopify</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap" id="products-controls">
+        <select id="products-sort" onchange="renderProducts()" style="padding:5px 10px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:0.7rem;cursor:pointer;outline:none">
+          <option value="name">Name A-Z</option>
+          <option value="margin-desc">Margin % High→Low</option>
+          <option value="margin-asc">Margin % Low→High</option>
+          <option value="sold-desc">Most Sold</option>
+          <option value="cost-desc">Cost High→Low</option>
+          <option value="cost-asc">Cost Low→High</option>
+          <option value="price-desc">Sell Price High→Low</option>
+          <option value="stock-desc">Stock High→Low</option>
+          <option value="stock-asc">Stock Low→High</option>
+          <option value="weight-desc">Weight High→Low</option>
+        </select>
+        <div style="margin-left:auto;display:flex;gap:4px">
+          <button onclick="setProductView('grid')" id="pv-grid" style="padding:4px 8px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.75rem" title="Grid view">▦</button>
+          <button onclick="setProductView('list')" id="pv-list" style="padding:4px 8px;border-radius:5px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);color:var(--text-faint);cursor:pointer;font-size:0.75rem" title="List view">☰</button>
+        </div>
       </div>
       <div class="metrics-grid" id="products-metrics"></div>
       <div id="products-grid" class="stock-grid" style="margin-top:14px"></div>
@@ -483,49 +501,91 @@ document.getElementById('sidebar-fx-sub').textContent='$1 USD = $'+c.usd_aud_rat
 }
 function renderOverview(){const d=appData.overview;if(!d)return;document.getElementById('overview-updated').textContent='Last synced: '+fmt(d.last_updated);document.getElementById('overview-alerts').innerHTML=(d.alerts||[]).map(a=>`<div class="alert-banner ${a.type}"><span class="alert-icon">${a.type==='info'?'ℹ':'⚠'}</span><span>${a.message}</span></div>`).join('');const m=d.metrics||{};document.getElementById('overview-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value teal">$${(m.combined_revenue||m.all_time_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">Shopify $${(m.shopify_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">Markets $${(m.market_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div></div><div class="card metric-tile"><div class="metric-value teal">$${(m.monthly_revenue||0).toFixed(2)}</div><div class="metric-label">Shopify MTD</div></div><div class="card metric-tile"><div class="metric-value">${m.combined_sales||m.total_orders||0}</div><div class="metric-label">Total Sales</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">${m.total_orders||0} online</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">${m.market_sales||0} markets</span></div></div><div class="card metric-tile"><div class="metric-value" style="color:${(m.pending_orders||0)>0?'var(--amber)':'var(--teal)'}">${m.pending_orders||0}</div><div class="metric-label">Unfulfilled</div></div><div class="card metric-tile"><div class="metric-value">${m.total_products||0}</div><div class="metric-label">Products</div></div><div class="card metric-tile"><div class="metric-value">$${(m.monthly_costs||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>`}
 let _productFilter='all';
+let _productView='grid';
+function setProductView(v){_productView=v;document.getElementById('pv-grid').style.background=v==='grid'?'rgba(255,255,255,0.1)':'rgba(255,255,255,0.06)';document.getElementById('pv-grid').style.color=v==='grid'?'#fff':'var(--text-faint)';document.getElementById('pv-list').style.background=v==='list'?'rgba(255,255,255,0.1)':'rgba(255,255,255,0.06)';document.getElementById('pv-list').style.color=v==='list'?'#fff':'var(--text-faint)';renderProducts()}
 function filterProducts(f){_productFilter=f;document.querySelectorAll('#products-filters .cat-filter').forEach(b=>b.classList.toggle('active',b.dataset.pf===f));renderProducts()}
 function renderProducts(){
 const cat=appData.catalog;if(!cat)return;
 const prods=cat.products||[];
 const stockData=appData.stock;
 const shopifyProducts=stockData?.products||[];
+const audRate=appData.silver?.current?.usd_aud_rate||1.55;
+const topProducts=(appData.orders?.top_products)||[];
+const salesByName={};topProducts.forEach(t=>{salesByName[t.name]={units:t.units,revenue:t.revenue}});
 document.getElementById('products-updated').textContent='Supplier: '+cat.supplier+' · Silver $'+cat.silver_price_usd_oz+'/oz · Invoice '+cat.last_invoice;
-const silverCount=prods.filter(p=>!p.is_gold).length;
-const goldCount=prods.filter(p=>p.is_gold).length;
-const onShopify=prods.filter(p=>p.shopify_name).length;
-const totalCostUSD=prods.reduce((s,p)=>s+(p.cost_usd||0),0);
-document.getElementById('products-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value">${prods.length}</div><div class="metric-label">Total SKUs</div></div><div class="card metric-tile"><div class="metric-value" style="color:#c0c0c0">${silverCount}</div><div class="metric-label">Silver</div></div><div class="card metric-tile"><div class="metric-value" style="color:#d4a849">${goldCount}</div><div class="metric-label">Brass Gold</div></div><div class="card metric-tile"><div class="metric-value teal">${onShopify}</div><div class="metric-label">On Shopify</div></div>`;
-let filtered=prods;
-if(_productFilter==='silver')filtered=prods.filter(p=>!p.is_gold);
-else if(_productFilter==='gold')filtered=prods.filter(p=>p.is_gold);
-else if(_productFilter==='shopify')filtered=prods.filter(p=>p.shopify_name);
-else if(_productFilter==='not-shopify')filtered=prods.filter(p=>!p.shopify_name);
+const enriched=prods.map(p=>{
+const shopifyMatch=p.shopify_name?shopifyProducts.find(sp=>sp.product===p.shopify_name):null;
+const sellPrice=shopifyMatch?shopifyMatch.price:null;
+const stock=shopifyMatch?shopifyMatch.total_quantity:0;
+const costAUD=p.cost_usd?(Math.round(p.cost_usd*audRate*100)/100):null;
+const margin=costAUD&&sellPrice?(sellPrice-costAUD):null;
+const marginPct=costAUD&&sellPrice?((sellPrice-costAUD)/sellPrice*100):null;
+const salesData=p.shopify_name?salesByName[p.shopify_name]:null;
+const unitsSold=salesData?salesData.units:0;
+const revenue=salesData?salesData.revenue:0;
+return {...p,shopifyMatch,sellPrice,stock,costAUD,margin,marginPct,unitsSold,revenue};
+});
+const silverCount=enriched.filter(p=>!p.is_gold).length;
+const goldCount=enriched.filter(p=>p.is_gold).length;
+const onShopify=enriched.filter(p=>p.shopify_name).length;
+const avgMargin=enriched.filter(p=>p.marginPct!==null);
+const avgMarginPct=avgMargin.length?(avgMargin.reduce((s,p)=>s+p.marginPct,0)/avgMargin.length):0;
+document.getElementById('products-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value">${prods.length}</div><div class="metric-label">Total SKUs</div></div><div class="card metric-tile"><div class="metric-value" style="color:#c0c0c0">${silverCount}</div><div class="metric-label">Silver</div></div><div class="card metric-tile"><div class="metric-value" style="color:#d4a849">${goldCount}</div><div class="metric-label">Brass Gold</div></div><div class="card metric-tile"><div class="metric-value teal">${onShopify}</div><div class="metric-label">On Shopify</div></div><div class="card metric-tile"><div class="metric-value" style="color:${avgMarginPct>=50?'var(--teal)':'var(--amber)'}">${avgMarginPct.toFixed(0)}%</div><div class="metric-label">Avg Margin</div></div>`;
+let filtered=enriched;
+if(_productFilter==='silver')filtered=enriched.filter(p=>!p.is_gold);
+else if(_productFilter==='gold')filtered=enriched.filter(p=>p.is_gold);
+else if(_productFilter==='shopify')filtered=enriched.filter(p=>p.shopify_name);
+else if(_productFilter==='not-shopify')filtered=enriched.filter(p=>!p.shopify_name);
+const sortVal=document.getElementById('products-sort')?.value||'name';
+const sorters={'name':(a,b)=>a.name.localeCompare(b.name),'margin-desc':(a,b)=>(b.marginPct||0)-(a.marginPct||0),'margin-asc':(a,b)=>(a.marginPct||0)-(b.marginPct||0),'sold-desc':(a,b)=>(b.unitsSold||0)-(a.unitsSold||0)||(b.revenue||0)-(a.revenue||0),'cost-desc':(a,b)=>(b.costAUD||0)-(a.costAUD||0),'cost-asc':(a,b)=>(a.costAUD||999)-(b.costAUD||999),'price-desc':(a,b)=>(b.sellPrice||0)-(a.sellPrice||0),'stock-desc':(a,b)=>(b.stock||0)-(a.stock||0),'stock-asc':(a,b)=>(a.stock||0)-(b.stock||0),'weight-desc':(a,b)=>(b.weight_g||0)-(a.weight_g||0)};
+filtered=[...filtered].sort(sorters[sortVal]||sorters['name']);
 const grid=document.getElementById('products-grid');
+if(_productView==='list'){
+grid.className='';grid.style.cssText='display:flex;flex-direction:column;gap:6px;margin-top:14px';
+grid.innerHTML=`<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:8px;padding:8px 12px;font-size:0.6rem;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(255,255,255,0.06)"><span>Product</span><span style="text-align:right">Cost AUD</span><span style="text-align:right">Sell</span><span style="text-align:right">Margin</span><span style="text-align:right">Stock</span><span style="text-align:right">Sold</span><span style="text-align:right">Revenue</span></div>`+filtered.map(p=>{
+const marginCol=p.marginPct!==null?(p.marginPct>=60?'var(--teal)':p.marginPct>=40?'var(--amber)':'var(--red-soft)'):'var(--text-faint)';
+const stockCol=p.stock>0?'var(--teal)':'var(--red-soft)';
+const matCol=p.is_gold?'#d4a849':'#c0c0c0';
+return `<div class="card" style="padding:0;cursor:pointer" onclick="showCatalogDetail('${p.supplier_sku}')">
+<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 1fr;gap:8px;padding:10px 12px;align-items:center;font-size:0.72rem">
+<div style="display:flex;align-items:center;gap:8px">
+${p.image?`<img src="${p.image}" style="width:32px;height:32px;border-radius:6px;object-fit:cover;${p.is_gold?'filter:sepia(0.6) hue-rotate(-10deg) saturate(1.8) brightness(1.1)':''}">`:'<div style="width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:rgba(255,255,255,0.1)">◆</div>'}
+<div><div style="font-weight:600;color:#fff">${p.name}</div><div style="font-size:0.58rem;color:${matCol};font-family:monospace">${p.supplier_sku}</div></div>
+</div>
+<div style="text-align:right;color:#fff;font-weight:600">${p.costAUD?'$'+p.costAUD.toFixed(2):'—'}</div>
+<div style="text-align:right;color:#fff;font-weight:600">${p.sellPrice?'$'+p.sellPrice.toFixed(0):'—'}</div>
+<div style="text-align:right;font-weight:700;color:${marginCol}">${p.marginPct!==null?p.marginPct.toFixed(0)+'%':'—'}</div>
+<div style="text-align:right;font-weight:600;color:${stockCol}">${p.stock}</div>
+<div style="text-align:right;color:${p.unitsSold>0?'#fff':'var(--text-faint)'};font-weight:${p.unitsSold>0?'600':'400'}">${p.unitsSold||'—'}</div>
+<div style="text-align:right;color:${p.revenue>0?'var(--teal)':'var(--text-faint)'};font-weight:${p.revenue>0?'600':'400'}">${p.revenue>0?'$'+p.revenue.toLocaleString('en-AU',{minimumFractionDigits:0}):'—'}</div>
+</div></div>`}).join('');
+} else {
+grid.className='stock-grid';grid.style.cssText='margin-top:14px';
 grid.innerHTML=filtered.map(p=>{
 const imgStyle=p.is_gold?'filter:sepia(0.6) hue-rotate(-10deg) saturate(1.8) brightness(1.1)':'';
 const matBadge=p.is_gold?'<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:rgba(212,168,73,0.15);color:#d4a849;font-size:0.55rem;font-weight:600">BRASS GOLD</span>':'<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:rgba(192,192,192,0.12);color:#c0c0c0;font-size:0.55rem;font-weight:600">925 SILVER</span>';
 const shopifyBadge=p.shopify_name?'<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:rgba(45,212,168,0.12);color:var(--teal);font-size:0.5rem;font-weight:600">SHOPIFY</span>':'<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--text-faint);font-size:0.5rem">NOT LISTED</span>';
 const compBadge=p.is_component?'<span style="display:inline-block;padding:2px 6px;border-radius:4px;background:rgba(255,180,50,0.12);color:var(--amber);font-size:0.5rem">COMPONENT</span>':'';
-const costStr=p.cost_usd?'$'+p.cost_usd.toFixed(2)+' USD':'—';
-const shopifyMatch=p.shopify_name?shopifyProducts.find(sp=>sp.product===p.shopify_name):null;
-const sellStr=shopifyMatch?'$'+shopifyMatch.price.toFixed(0):'—';
-const stockStr=shopifyMatch?shopifyMatch.total_quantity:'0';
+const marginCol=p.marginPct!==null?(p.marginPct>=60?'var(--teal)':p.marginPct>=40?'var(--amber)':'var(--red-soft)'):'var(--text-faint)';
 return `<div class="card" style="padding:0;overflow:hidden;cursor:pointer" onclick="showCatalogDetail('${p.supplier_sku}')">
 <div style="height:140px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">
 ${p.image?`<img src="${p.image}" style="width:100%;height:100%;object-fit:cover;${imgStyle}">`:'<div style="font-size:2rem;color:rgba(255,255,255,0.08)">◆</div>'}
 <div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;align-items:flex-end">${matBadge}${shopifyBadge}${compBadge}</div>
+${p.marginPct!==null?`<div style="position:absolute;bottom:6px;left:6px;padding:2px 7px;border-radius:4px;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);font-size:0.6rem;font-weight:700;color:${marginCol}">${p.marginPct.toFixed(0)}% margin</div>`:''}
 </div>
 <div style="padding:10px 12px">
 <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:2px">${p.name}</div>
 <div style="font-size:0.6rem;color:var(--teal);font-family:monospace;margin-bottom:6px">${p.supplier_sku}${p.variant_label?' · '+p.variant_label:''}</div>
 <div style="display:flex;justify-content:space-between;font-size:0.65rem">
-<div><div style="color:var(--text-faint)">Cost</div><div style="color:#fff;font-weight:600">${costStr}</div></div>
-<div style="text-align:center"><div style="color:var(--text-faint)">Sell</div><div style="color:#fff;font-weight:600">${sellStr}</div></div>
-<div style="text-align:right"><div style="color:var(--text-faint)">Stock</div><div style="color:${parseInt(stockStr)>0?'var(--teal)':'var(--red-soft)'};font-weight:600">${stockStr}</div></div>
+<div><div style="color:var(--text-faint)">Cost</div><div style="color:#fff;font-weight:600">${p.costAUD?'$'+p.costAUD.toFixed(2):'—'}</div></div>
+<div style="text-align:center"><div style="color:var(--text-faint)">Sell</div><div style="color:#fff;font-weight:600">${p.sellPrice?'$'+p.sellPrice.toFixed(0):'—'}</div></div>
+<div style="text-align:right"><div style="color:var(--text-faint)">Stock</div><div style="color:${p.stock>0?'var(--teal)':'var(--red-soft)'};font-weight:600">${p.stock}</div></div>
 </div>
+${p.unitsSold>0?`<div style="font-size:0.55rem;color:var(--text-muted);margin-top:4px">${p.unitsSold} sold · $${p.revenue.toLocaleString('en-AU',{minimumFractionDigits:0})} rev</div>`:''}
 ${p.stone?`<div style="font-size:0.55rem;color:var(--text-faint);margin-top:4px">Stone: ${p.stone}</div>`:''}
 ${p.notes?`<div style="font-size:0.55rem;color:var(--amber);margin-top:4px">${p.notes}</div>`:''}
 </div></div>`}).join('');
+}
 // Missing from catalog
 const catalogSkus=new Set(prods.map(p=>p.supplier_sku));
 const catalogShopifyNames=new Set(prods.filter(p=>p.shopify_name).map(p=>p.shopify_name));
