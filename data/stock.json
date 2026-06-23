@@ -659,14 +659,12 @@
           "inventory_item_id": null
         }
       ],
-      "supplier_sku": "TBD",
+      "supplier_sku": "NC02636G / NC02636H / NC02636I",
       "supplier": "Silver supplier",
       "is_component": true,
       "component_of": "HIATUS H PENDANT (SILVER)",
       "flags": [
-        "Needs sell price",
-        "Needs supplier SKU",
-        "Needs supplier price"
+        "Needs sell price"
       ],
       "notes": "Component \u2014 used in Hiatus H Pendant. 3 sizes available.",
       "is_live": false
