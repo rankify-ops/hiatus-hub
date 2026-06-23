@@ -706,7 +706,7 @@ ${costHist.length?`<div class="card" style="padding:20px">
   </div>`}).join('')}</div>
 </div>`:'<div class="card" style="padding:20px"><div class="card-header"><span class="card-title">Cost Price Change Log</span></div><div style="font-size:0.75rem;color:var(--text-muted);padding:12px 0">No cost changes recorded yet. Set cost prices in the Stock tab to start tracking.</div></div>'}`;
 
-drawSilverChart();
+requestAnimationFrame(()=>requestAnimationFrame(drawSilverChart));
 }
 
 function drawSilverChart(){
