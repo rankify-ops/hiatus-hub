@@ -8,9 +8,13 @@ module.exports = async function handler(req, res) {
 
   const scopes = [
     'openid', 'profile', 'email', 'offline_access',
-    'accounting.transactions.read',
-    'accounting.reports.read',
     'accounting.contacts.read',
+    'accounting.banktransactions.read',
+    'accounting.invoices.read',
+    'accounting.payments.read',
+    'accounting.reports.profitandloss.read',
+    'accounting.reports.balancesheet.read',
+    'accounting.settings.read',
   ].join(' ');
 
   const params = new URLSearchParams({
