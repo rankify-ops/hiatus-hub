@@ -23,7 +23,9 @@ async function kvSet(key, value) {
   });
 }
 
+const CATALOG_VERSION = 2;
 const SEED_CATALOG = {
+  version: CATALOG_VERSION,
   supplier: 'Guangzhou Yihong Jewelry Co., Ltd',
   silver_price_usd_oz: 70.24,
   last_invoice: '2026-06-15',
@@ -32,6 +34,7 @@ const SEED_CATALOG = {
     { supplier_sku: 'SR10242B', name: 'Creators Ring', type: 'Ring', material: '925 Silver', plating: 'Oxidation', weight_g: 8.1, cost_usd: 37.63, stone: null, is_gold: false, silver_sku: null, shopify_name: 'CREATORS RING (SILVER)', image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/12_635b1c9b-b2bc-4f83-8d7f-aee9fe904e5b.webp?v=1751674402' },
     { supplier_sku: 'BR02221B', name: 'Unearth Cuff', type: 'Bracelet', material: '925 Silver', plating: 'Oxidation', weight_g: 29.63, cost_usd: 121.89, stone: null, is_gold: false, silver_sku: null, shopify_name: 'UNEARTH CUFF (SILVER)', image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/13.webp?v=1751674389' },
     { supplier_sku: 'SR10397B', name: 'Unearth Stacker Ring Set', type: 'Ring', material: '925 Silver', plating: 'Oxidation', weight_g: 6.4, cost_usd: 28.13, stone: null, is_gold: false, silver_sku: null, shopify_name: 'UNEARTH STACKER RING SET (SILVER)', image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409' },
+    { supplier_sku: 'SR10243B', name: 'Unearth Ring', type: 'Ring', material: '925 Silver', plating: 'Oxidation', weight_g: 8.1, cost_usd: 37.63, stone: null, is_gold: false, silver_sku: null, shopify_name: 'UNEARTH RING (SILVER)', image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/11_680d9bae-4556-4c04-828a-00bbd1899724.webp?v=1751674374' },
     { supplier_sku: 'SR10453B', name: 'Unearth Signet Ring', type: 'Ring', material: '925 Silver', plating: 'Rhodium', weight_g: 9.1, cost_usd: null, stone: null, is_gold: false, silver_sku: null, shopify_name: 'UNEARTH SIGNET RING (SILVER)', image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/9_012c12af-b7a4-47f3-8d70-dc6b1e340d4e.webp?v=1751674419' },
     { supplier_sku: 'BR02628A', name: 'Cuban Link Bracelet (Medium)', type: 'Bracelet', material: '925 Silver', plating: 'Rhodium', weight_g: 22.89, cost_usd: 90.82, stone: null, is_gold: false, silver_sku: null, shopify_name: 'CUBAN LINK BRACELET (SILVER)', image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_7.png?v=1751674498', variant_label: '7.5 Inches' },
     { supplier_sku: 'BR02628B', name: 'Cuban Link Bracelet (Large)', type: 'Bracelet', material: '925 Silver', plating: 'Rhodium', weight_g: 24.48, cost_usd: 97.25, stone: null, is_gold: false, silver_sku: null, shopify_name: 'CUBAN LINK BRACELET (SILVER)', image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_7.png?v=1751674498', variant_label: '8 Inches' },
@@ -47,6 +50,7 @@ const SEED_CATALOG = {
     { supplier_sku: 'SR10242B-BG', name: 'Creators Ring (Gold)', type: 'Ring', material: 'Brass', plating: '2.5 Micron K Gold', weight_g: 8.1, cost_usd: 21.74, stone: null, is_gold: true, silver_sku: 'SR10242B', shopify_name: null, image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/12_635b1c9b-b2bc-4f83-8d7f-aee9fe904e5b.webp?v=1751674402' },
     { supplier_sku: 'BR02221B-BG', name: 'Unearth Cuff (Gold)', type: 'Bracelet', material: 'Brass', plating: '2.5 Micron K Gold', weight_g: 29.63, cost_usd: 50.02, stone: null, is_gold: true, silver_sku: 'BR02221B', shopify_name: null, image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/13.webp?v=1751674389' },
     { supplier_sku: 'SR10397B-BG', name: 'Unearth Stacker Ring (Gold)', type: 'Ring', material: 'Brass', plating: '2.5 Micron K Gold', weight_g: 6.4, cost_usd: 14.95, stone: null, is_gold: true, silver_sku: 'SR10397B', shopify_name: null, image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/10_a964cc27-1769-40ad-ba61-fe3bec9e7868.webp?v=1751674409' },
+    { supplier_sku: 'SR10243B-BG', name: 'Unearth Ring (Gold)', type: 'Ring', material: 'Brass', plating: '2.5 Micron K Gold', weight_g: 8.1, cost_usd: 21.74, stone: null, is_gold: true, silver_sku: 'SR10243B', shopify_name: null, image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/11_680d9bae-4556-4c04-828a-00bbd1899724.webp?v=1751674374' },
     { supplier_sku: 'SR10453B-BG', name: 'Unearth Signet Ring (Gold)', type: 'Ring', material: 'Brass', plating: '2.5 Micron K Gold', weight_g: 9.1, cost_usd: 23.68, stone: null, is_gold: true, silver_sku: 'SR10453B', shopify_name: null, image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/9_012c12af-b7a4-47f3-8d70-dc6b1e340d4e.webp?v=1751674419' },
     { supplier_sku: 'BR02628A-BG', name: 'Cuban Link Bracelet Medium (Gold)', type: 'Bracelet', material: 'Brass', plating: '2.5 Micron K Gold', weight_g: 22.89, cost_usd: 52.64, stone: null, is_gold: true, silver_sku: 'BR02628A', shopify_name: null, image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_7.png?v=1751674498', variant_label: '7.5 Inches' },
     { supplier_sku: 'BR02628B-BG', name: 'Cuban Link Bracelet Large (Gold)', type: 'Bracelet', material: 'Brass', plating: '2.5 Micron K Gold', weight_g: 24.48, cost_usd: 53.84, stone: null, is_gold: true, silver_sku: 'BR02628B', shopify_name: null, image: 'https://cdn.shopify.com/s/files/1/0584/3366/7115/files/UNEARTHED_7.png?v=1751674498', variant_label: '8 Inches' },
@@ -64,7 +68,7 @@ module.exports = async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       let catalog = await kvGet('supplier_catalog');
-      if (!catalog) {
+      if (!catalog || catalog.version !== CATALOG_VERSION) {
         catalog = SEED_CATALOG;
         await kvSet('supplier_catalog', JSON.stringify(catalog));
       }
