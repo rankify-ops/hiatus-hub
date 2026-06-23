@@ -1216,145 +1216,123 @@ renderReports();
 
 // ─── Supplier Order Builder ───
 window._supplierOrder={};
+let _orderFilter='all';
 
 function openSupplierOrder(){
-  const d=appData.stock;if(!d)return;
   window._supplierOrder={};
+  _orderFilter='all';
   renderSupplierOrder();
   document.getElementById('supplier-order-modal').style.display='flex';
 }
 
 function renderSupplierOrder(){
-  const d=appData.stock;if(!d)return;
-  const prods=d.products||[];
+  const cat=appData.catalog;
+  const stockData=appData.stock;
+  const catProds=(cat?.products||[]);
+  const shopifyProds=stockData?.products||[];
   const order=window._supplierOrder;
-  const totalItems=Object.values(order).reduce((a,p)=>a+Object.values(p.variants).reduce((b,q)=>b+q,0),0);
-  
+  const totalItems=Object.values(order).reduce((s,q)=>s+q,0);
+
+  let filtered=catProds;
+  if(_orderFilter==='silver')filtered=catProds.filter(p=>!p.is_gold);
+  else if(_orderFilter==='gold')filtered=catProds.filter(p=>p.is_gold);
+
   document.getElementById('supplier-order-content').innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <div>
         <div style="font-size:1.1rem;font-weight:700;color:#fff">Create Supplier Order</div>
-        <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);margin-top:2px">Select products and quantities to order</div>
+        <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);margin-top:2px">${cat?.supplier||'Supplier'} · Silver $${cat?.silver_price_usd_oz||'?'}/oz</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <span style="font-size:0.7rem;color:var(--teal);font-weight:600">${totalItems} items</span>
         <button onclick="document.getElementById('supplier-order-modal').style.display='none'" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center">✕</button>
       </div>
     </div>
-    
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
-      ${prods.filter(p=>p.supplier_sku&&p.supplier_sku!=='TBD'&&!p.supplier_sku.includes('TBD')).map(p=>{
-        const cleanName=p.product.replace(' (SILVER)','').replace(' (STERLING SILVER)','');
-        const inOrder=!!order[p.product];
-        const orderQty=inOrder?Object.values(order[p.product].variants).reduce((a,q)=>a+q,0):0;
-        return `<div style="border-radius:10px;background:rgba(255,255,255,${inOrder?'0.06':'0.03'});border:1px solid rgba(${inOrder?'45,212,168,0.2':'255,255,255,0.06'});overflow:hidden">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer" onclick="toggleOrderProduct('${p.product.replace(/'/g,"\\'")}')">
-            ${p.image?`<img src="${p.image}" style="width:36px;height:36px;border-radius:6px;object-fit:cover">`:'<div style="width:36px;height:36px;border-radius:6px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--text-faint)">?</div>'}
-            <div style="flex:1">
-              <div style="font-size:0.78rem;font-weight:600;color:#fff">${cleanName}</div>
-              <div style="font-size:0.58rem;color:var(--teal);font-family:monospace">${p.supplier_sku}</div>
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <button class="cat-filter ${_orderFilter==='all'?'active':''}" onclick="_orderFilter='all';renderSupplierOrder()">All</button>
+      <button class="cat-filter ${_orderFilter==='silver'?'active':''}" onclick="_orderFilter='silver';renderSupplierOrder()">Silver</button>
+      <button class="cat-filter ${_orderFilter==='gold'?'active':''}" onclick="_orderFilter='gold';renderSupplierOrder()">Brass Gold</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;max-height:55vh;overflow-y:auto">
+      ${filtered.map(p=>{
+        const qty=order[p.supplier_sku]||0;
+        const imgStyle=p.is_gold?'filter:sepia(0.6) hue-rotate(-10deg) saturate(1.8) brightness(1.1)':'';
+        const shopifyMatch=p.shopify_name?shopifyProds.find(sp=>sp.product===p.shopify_name):null;
+        const stockQty=shopifyMatch?shopifyMatch.total_quantity:0;
+        const matColor=p.is_gold?'#d4a849':'#c0c0c0';
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,${qty>0?'0.06':'0.03'});border:1px solid rgba(${qty>0?'45,212,168,0.2':'255,255,255,0.06'})">
+          ${p.image?`<img src="${p.image}" style="width:36px;height:36px;border-radius:6px;object-fit:cover;${imgStyle}">`:'<div style="width:36px;height:36px;border-radius:6px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--text-faint)">◆</div>'}
+          <div style="flex:1;min-width:0">
+            <div style="font-size:0.75rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
+            <div style="display:flex;gap:6px;align-items:center;margin-top:2px">
+              <span style="font-size:0.55rem;color:var(--teal);font-family:monospace">${p.supplier_sku}</span>
+              <span style="font-size:0.5rem;color:${matColor}">${p.is_gold?'GOLD':'SILVER'}</span>
             </div>
-            <div style="text-align:right"><div style="font-size:0.65rem;color:var(--text-muted)">${p.variants.length} sizes</div><div style="font-size:0.55rem;color:${p.total_quantity<=0?'var(--red-soft)':p.total_quantity<=10?'var(--amber)':'var(--teal)'}">${p.total_quantity} in stock</div></div>
-            ${orderQty>0?`<div style="min-width:24px;height:24px;border-radius:12px;background:var(--teal);color:#fff;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center">${orderQty}</div>`:''}
-            <div style="font-size:0.8rem;color:rgba(255,255,255,0.3)">${inOrder?'▾':'▸'}</div>
           </div>
-          ${inOrder?`<div style="padding:0 14px 12px">
-            <div style="display:flex;flex-wrap:wrap;gap:6px">
-              ${p.variants.map(v=>{
-                const vKey=v.sku||v.title;
-                const vQty=order[p.product]?.variants[vKey]||0;
-                const supSku=v.supplier_sku||p.supplier_sku||'';
-                return `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);min-width:120px">
-                  <div style="flex:1">
-                    <div style="font-size:0.68rem;color:#fff;font-weight:500">${v.title||'One Size'}</div>
-                    <div style="font-size:0.5rem;color:var(--text-faint)">${v.sku}${supSku&&supSku!==p.supplier_sku?' · '+supSku:''}</div>
-                  </div>
-                  <div style="text-align:center;margin-right:6px">
-                    <div style="font-size:0.75rem;font-weight:700;color:${v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)'}">${v.quantity}</div>
-                    <div style="font-size:0.4rem;color:var(--text-faint);text-transform:uppercase">in stock</div>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:4px">
-                    <button onclick="event.stopPropagation();adjustOrderQty('${p.product.replace(/'/g,"\\'")}','${vKey}',-1)" style="width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center">−</button>
-                    <span style="min-width:20px;text-align:center;font-size:0.8rem;font-weight:700;color:${vQty>0?'var(--teal)':'var(--text-faint)'}">${vQty}</span>
-                    <button onclick="event.stopPropagation();adjustOrderQty('${p.product.replace(/'/g,"\\'")}','${vKey}',1)" style="width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.75rem;display:flex;align-items:center;justify-content:center">+</button>
-                  </div>
-                </div>`}).join('')}
-            </div>
-          </div>`:''}
+          <div style="text-align:center;min-width:40px">
+            <div style="font-size:0.6rem;color:var(--text-faint)">Cost</div>
+            <div style="font-size:0.65rem;color:#fff;font-weight:600">${p.cost_usd?'$'+p.cost_usd.toFixed(2):'—'}</div>
+          </div>
+          <div style="text-align:center;min-width:30px">
+            <div style="font-size:0.6rem;color:var(--text-faint)">Stock</div>
+            <div style="font-size:0.65rem;font-weight:600;color:${stockQty>0?'var(--teal)':'var(--red-soft)'}">${stockQty}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <button onclick="adjustOrderQty('${p.supplier_sku}',-1)" style="width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center">−</button>
+            <span style="min-width:24px;text-align:center;font-size:0.85rem;font-weight:700;color:${qty>0?'var(--teal)':'var(--text-faint)'}">${qty}</span>
+            <button onclick="adjustOrderQty('${p.supplier_sku}',1)" style="width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center">+</button>
+          </div>
         </div>`}).join('')}
     </div>
-    
     ${totalItems>0?`<div style="display:flex;gap:8px">
       <button onclick="exportSupplierOrder()" style="flex:1;padding:12px;border-radius:var(--radius-sm);background:var(--teal);border:none;color:#fff;font-family:var(--font);font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.03em">Export to Excel (${totalItems} items)</button>
       <button onclick="window._supplierOrder={};renderSupplierOrder()" style="padding:12px 16px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-family:var(--font);font-size:0.72rem;cursor:pointer">Clear</button>
-    </div>`:'<div style="text-align:center;padding:12px;font-size:0.72rem;color:var(--text-faint)">Tap a product to add it to your order</div>'}`;
+    </div>`:'<div style="text-align:center;padding:12px;font-size:0.72rem;color:var(--text-faint)">Set quantities to build your order</div>'}`;
 }
 
 function toggleOrderProduct(productName){
-  const order=window._supplierOrder;
-  if(order[productName]){
-    delete order[productName];
-  } else {
-    const d=appData.stock;
-    const p=d.products.find(p=>p.product===productName);
-    if(!p)return;
-    order[productName]={
-      supplier_sku:p.supplier_sku,
-      variants:{}
-    };
-    p.variants.forEach(v=>{
-      order[productName].variants[v.sku||v.title]=0;
-    });
-  }
-  renderSupplierOrder();
+  // Legacy — no longer used
 }
 
-function adjustOrderQty(productName,variantKey,delta){
+function adjustOrderQty(sku,delta){
   const order=window._supplierOrder;
-  if(!order[productName])return;
-  const current=order[productName].variants[variantKey]||0;
-  order[productName].variants[variantKey]=Math.max(0,current+delta);
+  const current=order[sku]||0;
+  const newVal=Math.max(0,current+delta);
+  if(newVal>0)order[sku]=newVal;else delete order[sku];
   renderSupplierOrder();
 }
 
 function exportSupplierOrder(){
-  const d=appData.stock;if(!d)return;
+  const cat=appData.catalog;if(!cat)return;
   const order=window._supplierOrder;
+  const stockData=appData.stock;
+  const shopifyProds=stockData?.products||[];
   const rows=[];
-  const today=new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
-  
-  for(const[productName,orderData]of Object.entries(order)){
-    const p=d.products.find(pr=>pr.product===productName);
+
+  for(const[sku,qty]of Object.entries(order)){
+    if(qty<=0)continue;
+    const p=cat.products.find(cp=>cp.supplier_sku===sku);
     if(!p)continue;
-    const cleanName=productName.replace(' (SILVER)','').replace(' (STERLING SILVER)','');
-    
-    for(const v of p.variants){
-      const vKey=v.sku||v.title;
-      const qty=orderData.variants[vKey]||0;
-      if(qty<=0)continue;
-      rows.push({
-        'Product':cleanName,
-        'Supplier Code':v.supplier_sku||p.supplier_sku||'',
-        'Our SKU':v.sku||'',
-        'Size / Variant':v.title||'One Size',
-        'Material':p.material_type||'Sterling Silver',
-        'Order Qty':qty,
-        'Current Stock':v.quantity||0,
-        'Notes':''
-      });
-    }
+    const shopifyMatch=p.shopify_name?shopifyProds.find(sp=>sp.product===p.shopify_name):null;
+    rows.push({
+      'Product':p.name,
+      'Supplier Code':p.supplier_sku,
+      'Material':p.material,
+      'Plating':p.plating,
+      'Weight (g)':p.weight_g,
+      'Cost (USD)':p.cost_usd||'',
+      'Order Qty':qty,
+      'Line Total (USD)':p.cost_usd?(p.cost_usd*qty).toFixed(2):'',
+      'Current Stock':shopifyMatch?shopifyMatch.total_quantity:0,
+      'Notes':p.variant_label||''
+    });
   }
-  
+
   if(!rows.length)return;
-  
-  // Add header row with order info
   const ws=XLSX.utils.json_to_sheet(rows);
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Supplier Order');
-  
-  // Set column widths
-  ws['!cols']=[{wch:25},{wch:16},{wch:14},{wch:18},{wch:16},{wch:10},{wch:12},{wch:20}];
-  
+  ws['!cols']=[{wch:28},{wch:16},{wch:14},{wch:20},{wch:10},{wch:12},{wch:10},{wch:14},{wch:12},{wch:16}];
   const filename='Hiatus_Supplier_Order_'+new Date().toISOString().slice(0,10)+'.xlsx';
   XLSX.writeFile(wb,filename);
 }
