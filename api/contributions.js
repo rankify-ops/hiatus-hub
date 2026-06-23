@@ -36,9 +36,17 @@ module.exports = async function handler(req, res) {
     if (req.method === 'POST') {
       const { action } = req.body;
 
+      if (action === 'seed') {
+        const { entries } = req.body;
+        if (!entries || !entries.length) return res.status(400).json({ error: 'entries required' });
+        const data = { entries, updated: new Date().toISOString() };
+        await kvSet(KV_KEY, JSON.stringify(data));
+        return res.status(200).json({ success: true, count: entries.length });
+      }
+
       if (action === 'add') {
         const { entry } = req.body;
-        if (!entry || !entry.amount || !entry.date) return res.status(400).json({ error: 'amount and date required' });
+        if (!entry || !entry.amount) return res.status(400).json({ error: 'amount required' });
         const data = await kvGet(KV_KEY) || { entries: [] };
         entry.id = Date.now().toString();
         entry.created = new Date().toISOString();
