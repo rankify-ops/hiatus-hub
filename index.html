@@ -1018,21 +1018,35 @@ if(!prods.length){document.getElementById('stock-content').innerHTML=`<div class
 if(!document.getElementById('stock-css')){const st=document.createElement('style');st.id='stock-css';st.textContent='.stock-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}@media(max-width:1200px){.stock-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:768px){.stock-grid{grid-template-columns:repeat(2,1fr);gap:8px}}';document.head.appendChild(st)}
 const costData=appData.costs||{};
 const allCosts=costData.costs||{};
+const catProds=(appData.catalog?.products||[]);
+const catBySku={};catProds.forEach(cp=>{catBySku[cp.supplier_sku]=cp});
+const audRate=appData.silver?.current?.usd_aud_rate||1.55;
+function getCostAUD(p,v){
+  const c=allCosts[v.sku];
+  if(c&&c.cost_price)return c.cost_price;
+  const supSku=v.supplier_sku||p.supplier_sku;
+  if(!supSku)return null;
+  const skus=supSku.split(/\s*[\/+]\s*/);
+  let total=0;let found=false;
+  for(const s of skus){const cp=catBySku[s.trim()];if(cp&&cp.cost_usd){total+=cp.cost_usd*audRate;found=true}}
+  return found?Math.round(total*100)/100:null;
+}
 let totalRetailValue=0,totalCostValue=0,totalUnits=0;
 prods.forEach(p=>{p.variants.forEach(v=>{
   const qty=v.quantity||0;if(qty<=0)return;
   totalUnits+=qty;
   totalRetailValue+=qty*(p.price||0);
-  const c=allCosts[v.sku];
-  if(c&&c.cost_price)totalCostValue+=qty*c.cost_price;
+  const cost=getCostAUD(p,v);
+  if(cost)totalCostValue+=qty*cost;
 })});
+const marginPct=totalRetailValue>0&&totalCostValue>0?((totalRetailValue-totalCostValue)/totalRetailValue*100).toFixed(0):null;
 document.getElementById('stock-content').innerHTML=`
 <div class="metrics-grid">
   <div class="card metric-tile"><div class="metric-value">${s.total_products||0}</div><div class="metric-label">Products</div></div>
   <div class="card metric-tile"><div class="metric-value teal">${totalUnits}</div><div class="metric-label">Total Units</div></div>
   <div class="card metric-tile"><div class="metric-value teal">$${totalRetailValue.toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Retail Value</div></div>
   <div class="card metric-tile"><div class="metric-value">${totalCostValue>0?'$'+totalCostValue.toLocaleString('en-AU',{minimumFractionDigits:2}):'—'}</div><div class="metric-label">Cost Value</div></div>
-  <div class="card metric-tile"><div class="metric-value" style="color:${totalCostValue>0?'var(--teal)':'var(--text-muted)'}">${totalCostValue>0?'$'+(totalRetailValue-totalCostValue).toLocaleString('en-AU',{minimumFractionDigits:2}):'—'}</div><div class="metric-label">Margin</div></div>
+  <div class="card metric-tile"><div class="metric-value" style="color:${totalCostValue>0?'var(--teal)':'var(--text-muted)'}">${totalCostValue>0?'$'+(totalRetailValue-totalCostValue).toLocaleString('en-AU',{minimumFractionDigits:2}):'—'}</div><div class="metric-label">Margin${marginPct?' · '+marginPct+'%':''}</div></div>
 </div>
 <div class="card" style="margin-bottom:14px">
   <div class="card-header"><span class="card-title">Stock Change Log</span><span class="card-badge badge-teal">${changelog.length}</span></div>
