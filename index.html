@@ -313,6 +313,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       <div class="nav-item" data-tab="silver"><span class="nav-icon">Ag</span><span>Silver Tracker</span></div>
       <div class="nav-item" data-tab="finance"><span class="nav-icon">◇</span><span>Finance</span></div>
       <div class="nav-item" data-tab="reports"><span class="nav-icon">◎</span><span>Reports</span></div>
+      <div class="nav-item" data-tab="checklists"><span class="nav-icon">☑</span><span>Checklists</span></div>
     </nav>
     <div id="sidebar-market-data" style="padding:12px 16px;margin:8px 10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
       <div style="font-size:0.55rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-faint);margin-bottom:8px;font-weight:600">Live Market</div>
@@ -440,6 +441,17 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
         <div id="reports-embed-container"></div>
       </div>
     </div>
+
+    <div class="tab-panel" id="tab-checklists">
+      <div class="section-header">
+        <h2>Checklists</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="updated" id="checklists-updated"></div>
+          <button onclick="createChecklist()" style="padding:6px 14px;border-radius:8px;background:var(--teal);border:none;color:#000;font-weight:700;font-size:0.75rem;cursor:pointer;font-family:var(--font)">+ New List</button>
+        </div>
+      </div>
+      <div id="checklists-content"></div>
+    </div>
   </main>
 </div>
 <script>
@@ -491,7 +503,7 @@ for(const[key,file]of Object.entries(STATIC_FILES)){try{const res=await fetch(DA
 renderAll()}
 function fmt(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function $(v){return'$'+Number(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}
-function renderAll(){renderOverview();renderProducts();renderOrders();renderStock();renderMarkets();renderSilver();renderFinance();renderReports();updateSidebarMarket()}
+function renderAll(){renderOverview();renderProducts();renderOrders();renderStock();renderMarkets();renderSilver();renderFinance();renderReports();loadChecklists();updateSidebarMarket()}
 function updateSidebarMarket(){
 const sv=appData.silver;if(!sv||!sv.current)return;
 const c=sv.current;const ch=sv.change||{};
@@ -1552,6 +1564,123 @@ content.innerHTML=`
 </div>`;
 }catch(err){content.innerHTML=`<div style="padding:40px;text-align:center"><div style="font-size:1.5rem;margin-bottom:10px">⚠</div><div style="font-size:0.82rem;color:var(--red-soft)">Failed to load order details</div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px">${err.message}</div></div>`}}
 window.showOrderDetail=showOrderDetail;
+
+// ─── Checklists ───
+let _checklists=[];
+let _checklistsDirty=false;
+async function loadChecklists(){
+try{const res=await fetch('/api/checklists?t='+Date.now());if(res.ok){const d=await res.json();_checklists=d.lists||[];if(d.updated)document.getElementById('checklists-updated').textContent='Saved: '+fmt(d.updated);renderChecklists()}}catch(e){console.warn('Checklists load failed',e)}
+}
+async function saveChecklists(){
+try{await fetch('/api/checklists',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save',lists:_checklists})});document.getElementById('checklists-updated').textContent='Saved: '+fmt(new Date().toISOString());_checklistsDirty=false}catch(e){console.warn('Checklists save failed',e)}
+}
+function createChecklist(){
+const name=prompt('Checklist name:');
+if(!name||!name.trim())return;
+_checklists.unshift({id:Date.now().toString(),name:name.trim(),items:[],created:new Date().toISOString(),collapsed:false});
+saveChecklists();renderChecklists();
+}
+function deleteChecklist(id){
+if(!confirm('Delete this checklist?'))return;
+_checklists=_checklists.filter(l=>l.id!==id);
+saveChecklists();renderChecklists();
+}
+function addChecklistItem(listId){
+const input=document.getElementById('cl-input-'+listId);
+if(!input||!input.value.trim())return;
+const list=_checklists.find(l=>l.id===listId);
+if(!list)return;
+list.items.push({id:Date.now().toString(),text:input.value.trim(),done:false,added:new Date().toISOString()});
+input.value='';
+saveChecklists();renderChecklists();
+}
+function toggleCheckItem(listId,itemId){
+const list=_checklists.find(l=>l.id===listId);
+if(!list)return;
+const item=list.items.find(i=>i.id===itemId);
+if(!item)return;
+item.done=!item.done;
+if(item.done)item.completed=new Date().toISOString();
+else delete item.completed;
+saveChecklists();renderChecklists();
+}
+function deleteCheckItem(listId,itemId){
+const list=_checklists.find(l=>l.id===listId);
+if(!list)return;
+list.items=list.items.filter(i=>i.id!==itemId);
+saveChecklists();renderChecklists();
+}
+function toggleCollapseChecklist(id){
+const list=_checklists.find(l=>l.id===id);
+if(!list)return;
+list.collapsed=!list.collapsed;
+renderChecklists();
+}
+function clearCompleted(listId){
+const list=_checklists.find(l=>l.id===listId);
+if(!list)return;
+const count=list.items.filter(i=>i.done).length;
+if(!count||!confirm('Clear '+count+' completed item'+(count>1?'s':'')+'?'))return;
+list.items=list.items.filter(i=>!i.done);
+saveChecklists();renderChecklists();
+}
+function renderChecklists(){
+const el=document.getElementById('checklists-content');
+if(!el)return;
+if(!_checklists.length){
+el.innerHTML='<div style="text-align:center;padding:60px 20px"><div style="font-size:2rem;margin-bottom:12px;opacity:0.3">☑</div><div style="font-size:0.9rem;color:var(--text-muted);margin-bottom:6px">No checklists yet</div><div style="font-size:0.75rem;color:var(--text-faint)">Create one to start tracking tasks</div></div>';
+return;
+}
+const totalItems=_checklists.reduce((s,l)=>s+l.items.length,0);
+const totalDone=_checklists.reduce((s,l)=>s+l.items.filter(i=>i.done).length,0);
+let html='<div class="metrics-grid" style="margin-bottom:16px">';
+html+='<div class="card metric-tile"><div class="metric-value">'+_checklists.length+'</div><div class="metric-label">Lists</div></div>';
+html+='<div class="card metric-tile"><div class="metric-value">'+totalItems+'</div><div class="metric-label">Total Items</div></div>';
+html+='<div class="card metric-tile"><div class="metric-value teal">'+totalDone+'</div><div class="metric-label">Completed</div></div>';
+html+='<div class="card metric-tile"><div class="metric-value" style="color:'+(totalItems-totalDone>0?'var(--amber)':'var(--teal)')+'">'+(totalItems-totalDone)+'</div><div class="metric-label">Remaining</div></div>';
+html+='</div>';
+html+='<div style="display:flex;flex-direction:column;gap:12px">';
+_checklists.forEach(list=>{
+const done=list.items.filter(i=>i.done).length;
+const total=list.items.length;
+const pct=total?Math.round((done/total)*100):0;
+const barCol=pct===100?'var(--teal)':pct>=50?'var(--amber)':'var(--red-soft)';
+html+='<div class="card" style="padding:0;overflow:hidden">';
+html+='<div style="padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04)" onclick="toggleCollapseChecklist(\''+list.id+'\')">';
+html+='<span style="font-size:0.7rem;color:var(--text-faint);transition:transform 0.2s;transform:rotate('+(list.collapsed?'0':'90')+'deg)">▶</span>';
+html+='<div style="flex:1"><div style="font-size:0.88rem;font-weight:700;color:#fff">'+list.name+'</div>';
+html+='<div style="font-size:0.6rem;color:var(--text-faint);margin-top:2px">'+done+'/'+total+' complete'+(total?' · '+pct+'%':'')+'</div></div>';
+if(total>0){html+='<div style="width:60px;height:4px;border-radius:2px;background:rgba(255,255,255,0.06);overflow:hidden"><div style="width:'+pct+'%;height:100%;border-radius:2px;background:'+barCol+';transition:width 0.3s"></div></div>';}
+html+='<div style="display:flex;gap:4px">';
+if(done>0)html+='<button onclick="event.stopPropagation();clearCompleted(\''+list.id+'\')" style="padding:3px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text-faint);font-size:0.55rem;cursor:pointer;font-family:var(--font)">Clear done</button>';
+html+='<button onclick="event.stopPropagation();deleteChecklist(\''+list.id+'\')" style="padding:3px 8px;border-radius:5px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.15);color:var(--red-soft);font-size:0.55rem;cursor:pointer;font-family:var(--font)">Delete</button>';
+html+='</div></div>';
+if(!list.collapsed){
+html+='<div style="padding:0 16px 12px">';
+const pending=list.items.filter(i=>!i.done);
+const completed=list.items.filter(i=>i.done);
+pending.forEach(item=>{
+html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)">';
+html+='<div onclick="toggleCheckItem(\''+list.id+'\',\''+item.id+'\')" style="width:20px;height:20px;border-radius:5px;border:2px solid rgba(255,255,255,0.15);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s"></div>';
+html+='<div style="flex:1;font-size:0.8rem;color:#fff">'+item.text+'</div>';
+html+='<button onclick="deleteCheckItem(\''+list.id+'\',\''+item.id+'\')" style="padding:2px 6px;border-radius:4px;background:none;border:1px solid rgba(255,255,255,0.06);color:var(--text-faint);font-size:0.6rem;cursor:pointer;opacity:0.4;font-family:var(--font)" onmouseover="this.style.opacity=1;this.style.borderColor=\'rgba(239,68,68,0.3)\';this.style.color=\'var(--red-soft)\'" onmouseout="this.style.opacity=0.4;this.style.borderColor=\'rgba(255,255,255,0.06)\';this.style.color=\'var(--text-faint)\'">✕</button>';
+html+='</div>';
+});
+completed.forEach(item=>{
+html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03);opacity:0.45">';
+html+='<div onclick="toggleCheckItem(\''+list.id+'\',\''+item.id+'\')" style="width:20px;height:20px;border-radius:5px;border:2px solid var(--teal);background:var(--teal);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center"><span style="color:#000;font-size:0.65rem;font-weight:800">✓</span></div>';
+html+='<div style="flex:1;font-size:0.8rem;color:var(--text-muted);text-decoration:line-through">'+item.text+'</div>';
+html+='<button onclick="deleteCheckItem(\''+list.id+'\',\''+item.id+'\')" style="padding:2px 6px;border-radius:4px;background:none;border:1px solid rgba(255,255,255,0.06);color:var(--text-faint);font-size:0.6rem;cursor:pointer;opacity:0.4;font-family:var(--font)" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4">✕</button>';
+html+='</div>';
+});
+html+='<div style="display:flex;gap:8px;margin-top:10px"><input id="cl-input-'+list.id+'" type="text" placeholder="Add item..." onkeydown="if(event.key===\'Enter\')addChecklistItem(\''+list.id+'\')" style="flex:1;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#fff;font-size:0.78rem;font-family:var(--font);outline:none"><button onclick="addChecklistItem(\''+list.id+'\')" style="padding:8px 14px;border-radius:8px;background:var(--teal);border:none;color:#000;font-weight:700;font-size:0.72rem;cursor:pointer;font-family:var(--font)">Add</button></div>';
+html+='</div>';
+}
+html+='</div>';
+});
+html+='</div>';
+el.innerHTML=html;
+}
 
 loadData();setInterval(loadData,5*60*1000);
 </script>
