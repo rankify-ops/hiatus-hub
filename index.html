@@ -290,10 +290,10 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
     <div class="pin-divider"></div>
     <div class="pin-label">Enter PIN</div>
     <div class="pin-inputs" id="pin-inputs">
-      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
-      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
-      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
-      <input class="pin-input" type="number" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+      <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+      <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+      <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
+      <input class="pin-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
     </div>
     <div class="pin-error" id="pin-error">Incorrect PIN</div>
   </div>
@@ -456,10 +456,10 @@ if(sessionStorage.getItem('hiatus_auth')==='true'){
 
 pinInputs.forEach((input,i)=>{
   input.addEventListener('input',e=>{
-    const val=e.target.value;
-    if(val.length>1) e.target.value=val.slice(-1);
+    let val=e.target.value.replace(/[^0-9]/g,'');
+    if(val.length>1) val=val.slice(-1);
+    e.target.value=val;
     if(val&&i<pinInputs.length-1) pinInputs[i+1].focus();
-    // Check PIN when all 4 filled
     const code=[...pinInputs].map(p=>p.value).join('');
     if(code.length===4){
       if(code===PIN){
@@ -474,9 +474,9 @@ pinInputs.forEach((input,i)=>{
     }
   });
   input.addEventListener('keydown',e=>{
-    if(e.key==='Backspace'&&!e.target.value&&i>0){pinInputs[i-1].focus();pinInputs[i-1].value=''}
+    if(e.key==='Backspace'){if(!e.target.value&&i>0){pinInputs[i-1].focus();pinInputs[i-1].value=''}}
   });
-  input.addEventListener('focus',function(){this.select&&this.select()});
+  input.addEventListener('focus',function(){this.select()});
 });
 // Auto-focus first input
 if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
