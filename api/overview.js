@@ -69,14 +69,24 @@ module.exports = async function handler(req, res) {
       staticOverview = JSON.parse(raw);
     } catch {}
 
-    const [shopifyData, ordersData, square] = await Promise.all([
+    const [shopifyData, square] = await Promise.all([
       shopifyGQL(`{
         productsCount: productsCount { count }
         ordersCount: ordersCount { count }
         pendingOrders: ordersCount(query: "fulfillment_status:unfulfilled") { count }
       }`),
-      shopifyGQL(`{
-        allTimeOrders: orders(first: 250, sortKey: CREATED_AT, reverse: true, query: "financial_status:paid") {
+      getSquareRevenue(),
+    ]);
+
+    // Paginate all paid Shopify orders
+    const allOrders = [];
+    let cursor = null;
+    let hasNext = true;
+    while (hasNext) {
+      const afterClause = cursor ? `, after: "${cursor}"` : '';
+      const ordersData = await shopifyGQL(`{
+        orders(first: 250, sortKey: CREATED_AT, reverse: true, query: "financial_status:paid"${afterClause}) {
+          pageInfo { hasNextPage endCursor }
           edges {
             node {
               totalPriceSet { shopMoney { amount } }
@@ -84,12 +94,13 @@ module.exports = async function handler(req, res) {
             }
           }
         }
-      }`),
-      getSquareRevenue(),
-    ]);
+      }`);
+      for (const e of ordersData.orders.edges) allOrders.push(e.node);
+      hasNext = ordersData.orders.pageInfo.hasNextPage;
+      cursor = ordersData.orders.pageInfo.endCursor;
+    }
 
     const monthStart = startOfMonth();
-    const allOrders = ordersData.allTimeOrders.edges.map(e => e.node);
     const shopifyAllTime = allOrders.reduce((sum, o) => sum + parseFloat(o.totalPriceSet.shopMoney.amount), 0);
     const shopifyMTD = allOrders
       .filter(o => o.createdAt >= monthStart)

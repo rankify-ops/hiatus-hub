@@ -27,26 +27,24 @@ module.exports = async function handler(req, res) {
       locations[loc.id] = loc.name;
     }
 
-    // Fetch orders from Square — last 12 months
-    const since = new Date();
-    since.setMonth(since.getMonth() - 12);
-
-    const searchBody = {
-      location_ids: Object.keys(locations),
-      query: {
-        filter: {
-          state_filter: { states: ['COMPLETED'] },
-          date_time_filter: {
-            created_at: { start_at: since.toISOString() },
-          },
+    // Fetch all completed orders from Square
+    let allOrders = [];
+    let cursor = null;
+    do {
+      const searchBody = {
+        location_ids: Object.keys(locations),
+        query: {
+          filter: { state_filter: { states: ['COMPLETED'] } },
+          sort: { sort_field: 'CREATED_AT', sort_order: 'DESC' },
         },
-        sort: { sort_field: 'CREATED_AT', sort_order: 'DESC' },
-      },
-      limit: 500,
-    };
-
-    const ordersData = await squareAPI('POST', '/orders/search', searchBody);
-    const orders = ordersData.orders || [];
+        limit: 500,
+      };
+      if (cursor) searchBody.cursor = cursor;
+      const ordersData = await squareAPI('POST', '/orders/search', searchBody);
+      allOrders = allOrders.concat(ordersData.orders || []);
+      cursor = ordersData.cursor || null;
+    } while (cursor);
+    const orders = allOrders;
 
     const sales = [];
     let totalRevenue = 0;
