@@ -554,7 +554,7 @@ ${p.image?`<img src="${p.image}" style="width:32px;height:32px;border-radius:6px
 </div>
 <div style="text-align:right;color:#fff;font-weight:600">${p.costAUD?'$'+p.costAUD.toFixed(2):'—'}</div>
 <div style="text-align:right;color:#fff;font-weight:600">${p.sellPrice?'$'+p.sellPrice.toFixed(0):'—'}</div>
-<div style="text-align:right;font-weight:700;color:${marginCol}">${p.marginPct!==null?p.marginPct.toFixed(0)+'%':'—'}</div>
+<div style="text-align:right"><div style="font-weight:700;color:${marginCol}">${p.margin!==null?'$'+p.margin.toFixed(2):'—'}</div><div style="font-size:0.55rem;color:${marginCol}">${p.marginPct!==null?p.marginPct.toFixed(0)+'%':''}</div></div>
 <div style="text-align:right;font-weight:600;color:${stockCol}">${p.stock}</div>
 <div style="text-align:right;color:${p.unitsSold>0?'#fff':'var(--text-faint)'};font-weight:${p.unitsSold>0?'600':'400'}">${p.unitsSold||'—'}</div>
 <div style="text-align:right;color:${p.revenue>0?'var(--teal)':'var(--text-faint)'};font-weight:${p.revenue>0?'600':'400'}">${p.revenue>0?'$'+p.revenue.toLocaleString('en-AU',{minimumFractionDigits:0}):'—'}</div>
@@ -571,7 +571,7 @@ return `<div class="card" style="padding:0;overflow:hidden;cursor:pointer" oncli
 <div style="height:140px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative">
 ${p.image?`<img src="${p.image}" style="width:100%;height:100%;object-fit:cover;${imgStyle}">`:'<div style="font-size:2rem;color:rgba(255,255,255,0.08)">◆</div>'}
 <div style="position:absolute;top:6px;right:6px;display:flex;flex-direction:column;gap:3px;align-items:flex-end">${matBadge}${shopifyBadge}${compBadge}</div>
-${p.marginPct!==null?`<div style="position:absolute;bottom:6px;left:6px;padding:2px 7px;border-radius:4px;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);font-size:0.6rem;font-weight:700;color:${marginCol}">${p.marginPct.toFixed(0)}% margin</div>`:''}
+${p.marginPct!==null?`<div style="position:absolute;bottom:6px;left:6px;padding:2px 7px;border-radius:4px;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);font-size:0.6rem;font-weight:700;color:${marginCol}">$${p.margin.toFixed(0)} · ${p.marginPct.toFixed(0)}%</div>`:''}
 </div>
 <div style="padding:10px 12px">
 <div style="font-size:0.78rem;font-weight:600;color:#fff;margin-bottom:2px">${p.name}</div>
@@ -603,6 +603,12 @@ const stockData=appData.stock;
 const shopifyMatch=p.shopify_name?(stockData?.products||[]).find(sp=>sp.product===p.shopify_name):null;
 const imgStyle=p.is_gold?'filter:sepia(0.6) hue-rotate(-10deg) saturate(1.8) brightness(1.1)':'';
 const costData=appData.costs?.costs||{};
+const audRate=appData.silver?.current?.usd_aud_rate||1.55;
+const costAUD=p.cost_usd?(Math.round(p.cost_usd*audRate*100)/100):null;
+const sellPrice=shopifyMatch?shopifyMatch.price:null;
+const marginAUD=costAUD&&sellPrice?(sellPrice-costAUD):null;
+const marginPct=costAUD&&sellPrice?((sellPrice-costAUD)/sellPrice*100):null;
+const marginCol=marginPct!==null?(marginPct>=60?'var(--teal)':marginPct>=40?'var(--amber)':'var(--red-soft)'):'var(--text-faint)';
 const modal=document.getElementById('stock-detail-modal')||document.createElement('div');
 modal.id='catalog-detail-modal';modal.style.cssText='display:flex;position:fixed;inset:0;z-index:600;align-items:center;justify-content:center';
 modal.innerHTML=`<div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px)" onclick="this.parentElement.remove()"></div>
@@ -620,10 +626,14 @@ ${p.stone?`<span style="padding:2px 8px;border-radius:4px;background:rgba(255,25
 </div>
 <button onclick="this.closest('#catalog-detail-modal').remove()" style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
 </div>
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+<div class="card metric-tile" style="padding:12px"><div style="font-size:0.6rem;color:var(--text-faint)">Cost (AUD)</div><div style="font-size:0.9rem;font-weight:700;color:#fff">${costAUD?'$'+costAUD.toFixed(2):'—'}</div><div style="font-size:0.5rem;color:var(--text-faint);margin-top:2px">${p.cost_usd?'$'+p.cost_usd.toFixed(2)+' USD':''}</div></div>
+<div class="card metric-tile" style="padding:12px"><div style="font-size:0.6rem;color:var(--text-faint)">Sell Price</div><div style="font-size:0.9rem;font-weight:700;color:var(--teal)">${sellPrice?'$'+sellPrice.toFixed(0):'—'}</div></div>
+<div class="card metric-tile" style="padding:12px"><div style="font-size:0.6rem;color:var(--text-faint)">Margin</div><div style="font-size:0.9rem;font-weight:700;color:${marginCol}">${marginAUD!==null?'$'+marginAUD.toFixed(2):'—'}</div><div style="font-size:0.5rem;color:${marginCol};margin-top:2px">${marginPct!==null?marginPct.toFixed(0)+'%':''}</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
 <div class="card metric-tile" style="padding:12px"><div style="font-size:0.6rem;color:var(--text-faint)">Weight</div><div style="font-size:0.9rem;font-weight:700;color:#fff">${p.weight_g}g</div></div>
-<div class="card metric-tile" style="padding:12px"><div style="font-size:0.6rem;color:var(--text-faint)">Cost (USD)</div><div style="font-size:0.9rem;font-weight:700;color:#fff">${p.cost_usd?'$'+p.cost_usd.toFixed(2):'—'}</div></div>
-<div class="card metric-tile" style="padding:12px"><div style="font-size:0.6rem;color:var(--text-faint)">Sell Price</div><div style="font-size:0.9rem;font-weight:700;color:var(--teal)">${shopifyMatch?'$'+shopifyMatch.price.toFixed(0):'—'}</div></div>
+<div class="card metric-tile" style="padding:12px"><div style="font-size:0.6rem;color:var(--text-faint)">Exchange Rate</div><div style="font-size:0.9rem;font-weight:700;color:#fff">$${audRate.toFixed(4)}</div><div style="font-size:0.5rem;color:var(--text-faint);margin-top:2px">USD/AUD</div></div>
 </div>
 ${shopifyMatch?`<div class="card" style="padding:12px;margin-bottom:12px">
 <div style="font-size:0.7rem;font-weight:600;color:#fff;margin-bottom:8px">Shopify: ${shopifyMatch.product}</div>
