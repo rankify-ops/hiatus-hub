@@ -304,6 +304,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       <div class="nav-item" data-tab="orders"><span class="nav-icon">▤</span><span>Orders / Sales</span></div>
       <div class="nav-item" data-tab="stock"><span class="nav-icon">☷</span><span>Stock Levels</span></div>
       <div class="nav-item" data-tab="markets"><span class="nav-icon">⚑</span><span>Market Stalls</span></div>
+      <div class="nav-item" data-tab="silver"><span class="nav-icon">Ag</span><span>Silver Tracker</span></div>
       <div class="nav-item" data-tab="finance"><span class="nav-icon">◇</span><span>Finance</span></div>
       <div class="nav-item" data-tab="reports"><span class="nav-icon">◎</span><span>Reports</span></div>
     </nav>
@@ -396,6 +397,10 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       </div>
       <div id="markets-content"></div>
     </div>
+    <div class="tab-panel" id="tab-silver">
+      <div class="section-header"><h2>Silver Tracker</h2><div class="updated" id="silver-updated">Loading...</div></div>
+      <div id="silver-content"></div>
+    </div>
     <div class="tab-panel" id="tab-finance">
       <div class="section-header"><h2>Finance</h2><div class="updated" id="finance-updated">Loading...</div></div>
       <div id="finance-content"></div>
@@ -475,7 +480,7 @@ try{const res=await fetch('/api/catalogue'+t);if(res.ok){const catalogue=await r
 renderAll()}
 function fmt(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function $(v){return'$'+Number(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}
-function renderAll(){renderOverview();renderProducts();renderContent();renderOrders();renderStock();renderMarkets();renderFinance();renderReports()}
+function renderAll(){renderOverview();renderProducts();renderContent();renderOrders();renderStock();renderMarkets();renderSilver();renderFinance();renderReports()}
 function renderOverview(){const d=appData.overview;if(!d)return;document.getElementById('overview-updated').textContent='Last synced: '+fmt(d.last_updated);document.getElementById('store-status').textContent=d.status?.store||'Unknown';document.getElementById('overview-alerts').innerHTML=(d.alerts||[]).map(a=>`<div class="alert-banner ${a.type}"><span class="alert-icon">${a.type==='info'?'ℹ':'⚠'}</span><span>${a.message}</span></div>`).join('');const m=d.metrics||{};document.getElementById('overview-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value teal">$${(m.combined_revenue||m.all_time_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">Shopify $${(m.shopify_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">Markets $${(m.market_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div></div><div class="card metric-tile"><div class="metric-value teal">$${(m.monthly_revenue||0).toFixed(2)}</div><div class="metric-label">Shopify MTD</div></div><div class="card metric-tile"><div class="metric-value">${m.combined_sales||m.total_orders||0}</div><div class="metric-label">Total Sales</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">${m.total_orders||0} online</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">${m.market_sales||0} markets</span></div></div><div class="card metric-tile"><div class="metric-value" style="color:${(m.pending_orders||0)>0?'var(--amber)':'var(--teal)'}">${m.pending_orders||0}</div><div class="metric-label">Unfulfilled</div></div><div class="card metric-tile"><div class="metric-value">${m.total_products||0}</div><div class="metric-label">Products</div></div><div class="card metric-tile"><div class="metric-value">$${(m.monthly_costs||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>`;const items=[];items.push({dot:d.status?.store==='Pre-launch'?'amber':'green',text:'Store: '+(d.status?.store||'—')});items.push({dot:d.status?.content_pipeline==='Building'?'amber':'green',text:'Content Pipeline: '+(d.status?.content_pipeline||'—')});(d.status?.cad_pending||[]).forEach(c=>items.push({dot:'red',text:'CAD Pending: '+c}));document.getElementById('overview-status').innerHTML=items.map(s=>`<div class="status-item"><div class="status-dot ${s.dot}"></div><span class="status-text">${s.text}</span></div>`).join('');const cols=d.status?.collections_planned||[],heroes=d.status?.hero_pieces||[];document.getElementById('overview-collections').innerHTML=`<div class="status-list">${cols.map(c=>`<div class="status-item"><div class="status-dot teal"></div><span class="status-text">${c}</span><span class="status-meta">Collection</span></div>`).join('')}${heroes.map(h=>`<div class="status-item"><div class="status-dot amber"></div><span class="status-text">${h}</span><span class="status-meta">Hero Piece</span></div>`).join('')}</div>`}
 function renderProducts(){const d=appData.products;if(!d)return;document.getElementById('products-updated').textContent='Last synced: '+fmt(d.last_updated);const ps=d.pipeline_summary||{};const stages=[{key:'concept',label:'Concept',color:'#888'},{key:'cad_pending',label:'CAD Pending',color:'#d97706'},{key:'manufacturing',label:'Manufacturing',color:'#0d9373'},{key:'in_stock',label:'In Stock',color:'#16a34a'},{key:'listed',label:'Listed',color:'#111'}];const total=Object.values(ps).reduce((a,b)=>a+b,0)||1;document.getElementById('pipeline-metrics').innerHTML=stages.map(s=>`<div class="card metric-tile" style="padding:12px 8px"><div class="metric-value" style="font-size:1.5rem;color:${s.color}">${ps[s.key]||0}</div><div class="metric-label">${s.label}</div></div>`).join('');document.getElementById('pipeline-bar').innerHTML=stages.map(s=>`<div class="pipeline-segment" style="width:${(ps[s.key]||0)/total*100}%;background:${s.color}"></div>`).join('');document.getElementById('pipeline-legend').innerHTML=stages.map(s=>`<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div><span>${s.label}</span></div>`).join('');document.getElementById('collections-container').innerHTML=(d.collections||[]).map(col=>`<div class="card" style="margin-top:14px"><div class="card-header"><span class="card-title">${col.name}</span><span class="card-badge badge-${col.status==='Concept'?'amber':'teal'}">${col.status}</span></div><p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px">${col.description||''}</p><table class="data-table"><thead><tr><th>Piece</th><th>Type</th><th>Style</th><th>Status</th></tr></thead><tbody>${(col.pieces||[]).map(p=>`<tr><td style="color:var(--black);font-weight:500">${p.name}</td><td>${p.type}</td><td>${p.style||'—'}</td><td><span class="card-badge badge-${p.status.includes('pending')?'red':'amber'}" style="font-size:0.58rem">${p.status}</span></td></tr>`).join('')}</tbody></table></div>`).join('');renderCatalogue(d.catalogue||[])}
 
@@ -659,6 +664,67 @@ const res=await fetch('/api/xero/data?period='+period+'&t='+Date.now());
 if(res.ok){appData.xero=await res.json();renderFinanceContent()}
 }catch(e){console.warn('Xero reload failed',e)}
 }
+function renderSilver(){
+const sv=appData.silver||{};
+const costData=appData.costs||{};
+const history=(costData.history||[]).filter(e=>e.note||e.old_cost!==null);
+if(!sv.silver_aud_oz){document.getElementById('silver-updated').textContent='Waiting for data...';document.getElementById('silver-content').innerHTML='<div class="card"><div class="empty-state"><div class="icon">Ag</div><h3>Loading silver price...</h3></div></div>';return}
+document.getElementById('silver-updated').textContent='Updated: '+new Date(sv.updated).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+const stockData=appData.stock||{};
+const prods=(stockData.products||[]);
+const allCosts=costData.costs||{};
+let totalSilverUnits=0,totalSilverRetail=0,totalSilverCost=0;
+prods.filter(p=>(p.material_type||'').toLowerCase().includes('silver')).forEach(p=>{p.variants.forEach(v=>{
+  const qty=v.quantity||0;if(qty<=0)return;
+  totalSilverUnits+=qty;totalSilverRetail+=qty*(p.price||0);
+  const c=allCosts[v.sku];if(c&&c.cost_price)totalSilverCost+=qty*c.cost_price;
+})});
+document.getElementById('silver-content').innerHTML=`
+<div class="card" style="padding:24px;margin-bottom:14px">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px">
+    <div style="width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#c0c0c0,#e8e8e8);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#333">Ag</div>
+    <div>
+      <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em">Live Silver Spot Price</div>
+      <div style="font-size:1.8rem;font-weight:700;color:#c0c0c0">$${sv.silver_aud_oz.toFixed(2)} <span style="font-size:0.8rem;color:var(--text-faint)">AUD / troy oz</span></div>
+    </div>
+  </div>
+  <div class="metrics-grid">
+    <div class="card metric-tile" style="background:rgba(192,192,192,0.06);border:1px solid rgba(192,192,192,0.15)">
+      <div class="metric-value" style="color:#c0c0c0">$${sv.silver_aud_gram.toFixed(2)}</div><div class="metric-label">AUD / gram</div>
+    </div>
+    <div class="card metric-tile" style="background:rgba(192,192,192,0.06);border:1px solid rgba(192,192,192,0.15)">
+      <div class="metric-value" style="color:#c0c0c0">$${sv.silver_usd_oz.toFixed(2)}</div><div class="metric-label">USD / troy oz</div>
+    </div>
+    <div class="card metric-tile" style="background:rgba(192,192,192,0.06);border:1px solid rgba(192,192,192,0.15)">
+      <div class="metric-value" style="color:var(--text-muted)">${sv.usd_aud_rate}</div><div class="metric-label">USD → AUD Rate</div>
+    </div>
+    <div class="card metric-tile" style="background:rgba(192,192,192,0.06);border:1px solid rgba(192,192,192,0.15)">
+      <div class="metric-value" style="color:#c0c0c0">$${(sv.silver_aud_gram*10).toFixed(2)}</div><div class="metric-label">AUD / 10g</div>
+    </div>
+  </div>
+</div>
+<div class="card" style="padding:20px;margin-bottom:14px">
+  <div class="card-header"><span class="card-title">Silver Stock Valuation</span><span class="card-badge badge-teal">${totalSilverUnits} units</span></div>
+  <div class="metrics-grid" style="margin-top:12px">
+    <div class="card metric-tile"><div class="metric-value teal">$${totalSilverRetail.toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Retail Value</div></div>
+    <div class="card metric-tile"><div class="metric-value">${totalSilverCost>0?'$'+totalSilverCost.toLocaleString('en-AU',{minimumFractionDigits:2}):'—'}</div><div class="metric-label">Cost Value</div></div>
+    <div class="card metric-tile"><div class="metric-value" style="color:${totalSilverCost>0?'var(--teal)':'var(--text-muted)'}">${totalSilverCost>0?'$'+(totalSilverRetail-totalSilverCost).toLocaleString('en-AU',{minimumFractionDigits:2}):'—'}</div><div class="metric-label">Margin</div></div>
+    <div class="card metric-tile"><div class="metric-value" style="color:${totalSilverCost>0?'var(--teal)':'var(--text-muted)'}">${totalSilverCost>0&&totalSilverRetail>0?((totalSilverRetail-totalSilverCost)/totalSilverRetail*100).toFixed(1)+'%':'—'}</div><div class="metric-label">Margin %</div></div>
+  </div>
+</div>
+${history.length?`<div class="card" style="padding:20px">
+  <div class="card-header"><span class="card-title">Cost Price Change Log</span><span class="card-badge badge-teal">${history.length}</span></div>
+  <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">${history.slice(0,20).map(e=>{const dt=new Date(e.timestamp);return `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);flex-wrap:wrap">
+    <span style="font-size:0.6rem;color:var(--text-faint);min-width:65px">${dt.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'2-digit'})}</span>
+    <span style="font-family:monospace;font-size:0.65rem;color:var(--teal);min-width:70px">${e.sku}</span>
+    <span style="font-size:0.7rem;color:var(--red-soft)">${e.old_cost!==null?'$'+Number(e.old_cost).toFixed(2):'New'}</span>
+    <span style="font-size:0.65rem;color:var(--text-faint)">→</span>
+    <span style="font-size:0.7rem;font-weight:600;color:var(--teal)">$${Number(e.new_cost).toFixed(2)}</span>
+    ${e.note?`<span style="font-size:0.6rem;color:var(--text-faint);font-style:italic;flex:1">${e.note}</span>`:''}
+  </div>`}).join('')}</div>
+</div>`:'<div class="card" style="padding:20px"><div class="card-header"><span class="card-title">Cost Price Change Log</span></div><div style="font-size:0.75rem;color:var(--text-muted);padding:12px 0">No cost changes recorded yet. Set cost prices in the Stock tab to start tracking.</div></div>'}`;
+}
+
 function renderFinance(){
 const x=appData.xero;
 const ov=appData.overview||{};const ovm=ov.metrics||{};
@@ -810,7 +876,6 @@ return `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;fon
 const catFiltered=activeCat==='All'?prods:prods.filter(p=>p.product_type===activeCat);const matFiltered=catFiltered.filter(p=>activeMats.has(p.material_type));const filtered=window._stockLive?matFiltered.filter(p=>p.is_live):matFiltered;
 if(!prods.length){document.getElementById('stock-content').innerHTML=`<div class="card"><div class="empty-state"><div class="icon">☷</div><h3>Pre-launch</h3></div></div>`;return}
 if(!document.getElementById('stock-css')){const st=document.createElement('style');st.id='stock-css';st.textContent='.stock-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}@media(max-width:1200px){.stock-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:768px){.stock-grid{grid-template-columns:repeat(2,1fr);gap:8px}}';document.head.appendChild(st)}
-const sv=appData.silver||{};
 const costData=appData.costs||{};
 const allCosts=costData.costs||{};
 let totalRetailValue=0,totalCostValue=0,totalUnits=0;
@@ -822,18 +887,6 @@ prods.forEach(p=>{p.variants.forEach(v=>{
   if(c&&c.cost_price)totalCostValue+=qty*c.cost_price;
 })});
 document.getElementById('stock-content').innerHTML=`
-${sv.silver_aud_oz?`<div class="card" style="margin-bottom:14px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-  <div style="display:flex;align-items:center;gap:10px">
-    <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#c0c0c0,#e8e8e8);display:flex;align-items:center;justify-content:center;font-size:1.1rem">Ag</div>
-    <div><div style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">Live Silver Price</div>
-    <div style="font-size:1rem;font-weight:700;color:#c0c0c0">$${sv.silver_aud_oz.toFixed(2)} <span style="font-size:0.6rem;color:var(--text-faint)">AUD/oz</span></div></div>
-  </div>
-  <div style="display:flex;gap:16px">
-    <div style="text-align:center"><div style="font-size:0.85rem;font-weight:700;color:#c0c0c0">$${sv.silver_aud_gram.toFixed(2)}</div><div style="font-size:0.55rem;color:var(--text-faint)">AUD/gram</div></div>
-    <div style="text-align:center"><div style="font-size:0.85rem;font-weight:700;color:var(--text-muted)">$${sv.silver_usd_oz.toFixed(2)}</div><div style="font-size:0.55rem;color:var(--text-faint)">USD/oz</div></div>
-    <div style="text-align:center"><div style="font-size:0.85rem;font-weight:700;color:var(--text-muted)">${sv.usd_aud_rate}</div><div style="font-size:0.55rem;color:var(--text-faint)">USD/AUD</div></div>
-  </div>
-</div>`:''}
 <div class="metrics-grid">
   <div class="card metric-tile"><div class="metric-value">${s.total_products||0}</div><div class="metric-label">Products</div></div>
   <div class="card metric-tile"><div class="metric-value teal">${totalUnits}</div><div class="metric-label">Total Units</div></div>
