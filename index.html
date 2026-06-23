@@ -307,6 +307,27 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       <div class="nav-item" data-tab="finance"><span class="nav-icon">◇</span><span>Finance</span></div>
       <div class="nav-item" data-tab="reports"><span class="nav-icon">◎</span><span>Reports</span></div>
     </nav>
+    <div id="sidebar-market-data" style="padding:12px 16px;margin:8px 10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
+      <div style="font-size:0.55rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-faint);margin-bottom:8px;font-weight:600">Live Market</div>
+      <div id="sidebar-silver" style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.65rem;color:var(--text-muted)">Silver</span>
+          <span id="sidebar-silver-price" style="font-size:0.85rem;font-weight:700;color:#c0c0c0">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:2px">
+          <span id="sidebar-silver-sub" style="font-size:0.55rem;color:var(--text-faint)">AUD/oz</span>
+          <span id="sidebar-silver-change" style="font-size:0.6rem;font-weight:600">—</span>
+        </div>
+      </div>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:6px 0"></div>
+      <div id="sidebar-fx" style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.65rem;color:var(--text-muted)">USD / AUD</span>
+          <span id="sidebar-fx-rate" style="font-size:0.85rem;font-weight:700;color:#4a9eff">—</span>
+        </div>
+        <div id="sidebar-fx-sub" style="font-size:0.55rem;color:var(--text-faint);margin-top:2px;text-align:right">Exchange rate</div>
+      </div>
+    </div>
     <div class="sidebar-links">
       <div class="sidebar-links-title">Quick Links</div>
       <a href="https://app.clickup.com" class="sidebar-link" target="_blank">☑ ClickUp</a>
@@ -446,7 +467,20 @@ for(const[key,file]of Object.entries(STATIC_FILES)){try{const res=await fetch(DA
 renderAll()}
 function fmt(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function $(v){return'$'+Number(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}
-function renderAll(){renderOverview();renderProducts();renderOrders();renderStock();renderMarkets();renderSilver();renderFinance();renderReports()}
+function renderAll(){renderOverview();renderProducts();renderOrders();renderStock();renderMarkets();renderSilver();renderFinance();renderReports();updateSidebarMarket()}
+function updateSidebarMarket(){
+const sv=appData.silver;if(!sv||!sv.current)return;
+const c=sv.current;const ch=sv.change||{};
+document.getElementById('sidebar-silver-price').textContent='$'+c.aud_oz.toLocaleString('en-AU',{minimumFractionDigits:2});
+document.getElementById('sidebar-silver-sub').textContent='$'+c.aud_gram.toFixed(2)+'/g · $'+c.usd_oz.toFixed(2)+' USD/oz';
+const chDir=ch.direction==='up';
+const chCol=chDir?'var(--teal)':'var(--red-soft)';
+const chSign=chDir?'+':'';
+document.getElementById('sidebar-silver-change').style.color=chCol;
+document.getElementById('sidebar-silver-change').textContent=chSign+'$'+Math.abs(ch.usd||0).toFixed(2)+' ('+chSign+(ch.pct||0).toFixed(2)+'%)';
+document.getElementById('sidebar-fx-rate').textContent=c.usd_aud_rate.toFixed(4);
+document.getElementById('sidebar-fx-sub').textContent='$1 USD = $'+c.usd_aud_rate.toFixed(2)+' AUD';
+}
 function renderOverview(){const d=appData.overview;if(!d)return;document.getElementById('overview-updated').textContent='Last synced: '+fmt(d.last_updated);document.getElementById('overview-alerts').innerHTML=(d.alerts||[]).map(a=>`<div class="alert-banner ${a.type}"><span class="alert-icon">${a.type==='info'?'ℹ':'⚠'}</span><span>${a.message}</span></div>`).join('');const m=d.metrics||{};document.getElementById('overview-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value teal">$${(m.combined_revenue||m.all_time_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">Shopify $${(m.shopify_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">Markets $${(m.market_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div></div><div class="card metric-tile"><div class="metric-value teal">$${(m.monthly_revenue||0).toFixed(2)}</div><div class="metric-label">Shopify MTD</div></div><div class="card metric-tile"><div class="metric-value">${m.combined_sales||m.total_orders||0}</div><div class="metric-label">Total Sales</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">${m.total_orders||0} online</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">${m.market_sales||0} markets</span></div></div><div class="card metric-tile"><div class="metric-value" style="color:${(m.pending_orders||0)>0?'var(--amber)':'var(--teal)'}">${m.pending_orders||0}</div><div class="metric-label">Unfulfilled</div></div><div class="card metric-tile"><div class="metric-value">${m.total_products||0}</div><div class="metric-label">Products</div></div><div class="card metric-tile"><div class="metric-value">$${(m.monthly_costs||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>`}
 let _productFilter='all';
 function filterProducts(f){_productFilter=f;document.querySelectorAll('#products-filters .cat-filter').forEach(b=>b.classList.toggle('active',b.dataset.pf===f));renderProducts()}
