@@ -305,6 +305,7 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       <div class="nav-item" data-tab="stock"><span class="nav-icon">☷</span><span>Stock Levels</span></div>
       <div class="nav-item" data-tab="markets"><span class="nav-icon">⚑</span><span>Market Stalls</span></div>
       <div class="nav-item" data-tab="finance"><span class="nav-icon">◇</span><span>Finance</span></div>
+      <div class="nav-item" data-tab="reports"><span class="nav-icon">◎</span><span>Reports</span></div>
     </nav>
     <div class="sidebar-links">
       <div class="sidebar-links-title">Quick Links</div>
@@ -399,6 +400,28 @@ div[style*="grid-template-columns:repeat(auto-fill"]{grid-template-columns:1fr!i
       <div class="section-header"><h2>Finance</h2><div class="updated" id="finance-updated">Loading...</div></div>
       <div id="finance-content"></div>
     </div>
+    <div class="tab-panel" id="tab-reports">
+      <div class="section-header"><h2>Reports</h2><div class="updated" id="reports-updated">Looker Studio</div></div>
+      <div id="reports-content">
+        <div id="reports-embed-container"></div>
+        <div class="card" style="margin-top:14px;padding:20px">
+          <div class="card-header"><span class="card-title">Connect Looker Studio</span></div>
+          <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.6">
+            <p style="margin-bottom:10px">To embed your Looker Studio report:</p>
+            <ol style="padding-left:18px;margin-bottom:14px">
+              <li>Open your report in <a href="https://lookerstudio.google.com" target="_blank" style="color:var(--teal)">Looker Studio</a></li>
+              <li>Click <strong>Share</strong> → <strong>Get report link</strong> → enable embedding</li>
+              <li>Copy the embed URL</li>
+              <li>Paste it below and click Save</li>
+            </ol>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:10px">
+              <input type="text" id="looker-url-input" placeholder="https://lookerstudio.google.com/embed/reporting/..." style="flex:1;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:var(--black);font-size:0.8rem;outline:none">
+              <button onclick="saveLookerUrl()" style="padding:10px 20px;border-radius:var(--radius-sm);background:var(--teal);color:#fff;border:none;font-size:0.78rem;font-weight:600;cursor:pointer">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </div>
 <script>
@@ -440,7 +463,7 @@ pinInputs.forEach((input,i)=>{
 // Auto-focus first input
 if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
 const DATA_BASE='data/';
-const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders',market_sales:'/api/market-sales'};
+const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders',market_sales:'/api/market-sales',xero:'/api/xero/data'};
 const STATIC_FILES={products:'products.json',content:'content.json',stock_changelog:'stock_changelog.json',markets:'markets.json',finance:'finance.json'};
 let appData={};
 document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
@@ -452,7 +475,7 @@ try{const res=await fetch('/api/catalogue'+t);if(res.ok){const catalogue=await r
 renderAll()}
 function fmt(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function $(v){return'$'+Number(v||0).toLocaleString('en-AU',{minimumFractionDigits:0,maximumFractionDigits:0})}
-function renderAll(){renderOverview();renderProducts();renderContent();renderOrders();renderStock();renderMarkets();renderFinance()}
+function renderAll(){renderOverview();renderProducts();renderContent();renderOrders();renderStock();renderMarkets();renderFinance();renderReports()}
 function renderOverview(){const d=appData.overview;if(!d)return;document.getElementById('overview-updated').textContent='Last synced: '+fmt(d.last_updated);document.getElementById('store-status').textContent=d.status?.store||'Unknown';document.getElementById('overview-alerts').innerHTML=(d.alerts||[]).map(a=>`<div class="alert-banner ${a.type}"><span class="alert-icon">${a.type==='info'?'ℹ':'⚠'}</span><span>${a.message}</span></div>`).join('');const m=d.metrics||{};document.getElementById('overview-metrics').innerHTML=`<div class="card metric-tile"><div class="metric-value teal">$${(m.combined_revenue||m.all_time_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">Shopify $${(m.shopify_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">Markets $${(m.market_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div></div><div class="card metric-tile"><div class="metric-value teal">$${(m.monthly_revenue||0).toFixed(2)}</div><div class="metric-label">Shopify MTD</div></div><div class="card metric-tile"><div class="metric-value">${m.combined_sales||m.total_orders||0}</div><div class="metric-label">Total Sales</div><div style="display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:0.6rem"><span style="color:var(--text-muted)">${m.total_orders||0} online</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">${m.market_sales||0} markets</span></div></div><div class="card metric-tile"><div class="metric-value" style="color:${(m.pending_orders||0)>0?'var(--amber)':'var(--teal)'}">${m.pending_orders||0}</div><div class="metric-label">Unfulfilled</div></div><div class="card metric-tile"><div class="metric-value">${m.total_products||0}</div><div class="metric-label">Products</div></div><div class="card metric-tile"><div class="metric-value">$${(m.monthly_costs||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>`;const items=[];items.push({dot:d.status?.store==='Pre-launch'?'amber':'green',text:'Store: '+(d.status?.store||'—')});items.push({dot:d.status?.content_pipeline==='Building'?'amber':'green',text:'Content Pipeline: '+(d.status?.content_pipeline||'—')});(d.status?.cad_pending||[]).forEach(c=>items.push({dot:'red',text:'CAD Pending: '+c}));document.getElementById('overview-status').innerHTML=items.map(s=>`<div class="status-item"><div class="status-dot ${s.dot}"></div><span class="status-text">${s.text}</span></div>`).join('');const cols=d.status?.collections_planned||[],heroes=d.status?.hero_pieces||[];document.getElementById('overview-collections').innerHTML=`<div class="status-list">${cols.map(c=>`<div class="status-item"><div class="status-dot teal"></div><span class="status-text">${c}</span><span class="status-meta">Collection</span></div>`).join('')}${heroes.map(h=>`<div class="status-item"><div class="status-dot amber"></div><span class="status-text">${h}</span><span class="status-meta">Hero Piece</span></div>`).join('')}</div>`}
 function renderProducts(){const d=appData.products;if(!d)return;document.getElementById('products-updated').textContent='Last synced: '+fmt(d.last_updated);const ps=d.pipeline_summary||{};const stages=[{key:'concept',label:'Concept',color:'#888'},{key:'cad_pending',label:'CAD Pending',color:'#d97706'},{key:'manufacturing',label:'Manufacturing',color:'#0d9373'},{key:'in_stock',label:'In Stock',color:'#16a34a'},{key:'listed',label:'Listed',color:'#111'}];const total=Object.values(ps).reduce((a,b)=>a+b,0)||1;document.getElementById('pipeline-metrics').innerHTML=stages.map(s=>`<div class="card metric-tile" style="padding:12px 8px"><div class="metric-value" style="font-size:1.5rem;color:${s.color}">${ps[s.key]||0}</div><div class="metric-label">${s.label}</div></div>`).join('');document.getElementById('pipeline-bar').innerHTML=stages.map(s=>`<div class="pipeline-segment" style="width:${(ps[s.key]||0)/total*100}%;background:${s.color}"></div>`).join('');document.getElementById('pipeline-legend').innerHTML=stages.map(s=>`<div class="legend-item"><div class="legend-dot" style="background:${s.color}"></div><span>${s.label}</span></div>`).join('');document.getElementById('collections-container').innerHTML=(d.collections||[]).map(col=>`<div class="card" style="margin-top:14px"><div class="card-header"><span class="card-title">${col.name}</span><span class="card-badge badge-${col.status==='Concept'?'amber':'teal'}">${col.status}</span></div><p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px">${col.description||''}</p><table class="data-table"><thead><tr><th>Piece</th><th>Type</th><th>Style</th><th>Status</th></tr></thead><tbody>${(col.pieces||[]).map(p=>`<tr><td style="color:var(--black);font-weight:500">${p.name}</td><td>${p.type}</td><td>${p.style||'—'}</td><td><span class="card-badge badge-${p.status.includes('pending')?'red':'amber'}" style="font-size:0.58rem">${p.status}</span></td></tr>`).join('')}</tbody></table></div>`).join('');renderCatalogue(d.catalogue||[])}
 
@@ -710,7 +733,56 @@ document.getElementById('finance-content').innerHTML=`
     <div class="finance-row" style="border-top:2px solid rgba(255,255,255,0.08);padding-top:10px;margin-top:6px"><span class="label" style="font-weight:700">Combined</span><span class="value" style="font-weight:700;color:var(--teal)">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
     <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.06);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)"><div style="font-size:0.73rem;color:var(--text-muted)">Revenue pulled live from Shopify Admin API + Square POS. Costs tracked in ClickUp.</div></div>
   </div>
+</div>
+${renderXeroSection()}`}
+function renderXeroSection(){
+const x=appData.xero;
+if(!x||!x.connected){
+return `<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Xero Accounting</span><span class="card-badge badge-amber">Not Connected</span></div>
+  <div style="padding:20px;text-align:center">
+    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px">Connect Xero to pull live P&L, expenses, and bank transactions.</div>
+    <a href="/api/xero/auth" style="display:inline-block;padding:10px 24px;border-radius:var(--radius-sm);background:#13B5EA;color:#fff;font-size:0.8rem;font-weight:700;text-decoration:none">Connect Xero</a>
+    <div style="font-size:0.65rem;color:var(--text-faint);margin-top:8px">Requires XERO_CLIENT_ID, XERO_CLIENT_SECRET, and Vercel KV in environment</div>
+  </div>
 </div>`}
+const pnl=x.profit_and_loss||{};
+const expenses=x.recent_expenses||[];
+const invoices=x.recent_invoices||[];
+return `<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Xero — Profit & Loss</span><span class="card-badge badge-teal">Live</span></div>
+  <div style="font-size:0.7rem;color:var(--text-faint);margin-bottom:12px">${x.period||''}</div>
+  <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+    <div class="card metric-tile" style="background:rgba(16,185,129,0.04)"><div class="metric-value teal">$${(pnl.total_income||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Income</div></div>
+    <div class="card metric-tile" style="background:rgba(239,68,68,0.04)"><div class="metric-value" style="color:var(--red-soft)">$${(pnl.total_expenses||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Expenses</div></div>
+    <div class="card metric-tile" style="background:${pnl.net_profit>=0?'rgba(16,185,129,0.04)':'rgba(239,68,68,0.04)'}"><div class="metric-value" style="color:${pnl.net_profit>=0?'var(--teal)':'var(--red-soft)'}">$${(pnl.net_profit||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Net Profit</div></div>
+  </div>
+  ${(pnl.income_lines||[]).length?`<div style="margin-bottom:10px"><div style="font-size:0.72rem;font-weight:700;color:var(--black);margin-bottom:6px">Income</div>${pnl.income_lines.map(l=>`<div class="finance-row"><span class="label">${l.name}</span><span class="value" style="color:var(--teal)">$${l.amount.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>`).join('')}</div>`:''}
+  ${(pnl.expense_lines||[]).length?`<div><div style="font-size:0.72rem;font-weight:700;color:var(--black);margin-bottom:6px">Expenses</div>${pnl.expense_lines.map(l=>`<div class="finance-row"><span class="label">${l.name}</span><span class="value" style="color:var(--red-soft)">$${l.amount.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>`).join('')}</div>`:''}
+</div>
+${expenses.length?`<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Recent Expenses</span><span class="card-badge badge-silver">Xero Bank</span></div>
+  <table class="data-table"><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Account</th></tr></thead><tbody>
+    ${expenses.map(e=>`<tr>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${e.date?new Date(e.date+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</td>
+      <td style="font-weight:600;color:var(--black)">${e.description}</td>
+      <td style="font-weight:700;color:var(--red-soft)">$${(e.amount||0).toFixed(2)}</td>
+      <td style="font-size:0.72rem;color:var(--text-muted)">${e.account}</td>
+    </tr>`).join('')}
+  </tbody></table>
+</div>`:''}
+${invoices.length?`<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Invoices</span><span class="card-badge badge-teal">Xero</span></div>
+  <table class="data-table"><thead><tr><th>#</th><th>Contact</th><th>Total</th><th>Due</th><th>Status</th></tr></thead><tbody>
+    ${invoices.map(i=>`<tr>
+      <td style="font-weight:500;color:var(--text-muted)">${i.number||'—'}</td>
+      <td style="font-weight:600;color:var(--black)">${i.contact}</td>
+      <td style="font-weight:700;color:var(--teal)">$${(i.total||0).toFixed(2)}</td>
+      <td style="color:${i.amount_due>0?'var(--amber)':'var(--text-muted)'}">$${(i.amount_due||0).toFixed(2)}</td>
+      <td><span class="card-badge badge-${i.status==='PAID'?'teal':'amber'}" style="font-size:0.55rem">${i.status}</span></td>
+    </tr>`).join('')}
+  </tbody></table>
+</div>`:''}`}
 function renderStock(filterCat){const d=appData.stock;if(!d)return;
 const cl=appData.stock_changelog||{changelog:[]};
 const changelog=cl.changelog||[];
@@ -891,6 +963,22 @@ document.getElementById('markets-content').innerHTML=`
     <td style="font-weight:700;color:var(--teal)">$${md.revenue.toFixed(2)}</td><td></td>
   </tr></tfoot></table>
 </div>`}}
+
+function renderReports(){
+const url=localStorage.getItem('hiatus_looker_url');
+const container=document.getElementById('reports-embed-container');
+if(url){
+container.innerHTML=`<iframe src="${url}" style="width:100%;height:75vh;border:none;border-radius:var(--radius-md);background:rgba(255,255,255,0.03)" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>`;
+document.getElementById('reports-updated').textContent='Looker Studio — Embedded';
+}else{container.innerHTML=''}
+}
+window.saveLookerUrl=function(){
+const url=document.getElementById('looker-url-input').value.trim();
+if(!url){alert('Please paste a Looker Studio embed URL');return}
+if(!url.includes('lookerstudio.google.com')){alert('URL must be from lookerstudio.google.com');return}
+localStorage.setItem('hiatus_looker_url',url);
+renderReports();
+}
 
 // ─── Supplier Order Builder ───
 window._supplierOrder={};
