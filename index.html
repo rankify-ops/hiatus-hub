@@ -1117,17 +1117,14 @@ document.getElementById('markets-content').innerHTML=`
 </div>`}}
 
 function renderReports(){
-const url=localStorage.getItem('hiatus_looker_url');
 const container=document.getElementById('reports-embed-container');
-if(url){
-container.innerHTML=`<iframe src="${url}" style="width:100%;height:75vh;border:none;border-radius:var(--radius-md);background:rgba(255,255,255,0.03)" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>`;
-document.getElementById('reports-updated').textContent='Looker Studio — Embedded';
-}else{container.innerHTML=''}
+const url=localStorage.getItem('hiatus_looker_url')||'https://datastudio.google.com/s/hpZuQ-qmCYc';
+container.innerHTML=`<iframe src="${url}" style="width:100%;height:80vh;border:none;border-radius:var(--radius-md);background:rgba(255,255,255,0.03)" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>`;
+document.getElementById('reports-updated').textContent='Google Data Studio';
 }
 window.saveLookerUrl=function(){
 const url=document.getElementById('looker-url-input').value.trim();
-if(!url){alert('Please paste a Looker Studio embed URL');return}
-if(!url.includes('lookerstudio.google.com')){alert('URL must be from lookerstudio.google.com');return}
+if(!url){alert('Please paste a URL');return}
 localStorage.setItem('hiatus_looker_url',url);
 renderReports();
 }
