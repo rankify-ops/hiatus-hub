@@ -1223,40 +1223,10 @@ ${p.notes?`<div style="font-size:0.68rem;color:rgba(255,255,255,0.4);margin-bott
 
 <div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Variants, Stock & Cost Prices</div>
 <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px">${p.variants.map(v=>{const vc=v.quantity<=0?'var(--red-soft)':v.quantity<=3?'var(--amber)':'var(--teal)';const st=v.quantity<=0?'OOS':v.quantity<=3?'Low':'OK';const ck=(appData.costs||{}).costs||{};const cv=ck[v.sku]||{};let cp=cv.cost_price||null;if(!cp){cp=getCostAUD(p,v)}const margin=cp&&p.price?(p.price-cp):null;const marginPct=cp&&p.price?(((p.price-cp)/p.price)*100):null;const costSource=cv.cost_price?'manual':'catalog';return `<div style="padding:10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1"><div style="font-size:0.78rem;font-weight:600;color:#fff">${v.title||'—'}</div><div style="font-size:0.6rem;color:rgba(255,255,255,0.4)">SKU: ${v.sku}${v.supplier_sku?' · Supplier: '+v.supplier_sku:''}</div></div><div style="font-size:1rem;font-weight:700;color:${vc}">${v.quantity}</div><span style="padding:2px 6px;border-radius:5px;font-size:0.5rem;font-weight:700;background:${vc}15;color:${vc};border:1px solid ${vc}25">${st}</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><div style="display:flex;align-items:center;gap:4px"><span style="font-size:0.6rem;color:var(--text-faint)">Cost${costSource==='catalog'?' (live)':''}:</span><span style="font-size:0.72rem;font-weight:600;color:#fff">${cp?'$'+cp.toFixed(2)+' AUD':'—'}</span></div><span style="font-size:0.6rem;color:var(--text-faint)">Sell: $${p.price.toFixed(2)}</span>${margin!==null?`<span style="font-size:0.6rem;font-weight:600;color:${margin>0?'var(--teal)':'var(--red-soft)'}">Margin: $${margin.toFixed(2)} (${marginPct.toFixed(0)}%)</span>`:''}${cp&&v.quantity>0?`<span style="font-size:0.55rem;color:var(--text-faint)">Value: $${(cp*v.quantity).toFixed(2)}</span>`:''}</div></div>`}).join('')}</div>
-<div style="display:flex;gap:8px;margin-bottom:16px"><button onclick="saveStockCosts()" style="padding:8px 18px;border-radius:var(--radius-sm);background:var(--teal);color:#fff;border:none;font-size:0.75rem;font-weight:600;cursor:pointer">Save Cost Prices</button><span id="cost-save-status" style="font-size:0.7rem;color:var(--text-muted);align-self:center"></span></div>
-
-${(()=>{const ch=(appData.costs||{}).history||[];const skus=p.variants.map(v=>v.sku);const costHist=ch.filter(e=>skus.includes(e.sku));return costHist.length?`<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Cost Price History</div><div style="display:flex;flex-direction:column;gap:4px;margin-bottom:16px">${costHist.slice(0,10).map(e=>{const dt=new Date(e.timestamp);return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.03);font-size:0.7rem"><span style="color:var(--text-faint);min-width:55px;font-size:0.58rem">${dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span><span style="color:rgba(255,255,255,0.5);min-width:60px;font-family:monospace;font-size:0.6rem">${e.sku}</span><span style="color:var(--red-soft)">${e.old_cost!==null?'$'+Number(e.old_cost).toFixed(2):'—'}</span><span style="color:var(--text-faint)">→</span><span style="color:var(--teal)">$${Number(e.new_cost).toFixed(2)}</span>${e.note?`<span style="color:var(--text-faint);font-size:0.58rem;font-style:italic">${e.note}</span>`:''}</div>`}).join('')}</div>`:''})()}
 ${prodChanges.length?`<div style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Stock Change History</div><div style="display:flex;flex-direction:column;gap:4px">${prodChanges.slice().reverse().map(c=>{const col2=c.change>0?'var(--teal)':'var(--red-soft)';const dt2=new Date(c.timestamp);return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,0.03);font-size:0.7rem"><span style="font-weight:700;color:${col2};min-width:28px">${c.change>0?'+':''}${c.change}</span><span style="color:rgba(255,255,255,0.7);flex:1">${c.variant} · ${c.reason}</span><span style="color:rgba(255,255,255,0.3);font-size:0.58rem">${dt2.toLocaleDateString('en-AU',{day:'numeric',month:'short'})}</span></div>`}).join('')}</div>`:'<div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:8px">No stock changes recorded for this product.</div>'}
 </div>`;
 modal.style.display='flex'}
 
-async function saveStockCosts(){
-const inputs=document.querySelectorAll('.cost-input');
-const items=[];
-inputs.forEach(inp=>{
-  const sku=inp.dataset.sku;
-  const val=inp.value.trim();
-  if(sku&&val!=='')items.push({sku,cost_price:parseFloat(val)});
-});
-if(!items.length){document.getElementById('cost-save-status').textContent='No costs entered';return}
-document.getElementById('cost-save-status').textContent='Saving...';
-try{
-  const res=await fetch('/api/costs',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
-  const data=await res.json();
-  if(data.success){
-    document.getElementById('cost-save-status').textContent=`Saved ${data.updated} cost prices`;
-    document.getElementById('cost-save-status').style.color='var(--teal)';
-    const costRes=await fetch('/api/costs?t='+Date.now());
-    if(costRes.ok)appData.costs=await costRes.json();
-    setTimeout(()=>renderStock(),500);
-  }else{
-    document.getElementById('cost-save-status').textContent='Error: '+(data.error||'Unknown');
-    document.getElementById('cost-save-status').style.color='var(--red-soft)';
-  }
-}catch(e){
-  document.getElementById('cost-save-status').textContent='Save failed';
-  document.getElementById('cost-save-status').style.color='var(--red-soft)';
-}}
 
 function renderMarkets(){
 const ms=appData.market_sales||{sales:[]};
