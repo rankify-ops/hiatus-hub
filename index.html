@@ -464,7 +464,7 @@ pinInputs.forEach((input,i)=>{
 if(!sessionStorage.getItem('hiatus_auth')) setTimeout(()=>pinInputs[0]?.focus(),300);
 const DATA_BASE='data/';
 const LIVE_ROUTES={overview:'/api/overview',stock:'/api/stock',orders:'/api/orders',market_sales:'/api/market-sales',xero:'/api/xero/data'};
-const STATIC_FILES={products:'products.json',content:'content.json',stock_changelog:'stock_changelog.json',markets:'markets.json',finance:'finance.json'};
+const STATIC_FILES={products:'products.json',content:'content.json',stock_changelog:'stock_changelog.json',markets:'markets.json'};
 let appData={};
 document.querySelectorAll('.nav-item').forEach(item=>{item.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));item.classList.add('active');document.getElementById('tab-'+item.dataset.tab).classList.add('active');document.querySelector('.sidebar').classList.remove('open')})});
 async function loadData(){
@@ -649,135 +649,126 @@ ${mSales.length?`<div class="card">
   </tbody></table>
 </div>`:`<div class="card"><div class="empty-state"><div class="icon">⚑</div><h3>No market sales yet</h3><p>When you sell at a market, just tell me what you sold and I'll log it here and update your Shopify inventory.</p></div></div>`}
 `}}
-function renderFinance(){const d=appData.finance;if(!d)return;
+let _financePeriod='ytd';
+window.switchFinancePeriod=async function(period){
+_financePeriod=period;
+document.querySelectorAll('#finance-periods .cat-filter').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
+document.getElementById('finance-content').innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted)">Loading Xero data...</div>';
+try{
+const res=await fetch('/api/xero/data?period='+period+'&t='+Date.now());
+if(res.ok){appData.xero=await res.json();renderFinanceContent()}
+}catch(e){console.warn('Xero reload failed',e)}
+}
+function renderFinance(){
+const x=appData.xero;
 const ov=appData.overview||{};const ovm=ov.metrics||{};
-document.getElementById('finance-updated').textContent='Last synced: '+fmt(ov.last_updated||d.last_updated)+' · Costs: ClickUp · Revenue: Shopify + Square';
-const c=d.costs||{},subs=d.subscriptions||[];
+if(!x||!x.connected){
+document.getElementById('finance-updated').textContent='Not connected';
+document.getElementById('finance-content').innerHTML=`
+<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Xero Accounting</span><span class="card-badge badge-amber">Not Connected</span></div>
+  <div style="padding:30px;text-align:center">
+    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px">Connect Xero to see live P&L, bank transactions, invoices, and subscriptions.</div>
+    <a href="/api/xero/auth" style="display:inline-block;padding:12px 28px;border-radius:var(--radius-sm);background:#13B5EA;color:#fff;font-size:0.82rem;font-weight:700;text-decoration:none">Connect Xero</a>
+    <div style="font-size:0.65rem;color:var(--text-faint);margin-top:10px">Requires XERO_CLIENT_ID, XERO_CLIENT_SECRET, and Vercel KV</div>
+  </div>
+</div>
+<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Revenue Channels</span><span class="card-badge badge-teal">Live</span></div>
+  <div class="finance-row"><span class="label">Shopify (Online)</span><span class="value" style="font-weight:700;color:var(--teal)">$${(ovm.shopify_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+  <div class="finance-row"><span class="label">Square (Markets)</span><span class="value" style="font-weight:700;color:var(--teal)">$${(ovm.market_revenue||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
+</div>`;
+return}
+renderFinanceContent();
+}
+function renderFinanceContent(){
+const x=appData.xero;
+const ov=appData.overview||{};const ovm=ov.metrics||{};
 const shopifyRev=ovm.shopify_revenue||ovm.all_time_revenue||0;
 const marketRev=ovm.market_revenue||0;
 const combinedRev=ovm.combined_revenue||(shopifyRev+marketRev);
-const monthlyRev=ovm.monthly_revenue||0;
-const catColors={Accounting:'#7c6cf5',Domain:'#4a8fe8',Website:'#3ba5e8',Email:'#3dada0'};
-const upcoming=subs.filter(s=>s.renewal_date).map(s=>({...s,_renew:new Date(s.renewal_date)})).sort((a,b)=>a._renew-b._renew);
+const pnl=x.profit_and_loss||{};
+const txns=x.recent_transactions||[];
+const invoices=x.recent_invoices||[];
+const subs=x.subscriptions||[];
 const now=new Date();
+const fmtD=d=>{if(!d)return'—';const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})};
+const fmtShort=d=>{if(!d)return'—';const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-AU',{day:'numeric',month:'short'})};
+document.getElementById('finance-updated').textContent='Last synced: '+fmt(x.last_updated)+' · Source: Xero + Shopify + Square';
 document.getElementById('finance-content').innerHTML=`
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px" id="finance-periods">
+  <button class="cat-filter ${_financePeriod==='month'?'active':''}" data-period="month" onclick="switchFinancePeriod('month')">This Month</button>
+  <button class="cat-filter ${_financePeriod==='quarter'?'active':''}" data-period="quarter" onclick="switchFinancePeriod('quarter')">This Quarter</button>
+  <button class="cat-filter ${_financePeriod==='ytd'?'active':''}" data-period="ytd" onclick="switchFinancePeriod('ytd')">Year to Date</button>
+  <button class="cat-filter ${_financePeriod==='all'?'active':''}" data-period="all" onclick="switchFinancePeriod('all')">All Time</button>
+</div>
 <div class="metrics-grid" style="margin-bottom:18px">
   <div class="card metric-tile"><div class="metric-value teal">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">All-time Revenue</div><div style="display:flex;gap:6px;justify-content:center;margin-top:5px;font-size:0.58rem"><span style="color:var(--text-muted)">Shopify $${shopifyRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span><span style="color:var(--text-faint)">·</span><span style="color:var(--text-muted)">Markets $${marketRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div></div>
-  <div class="card metric-tile"><div class="metric-value teal">$${monthlyRev.toFixed(2)}</div><div class="metric-label">Revenue MTD</div></div>
-  <div class="card metric-tile"><div class="metric-value">$${(c.total_monthly||0).toFixed(2)}</div><div class="metric-label">Monthly Costs</div></div>
-  <div class="card metric-tile"><div class="metric-value">${subs.length}</div><div class="metric-label">Active Subs</div></div>
+  <div class="card metric-tile" style="background:rgba(16,185,129,0.04)"><div class="metric-value teal">$${(pnl.total_income||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Xero Income</div></div>
+  <div class="card metric-tile" style="background:rgba(239,68,68,0.04)"><div class="metric-value" style="color:var(--red-soft)">$${(pnl.total_expenses||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Xero Expenses</div></div>
+  <div class="card metric-tile" style="background:${(pnl.net_profit||0)>=0?'rgba(16,185,129,0.04)':'rgba(239,68,68,0.04)'}"><div class="metric-value" style="color:${(pnl.net_profit||0)>=0?'var(--teal)':'var(--red-soft)'}">$${(pnl.net_profit||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Net Profit</div></div>
 </div>
-<div class="card" style="margin-bottom:14px">
-  <div class="card-header"><span class="card-title">Upcoming Renewals</span></div>
+<div class="finance-grid">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Income</span><span class="card-badge badge-teal">P&L</span></div>
+    ${(pnl.income_lines||[]).length?(pnl.income_lines||[]).map(l=>`<div class="finance-row"><span class="label">${l.name}</span><span class="value" style="color:var(--teal);font-weight:600">$${l.amount.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>`).join('')+'<div class="finance-row" style="border-top:2px solid rgba(255,255,255,0.08);padding-top:8px;margin-top:6px"><span class="label" style="font-weight:700">Total Income</span><span class="value" style="font-weight:700;color:var(--teal)">$'+(pnl.total_income||0).toLocaleString('en-AU',{minimumFractionDigits:2})+'</span></div>':'<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:0.8rem">No income this period</div>'}
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Expenses</span><span class="card-badge badge-silver">P&L</span></div>
+    ${(pnl.expense_lines||[]).length?(pnl.expense_lines||[]).map(l=>`<div class="finance-row"><span class="label">${l.name}</span><span class="value" style="color:var(--red-soft);font-weight:600">$${l.amount.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>`).join('')+'<div class="finance-row" style="border-top:2px solid rgba(255,255,255,0.08);padding-top:8px;margin-top:6px"><span class="label" style="font-weight:700">Total Expenses</span><span class="value" style="font-weight:700;color:var(--red-soft)">$'+(pnl.total_expenses||0).toLocaleString('en-AU',{minimumFractionDigits:2})+'</span></div>':'<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:0.8rem">No expenses this period</div>'}
+  </div>
+</div>
+${subs.length?`<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Active Subscriptions</span><span class="card-badge badge-teal">Xero Repeating</span></div>
   <div style="display:flex;flex-direction:column;gap:8px">
-    ${upcoming.map(s=>{
-      const days=Math.ceil((s._renew-now)/(86400000));
-      const isUrgent=days<=30;
-      const isSoon=days<=90;
-      const dateStr=s._renew.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+    ${subs.map(s=>{
+      const nextDate=s.next_date?new Date(s.next_date+'T00:00:00'):null;
+      const days=nextDate?Math.ceil((nextDate-now)/86400000):999;
+      const isUrgent=days<=14;
+      const isSoon=days<=60;
       const statusCol=isUrgent?'var(--amber)':isSoon?'var(--teal)':'var(--text-muted)';
       const bgCol=isUrgent?'rgba(217,119,6,0.06)':isSoon?'rgba(16,185,129,0.04)':'transparent';
+      const unitLabel=s.unit==='monthly'?(s.period===1?'/mo':'/'+s.period+'mo'):s.unit==='weekly'?'/wk':'/yr';
       return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);background:${bgCol};border:1px solid rgba(255,255,255,0.06)">
         <div style="width:8px;height:8px;border-radius:50%;background:${statusCol};box-shadow:0 0 6px ${statusCol}44;flex-shrink:0"></div>
         <div style="flex:1">
           <div style="font-size:0.82rem;font-weight:600;color:var(--black)">${s.name}</div>
-          <div style="font-size:0.7rem;color:var(--text-muted)">${s.billing_cycle} · $${(s.billing_cycle==='Monthly'?s.monthly_cost:s.annual_cost||0).toFixed(2)} ${s.billing_cycle==='Monthly'?'/mo':'/yr'}</div>
+          <div style="font-size:0.68rem;color:var(--text-muted)">${s.description!==s.name?s.description:''}</div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:0.8rem;font-weight:600;color:${statusCol}">${dateStr}</div>
-          <div style="font-size:0.65rem;color:var(--text-faint)">${days<=0?'Overdue':days===1?'Tomorrow':days+' days'}</div>
+          <div style="font-size:0.85rem;font-weight:700;color:var(--black)">$${(s.amount||0).toFixed(2)}${unitLabel}</div>
+          ${nextDate?`<div style="font-size:0.65rem;color:${statusCol}">Next: ${fmtD(s.next_date)} ${days<=0?'(overdue)':days<=7?'('+days+'d)':''}</div>`:''}
         </div>
       </div>`}).join('')}
   </div>
-</div>
-<div class="card" style="margin-bottom:14px">
-  <div class="card-header"><span class="card-title">Active Subscriptions</span><span class="card-badge badge-teal">from ClickUp</span></div>
-  <table class="data-table"><thead><tr><th>Service</th><th>Category</th><th>Monthly</th><th>Annual</th><th>Billing</th><th>Renewal</th><th>Payment</th></tr></thead><tbody>
-    ${subs.map(s=>{
-      const cat=s.category||'—';
-      const catCol=catColors[cat]||'#888';
-      const renewal=s.renewal_date?new Date(s.renewal_date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'—';
-      const daysLeft=s.renewal_date?Math.ceil((new Date(s.renewal_date)-now)/86400000):999;
-      const isExpiring=daysLeft<=30;
-      return `<tr>
-        <td style="color:var(--black);font-weight:600">${s.login_url?'<a href="'+s.login_url+'" target="_blank" style="color:var(--black);text-decoration:none;border-bottom:1px dotted var(--text-muted)">'+s.name+'</a>':s.name}</td>
-        <td><span style="display:inline-block;padding:3px 9px;border-radius:10px;font-size:0.62rem;font-weight:700;letter-spacing:0.03em;background:${catCol}18;color:${catCol};border:1px solid ${catCol}30">${cat}</span></td>
-        <td style="font-weight:600;color:var(--black)">$${(s.monthly_cost||0).toFixed(2)}</td>
-        <td style="color:var(--text-secondary)">$${(s.annual_cost||0).toFixed(2)}</td>
-        <td style="color:var(--text-secondary)">${s.billing_cycle||'—'}</td>
-        <td style="font-weight:${isExpiring?'700':'500'};color:${isExpiring?'var(--amber)':'var(--text-secondary)'}">${renewal}</td>
-        <td style="font-size:0.72rem;color:var(--text-muted)">${s.payment_method||'—'}</td>
-      </tr>`}).join('')}
-  </tbody>
-  <tfoot><tr style="border-top:2px solid rgba(255,255,255,0.08)">
-    <td style="font-weight:700;color:var(--black)">Total</td><td></td>
-    <td style="font-weight:700;color:var(--teal)">$${subs.reduce((a,s)=>a+(s.monthly_cost||0),0).toFixed(2)}</td>
-    <td style="font-weight:700;color:var(--text-secondary)">$${subs.reduce((a,s)=>a+(s.annual_cost||0),0).toFixed(2)}</td>
-    <td colspan="3"></td>
-  </tr></tfoot></table>
-</div>
-<div class="finance-grid">
-  <div class="card">
-    <div class="card-header"><span class="card-title">Cost Breakdown</span><span class="card-badge badge-silver">${d.currency||'AUD'}</span></div>
-    <div class="finance-row"><span class="label">Subscriptions</span><span class="value" style="font-weight:700">$${(c.subscriptions||0).toFixed(2)}</span></div>
-    <div class="finance-row"><span class="label">CAD / Design</span><span class="value">${$(c.cad_design)}</span></div>
-    <div class="finance-row"><span class="label">Manufacturing</span><span class="value">${$(c.manufacturing)}</span></div>
-    <div class="finance-row"><span class="label">Marketing</span><span class="value">${$(c.marketing)}</span></div>
-    <div class="finance-row"><span class="label">Packaging</span><span class="value">${$(c.packaging)}</span></div>
-    <div class="finance-row"><span class="label">Shipping</span><span class="value">${$(c.shipping)}</span></div>
+  <div style="margin-top:10px;padding:8px 14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;font-size:0.75rem">
+    <span style="font-weight:700;color:var(--black)">Monthly Total</span>
+    <span style="font-weight:700;color:var(--teal)">$${subs.filter(s=>s.unit==='monthly'&&s.period===1).reduce((a,s)=>a+s.amount,0).toFixed(2)}/mo</span>
   </div>
-  <div class="card">
-    <div class="card-header"><span class="card-title">Revenue Channels</span><span class="card-badge badge-teal">Live</span></div>
-    <div class="finance-row"><span class="label">Shopify (Online)</span><span class="value" style="font-weight:700;color:var(--teal)">$${shopifyRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
-    <div class="finance-row"><span class="label">Square (Markets)</span><span class="value" style="font-weight:700;color:var(--teal)">$${marketRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
-    <div class="finance-row" style="border-top:2px solid rgba(255,255,255,0.08);padding-top:10px;margin-top:6px"><span class="label" style="font-weight:700">Combined</span><span class="value" style="font-weight:700;color:var(--teal)">$${combinedRev.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>
-    <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,0.06);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.08)"><div style="font-size:0.73rem;color:var(--text-muted)">Revenue pulled live from Shopify Admin API + Square POS. Costs tracked in ClickUp.</div></div>
-  </div>
-</div>
-${renderXeroSection()}`}
-function renderXeroSection(){
-const x=appData.xero;
-if(!x||!x.connected){
-return `<div class="card" style="margin-top:14px">
-  <div class="card-header"><span class="card-title">Xero Accounting</span><span class="card-badge badge-amber">Not Connected</span></div>
-  <div style="padding:20px;text-align:center">
-    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px">Connect Xero to pull live P&L, expenses, and bank transactions.</div>
-    <a href="/api/xero/auth" style="display:inline-block;padding:10px 24px;border-radius:var(--radius-sm);background:#13B5EA;color:#fff;font-size:0.8rem;font-weight:700;text-decoration:none">Connect Xero</a>
-    <div style="font-size:0.65rem;color:var(--text-faint);margin-top:8px">Requires XERO_CLIENT_ID, XERO_CLIENT_SECRET, and Vercel KV in environment</div>
-  </div>
-</div>`}
-const pnl=x.profit_and_loss||{};
-const expenses=x.recent_expenses||[];
-const invoices=x.recent_invoices||[];
-return `<div class="card" style="margin-top:14px">
-  <div class="card-header"><span class="card-title">Xero — Profit & Loss</span><span class="card-badge badge-teal">Live</span></div>
-  <div style="font-size:0.7rem;color:var(--text-faint);margin-bottom:12px">${x.period||''}</div>
-  <div class="metrics-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
-    <div class="card metric-tile" style="background:rgba(16,185,129,0.04)"><div class="metric-value teal">$${(pnl.total_income||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Income</div></div>
-    <div class="card metric-tile" style="background:rgba(239,68,68,0.04)"><div class="metric-value" style="color:var(--red-soft)">$${(pnl.total_expenses||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Expenses</div></div>
-    <div class="card metric-tile" style="background:${pnl.net_profit>=0?'rgba(16,185,129,0.04)':'rgba(239,68,68,0.04)'}"><div class="metric-value" style="color:${pnl.net_profit>=0?'var(--teal)':'var(--red-soft)'}">$${(pnl.net_profit||0).toLocaleString('en-AU',{minimumFractionDigits:2})}</div><div class="metric-label">Net Profit</div></div>
-  </div>
-  ${(pnl.income_lines||[]).length?`<div style="margin-bottom:10px"><div style="font-size:0.72rem;font-weight:700;color:var(--black);margin-bottom:6px">Income</div>${pnl.income_lines.map(l=>`<div class="finance-row"><span class="label">${l.name}</span><span class="value" style="color:var(--teal)">$${l.amount.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>`).join('')}</div>`:''}
-  ${(pnl.expense_lines||[]).length?`<div><div style="font-size:0.72rem;font-weight:700;color:var(--black);margin-bottom:6px">Expenses</div>${pnl.expense_lines.map(l=>`<div class="finance-row"><span class="label">${l.name}</span><span class="value" style="color:var(--red-soft)">$${l.amount.toLocaleString('en-AU',{minimumFractionDigits:2})}</span></div>`).join('')}</div>`:''}
-</div>
-${expenses.length?`<div class="card" style="margin-top:14px">
-  <div class="card-header"><span class="card-title">Recent Expenses</span><span class="card-badge badge-silver">Xero Bank</span></div>
-  <table class="data-table"><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Account</th></tr></thead><tbody>
-    ${expenses.map(e=>`<tr>
-      <td style="font-size:0.75rem;color:var(--text-muted)">${e.date?new Date(e.date+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'}):'—'}</td>
-      <td style="font-weight:600;color:var(--black)">${e.description}</td>
-      <td style="font-weight:700;color:var(--red-soft)">$${(e.amount||0).toFixed(2)}</td>
-      <td style="font-size:0.72rem;color:var(--text-muted)">${e.account}</td>
-    </tr>`).join('')}
-  </tbody></table>
 </div>`:''}
+<div class="card" style="margin-top:14px">
+  <div class="card-header"><span class="card-title">Bank Transactions</span><span class="card-badge badge-silver">Xero</span></div>
+  ${txns.length?`<table class="data-table"><thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Account</th></tr></thead><tbody>
+    ${txns.map(t=>{
+      const isSpend=t.type==='SPEND';
+      return `<tr>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${fmtShort(t.date)}</td>
+      <td style="font-weight:600;color:var(--black)">${t.description}</td>
+      <td><span class="card-badge" style="font-size:0.52rem;background:${isSpend?'rgba(239,68,68,0.08)':'rgba(16,185,129,0.08)'};color:${isSpend?'var(--red-soft)':'var(--teal)'};border:1px solid ${isSpend?'rgba(239,68,68,0.2)':'rgba(16,185,129,0.2)'}">${t.type}</span></td>
+      <td style="font-weight:700;color:${isSpend?'var(--red-soft)':'var(--teal)'}">$${(t.amount||0).toFixed(2)}</td>
+      <td style="font-size:0.72rem;color:var(--text-muted)">${t.account}</td>
+    </tr>`}).join('')}
+  </tbody></table>`:`<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:0.8rem">No recent transactions</div>`}
+</div>
 ${invoices.length?`<div class="card" style="margin-top:14px">
   <div class="card-header"><span class="card-title">Invoices</span><span class="card-badge badge-teal">Xero</span></div>
-  <table class="data-table"><thead><tr><th>#</th><th>Contact</th><th>Total</th><th>Due</th><th>Status</th></tr></thead><tbody>
+  <table class="data-table"><thead><tr><th>#</th><th>Contact</th><th>Date</th><th>Total</th><th>Paid</th><th>Due</th><th>Status</th></tr></thead><tbody>
     ${invoices.map(i=>`<tr>
       <td style="font-weight:500;color:var(--text-muted)">${i.number||'—'}</td>
       <td style="font-weight:600;color:var(--black)">${i.contact}</td>
+      <td style="font-size:0.75rem;color:var(--text-muted)">${fmtShort(i.date)}</td>
       <td style="font-weight:700;color:var(--teal)">$${(i.total||0).toFixed(2)}</td>
+      <td style="color:var(--text-muted)">$${(i.amount_paid||0).toFixed(2)}</td>
       <td style="color:${i.amount_due>0?'var(--amber)':'var(--text-muted)'}">$${(i.amount_due||0).toFixed(2)}</td>
       <td><span class="card-badge badge-${i.status==='PAID'?'teal':'amber'}" style="font-size:0.55rem">${i.status}</span></td>
     </tr>`).join('')}

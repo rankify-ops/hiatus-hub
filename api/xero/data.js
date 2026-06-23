@@ -1,5 +1,15 @@
 const XERO_API = 'https://api.xero.com/api.xro/2.0';
 
+function parseXeroDate(d) {
+  if (!d) return '';
+  // Xero returns "/Date(1234567890000+0000)/" format
+  const match = d.match(/\/Date\((\d+)/);
+  if (match) return new Date(parseInt(match[1])).toISOString().split('T')[0];
+  // Already ISO
+  if (d.includes('-')) return d.split('T')[0];
+  return d;
+}
+
 async function kvGet(key) {
   const url = process.env.KV_REST_API_URL;
   const token = process.env.KV_REST_API_TOKEN;
@@ -58,8 +68,9 @@ async function refreshTokens(stored) {
 async function getTokens() {
   let stored = await kvGet('xero_tokens');
   if (!stored) throw new Error('Xero not connected — visit /api/xero/auth');
-  // Always refresh — Xero access tokens only last 30 min
-  stored = await refreshTokens(stored);
+  if (Date.now() > stored.expires_at - 120000) {
+    stored = await refreshTokens(stored);
+  }
   return stored;
 }
 
@@ -80,15 +91,29 @@ module.exports = async function handler(req, res) {
     const tokens = await getTokens();
     const { access_token, tenant_id } = tokens;
     const report = req.query.report || 'summary';
+    const period = req.query.period || 'ytd';
 
     if (report === 'status') {
       return res.status(200).json({ connected: true, tenant_id });
     }
 
+    // Calculate date range from period
+    const now = new Date();
+    let fromDate, toDate = now.toISOString().split('T')[0];
+    if (period === 'month') {
+      fromDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    } else if (period === 'quarter') {
+      const qMonth = Math.floor(now.getMonth() / 3) * 3;
+      fromDate = `${now.getFullYear()}-${String(qMonth + 1).padStart(2, '0')}-01`;
+    } else if (period === 'year') {
+      fromDate = `${now.getFullYear()}-01-01`;
+    } else if (period === 'all') {
+      fromDate = '2020-01-01';
+    } else {
+      fromDate = `${now.getFullYear()}-01-01`;
+    }
+
     if (report === 'pnl') {
-      const now = new Date();
-      const fromDate = `${now.getFullYear()}-01-01`;
-      const toDate = now.toISOString().split('T')[0];
       const data = await xeroGet(`/Reports/ProfitAndLoss?fromDate=${fromDate}&toDate=${toDate}`, access_token, tenant_id);
       return res.status(200).json(data);
     }
@@ -98,25 +123,12 @@ module.exports = async function handler(req, res) {
       return res.status(200).json(data);
     }
 
-    if (report === 'bank') {
-      const data = await xeroGet('/BankTransactions?where=Type%3D%3D%22SPEND%22&order=Date%20DESC&pageSize=50', access_token, tenant_id);
-      return res.status(200).json(data);
-    }
-
-    if (report === 'invoices') {
-      const data = await xeroGet('/Invoices?where=Type%3D%3D%22ACCREC%22&order=Date%20DESC&pageSize=50', access_token, tenant_id);
-      return res.status(200).json(data);
-    }
-
-    // Default: summary with P&L + recent bank transactions
-    const now = new Date();
-    const fromDate = `${now.getFullYear()}-01-01`;
-    const toDate = now.toISOString().split('T')[0];
-
-    const [pnl, bank, invoices] = await Promise.all([
+    // Default: full summary
+    const [pnl, bank, invoices, repeating] = await Promise.all([
       xeroGet(`/Reports/ProfitAndLoss?fromDate=${fromDate}&toDate=${toDate}`, access_token, tenant_id),
-      xeroGet('/BankTransactions?where=Type%3D%3D%22SPEND%22&order=Date%20DESC&pageSize=20', access_token, tenant_id),
-      xeroGet('/Invoices?where=Type%3D%3D%22ACCREC%22&order=Date%20DESC&pageSize=10&Statuses=AUTHORISED,PAID', access_token, tenant_id),
+      xeroGet('/BankTransactions?order=Date%20DESC&pageSize=30', access_token, tenant_id),
+      xeroGet('/Invoices?order=Date%20DESC&pageSize=20&Statuses=AUTHORISED,PAID', access_token, tenant_id),
+      xeroGet('/RepeatingInvoices', access_token, tenant_id).catch(() => ({ RepeatingInvoices: [] })),
     ]);
 
     // Parse P&L report rows
@@ -132,16 +144,17 @@ module.exports = async function handler(req, res) {
           if (row.RowType === 'Row' && row.Cells) {
             const name = row.Cells[0]?.Value || '';
             const amount = parseFloat(row.Cells[1]?.Value) || 0;
+            if (amount === 0) continue;
             if (title.includes('income') || title.includes('revenue')) {
               incomeLines.push({ name, amount });
-            } else if (title.includes('expense') || title.includes('cost')) {
+            } else if (title.includes('expense') || title.includes('cost') || title.includes('operating')) {
               expenseLines.push({ name, amount });
             }
           }
           if (row.RowType === 'SummaryRow' && row.Cells) {
             const amount = parseFloat(row.Cells[1]?.Value) || 0;
             if (title.includes('income') || title.includes('revenue')) totalIncome = amount;
-            else if (title.includes('expense') || title.includes('cost')) totalExpenses = amount;
+            else if (title.includes('expense') || title.includes('cost') || title.includes('operating')) totalExpenses = amount;
           }
         }
       }
@@ -152,29 +165,53 @@ module.exports = async function handler(req, res) {
     }
 
     // Parse bank transactions
-    const recentExpenses = (bank.BankTransactions || []).map(t => ({
-      date: t.Date ? t.Date.split('T')[0] : '',
+    const recentTransactions = (bank.BankTransactions || []).map(t => ({
+      date: parseXeroDate(t.DateString || t.Date),
+      type: t.Type,
       description: t.Contact?.Name || t.Reference || 'Unknown',
       amount: t.Total || 0,
       account: t.BankAccount?.Name || '',
       reference: t.Reference || '',
+      status: t.Status,
+      is_reconciled: t.IsReconciled,
     }));
 
     // Parse invoices
     const recentInvoices = (invoices.Invoices || []).map(i => ({
       number: i.InvoiceNumber,
-      date: i.Date ? i.Date.split('T')[0] : '',
-      due_date: i.DueDate ? i.DueDate.split('T')[0] : '',
+      date: parseXeroDate(i.DateString || i.Date),
+      due_date: parseXeroDate(i.DueDateString || i.DueDate),
       contact: i.Contact?.Name || '',
       total: i.Total || 0,
       amount_due: i.AmountDue || 0,
+      amount_paid: i.AmountPaid || 0,
       status: i.Status,
+      type: i.Type,
     }));
+
+    // Parse repeating invoices (subscriptions)
+    const subscriptions = (repeating.RepeatingInvoices || []).map(r => {
+      const schedule = r.Schedule || {};
+      const lineTotal = (r.LineItems || []).reduce((sum, li) => sum + (li.UnitAmount || 0) * (li.Quantity || 1), 0);
+      return {
+        name: r.Contact?.Name || (r.LineItems || [])[0]?.Description || 'Unknown',
+        description: (r.LineItems || []).map(li => li.Description).filter(Boolean).join(', '),
+        amount: r.Total || lineTotal,
+        tax: r.TotalTax || 0,
+        period: schedule.Period || 1,
+        unit: (schedule.Unit || 'MONTHLY').toLowerCase(),
+        next_date: parseXeroDate(schedule.NextScheduledDate),
+        start_date: parseXeroDate(schedule.StartDate),
+        status: r.Status,
+        type: r.Type,
+      };
+    }).filter(s => s.status === 'AUTHORISED');
 
     const result = {
       connected: true,
       last_updated: new Date().toISOString(),
       period: `${fromDate} to ${toDate}`,
+      period_label: period,
       profit_and_loss: {
         total_income: totalIncome,
         total_expenses: totalExpenses,
@@ -182,8 +219,9 @@ module.exports = async function handler(req, res) {
         income_lines: incomeLines,
         expense_lines: expenseLines,
       },
-      recent_expenses: recentExpenses,
+      recent_transactions: recentTransactions,
       recent_invoices: recentInvoices,
+      subscriptions: subscriptions,
     };
 
     res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=300');
