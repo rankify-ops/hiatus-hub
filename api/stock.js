@@ -190,7 +190,7 @@ module.exports = async function handler(req, res) {
         }
       }
 
-      if (changelog.length > 1000) changelog.length = 1000;
+      // No cap — full permanent record
       await Promise.all([
         kvSet('stock_snapshot', JSON.stringify(currentSnapshot)),
         kvSet('stock_changelog', JSON.stringify(changelog)),

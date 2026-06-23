@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
       };
 
       history.unshift(entry);
-      if (history.length > 500) history.length = 500;
+      // No cap — full permanent record
 
       await kvSet('product_costs', JSON.stringify(costs));
       await kvSet('cost_history', JSON.stringify(history));
@@ -94,7 +94,7 @@ module.exports = async function handler(req, res) {
         history.unshift(entry);
       }
 
-      if (history.length > 500) history.length = 500;
+      // No cap — full permanent record
       await kvSet('product_costs', JSON.stringify(costs));
       await kvSet('cost_history', JSON.stringify(history));
 
