@@ -1390,6 +1390,7 @@ function renderSupplierOrder(){
   let filtered=catProds;
   if(_orderFilter==='silver')filtered=catProds.filter(p=>!p.is_gold);
   else if(_orderFilter==='gold')filtered=catProds.filter(p=>p.is_gold);
+  else if(_orderFilter==='inorder')filtered=catProds.filter(p=>order[p.supplier_sku]>0);
 
   document.getElementById('supplier-order-content').innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -1406,6 +1407,7 @@ function renderSupplierOrder(){
       <button class="cat-filter ${_orderFilter==='all'?'active':''}" onclick="_orderFilter='all';renderSupplierOrder()">All</button>
       <button class="cat-filter ${_orderFilter==='silver'?'active':''}" onclick="_orderFilter='silver';renderSupplierOrder()">Silver</button>
       <button class="cat-filter ${_orderFilter==='gold'?'active':''}" onclick="_orderFilter='gold';renderSupplierOrder()">Brass Gold</button>
+      <button class="cat-filter ${_orderFilter==='inorder'?'active':''}" onclick="_orderFilter='inorder';renderSupplierOrder()">In Order (${totalItems})</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;max-height:55vh;overflow-y:auto">
       ${filtered.map(p=>{
@@ -1433,7 +1435,7 @@ function renderSupplierOrder(){
           </div>
           <div style="display:flex;align-items:center;gap:4px">
             <button onclick="adjustOrderQty('${p.supplier_sku}',-1)" style="width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center">−</button>
-            <span style="min-width:24px;text-align:center;font-size:0.85rem;font-weight:700;color:${qty>0?'var(--teal)':'var(--text-faint)'}">${qty}</span>
+            <input type="number" min="0" value="${qty}" onchange="setOrderQty('${p.supplier_sku}',parseInt(this.value)||0)" onclick="event.stopPropagation();this.select()" style="width:40px;text-align:center;font-size:0.8rem;font-weight:700;color:${qty>0?'var(--teal)':'var(--text-faint)'};background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:2px 0;font-family:var(--font);outline:none;-moz-appearance:textfield;appearance:textfield">
             <button onclick="adjustOrderQty('${p.supplier_sku}',1)" style="width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center">+</button>
           </div>
         </div>`}).join('')}
@@ -1453,7 +1455,18 @@ function adjustOrderQty(sku,delta){
   const current=order[sku]||0;
   const newVal=Math.max(0,current+delta);
   if(newVal>0)order[sku]=newVal;else delete order[sku];
+  const scrollEl=document.getElementById('supplier-order-content');
+  const scrollTop=scrollEl?scrollEl.scrollTop:0;
   renderSupplierOrder();
+  if(scrollEl)scrollEl.scrollTop=scrollTop;
+}
+function setOrderQty(sku,val){
+  const order=window._supplierOrder;
+  if(val>0)order[sku]=val;else delete order[sku];
+  const scrollEl=document.getElementById('supplier-order-content');
+  const scrollTop=scrollEl?scrollEl.scrollTop:0;
+  renderSupplierOrder();
+  if(scrollEl)scrollEl.scrollTop=scrollTop;
 }
 
 function exportSupplierOrder(){
