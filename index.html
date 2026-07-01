@@ -1629,11 +1629,13 @@ const category=document.getElementById('contrib-cat').value;
 const payer=document.getElementById('contrib-payer').value;
 if(!amount||amount<=0){alert('Please enter a valid amount');return}
 try{
+var r;
 if(editId){
-await fetch('/api/contributions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',id:editId,updates:{date,amount,description,category,payer}})});
+r=await fetch('/api/contributions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'update',id:editId,updates:{date,amount,description,category,payer}})});
 }else{
-await fetch('/api/contributions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',entry:{date,amount,description,category,payer}})});
+r=await fetch('/api/contributions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',entry:{date,amount,description,category,payer}})});
 }
+if(!r.ok){var err=await r.json().catch(function(){return{error:'Unknown error'}});alert('Save failed: '+(err.error||r.status));return}
 document.getElementById('contribution-modal').style.display='none';
 await loadContributions();
 }catch(e){alert('Failed to save: '+e.message)}
