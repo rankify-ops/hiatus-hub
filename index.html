@@ -1386,6 +1386,11 @@ function renderSupplierOrder(){
   const shopifyProds=stockData?.products||[];
   const order=window._supplierOrder;
   const totalItems=Object.values(order).reduce((s,q)=>s+q,0);
+  let totalCostUSD=0;
+  for(const[sku,qty]of Object.entries(order)){
+    const p=catProds.find(cp=>cp.supplier_sku===sku);
+    if(p&&p.cost_usd)totalCostUSD+=p.cost_usd*qty;
+  }
 
   let filtered=catProds;
   if(_orderFilter==='silver')filtered=catProds.filter(p=>!p.is_gold);
@@ -1440,7 +1445,11 @@ function renderSupplierOrder(){
           </div>
         </div>`}).join('')}
     </div>
-    ${totalItems>0?`<div style="display:flex;gap:8px">
+    ${totalItems>0?`<div style="padding:12px 14px;border-radius:var(--radius-sm);background:rgba(45,212,168,0.06);border:1px solid rgba(45,212,168,0.15);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:0.72rem;color:var(--text-muted)">${totalItems} item${totalItems!==1?'s':''} · ${Object.keys(order).length} SKU${Object.keys(order).length!==1?'s':''}</div>
+      <div style="font-size:1rem;font-weight:700;color:var(--teal)">$${totalCostUSD.toLocaleString('en-AU',{minimumFractionDigits:2})} USD</div>
+    </div>
+    <div style="display:flex;gap:8px">
       <button onclick="exportSupplierOrder()" style="flex:1;padding:12px;border-radius:var(--radius-sm);background:var(--teal);border:none;color:#fff;font-family:var(--font);font-size:0.78rem;font-weight:700;cursor:pointer;letter-spacing:0.03em">Export to Excel (${totalItems} items)</button>
       <button onclick="window._supplierOrder={};renderSupplierOrder()" style="padding:12px 16px;border-radius:var(--radius-sm);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);font-family:var(--font);font-size:0.72rem;cursor:pointer">Clear</button>
     </div>`:'<div style="text-align:center;padding:12px;font-size:0.72rem;color:var(--text-faint)">Set quantities to build your order</div>'}`;
